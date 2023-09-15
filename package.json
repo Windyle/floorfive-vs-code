@@ -29,21 +29,30 @@
                     "title": "FloorFive",
                     "icon": "assets/logo/FloorFive_activitybar.png"
                 }
+            ],
+            "panel": [
+                {
+                    "id": "floorfive-vs-code-panel",
+                    "title": "FloorFive",
+                    "icon": "assets/logo/FloorFive_activitybar.png"
+                }
             ]
         },
         "views": {
             "floorfive-vs-code": [
                 {
-                    "id": "floorfive-vs-code.kbs6-dev",
-                    "name": "KBS6 - Development",
+                    "id": "floorfive-vs-code.webview",
+                    "name": "",
                     "icon": "assets/icons/code.svg",
                     "type": "webview"
-                },
+                }
+            ],
+            "floorfive-vs-code-panel": [
                 {
-                    "id": "floorfive-vs-code.settings",
-                    "name": "Settings",
-                    "icon": "assets/icons/settings.svg",
-                    "visibility": "collapsed"
+                    "id": "floorfive-vs-code-panel.webview",
+                    "name": "",
+                    "icon": "assets/icons/code.svg",
+                    "type": "webview"
                 }
             ]
         }

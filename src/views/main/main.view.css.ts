@@ -1,4 +1,25 @@
 export const CSS: string = `
+body {
+    padding: 0 5px;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.container::-webkit-scrollbar {
+    width: 2px;
+}
+
+icon, label {
+    cursor: pointer;
+}
+
 .collapsible {
   display: flex;
   justify-content: space-between;
@@ -11,6 +32,19 @@ export const CSS: string = `
 
 .collapsible:first-child {
     margin-top: 10px;
+}
+
+.collapsible.settings {
+    margin-top: 30px;
+}
+
+.collapsible.settings icon {
+    margin-right: 10px;
+}
+
+.collapsible.settings icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .collapsible:hover {
@@ -44,11 +78,16 @@ h1 {
   grid-template-columns: 1fr;
   grid-gap: 10px;
   padding: 0;
-  transition: max-height 0.2s ease-out, padding 0.2s ease-out;
+  transition: max-height 0.2s ease-out, padding 0.001s 0.2s ease-out;
   max-height: 0;
   background-color: var(--vscode-editor-background);
   overflow: hidden;
   border-radius: 5px;
+}
+
+.collapsible.active + .btns-container {
+    padding: 10px !important;
+    transition: max-height 0.2s ease-out;
 }
 
 .btns-container h2 {
@@ -79,7 +118,7 @@ h1 {
         grid-column: 1 / span 3;
     }
 
-    button.btn-span-2 {
+    .command-button.btn-span-2 {
         grid-column: 1 / span 1;
     }
 }
@@ -93,12 +132,12 @@ h1 {
         grid-column: 1 / span 4;
     }
 
-    button.btn-span-2 {
+    .command-button.btn-span-2 {
         grid-column: 1 / span 1;
     }
 }
 
-button {
+.command-button {
   background-color: var(--vscode-button-background);
   border: none;
   color: var(--vscode-button-foreground);
@@ -108,11 +147,24 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.command-button:hover {
   opacity: 0.9;
 }
 
-button:active {
+.command-button:active {
   opacity: 0.8;
+}
+
+.command-button.icon-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 0 10px;
+    position: relative;
+}
+
+.command-button.icon-button icon svg {
+    width: 20px;
+    height: 20px;
 }
 `;
