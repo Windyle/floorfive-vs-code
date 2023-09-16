@@ -98,7 +98,7 @@ h1 {
     user-select: none;
 }
 
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 420px) {
     .btns-container {
         grid-template-columns: 1fr 1fr;
     }
@@ -109,7 +109,7 @@ h1 {
     }
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (min-width: 620px) {
     .btns-container {
         grid-template-columns: 1fr 1fr 1fr;
     }

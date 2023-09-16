@@ -27,6 +27,19 @@ export const HTML: string = `<!DOCTYPE html>
 
     </aside>
 
+    <main class="main">
+
+      <header class="header">
+        <div class="tab active" name="angular-serve">Serve</div>
+        <div class="tab" name="angular-test">Test</div>
+        <div class="tab" name="angular-build">Build</div>
+        <div class="tab" name="angular-build-watch">Build Watch</div>
+      </header>
+
+      <section class="section"></section>
+
+    </main>
+
   </div>
 
   <script>

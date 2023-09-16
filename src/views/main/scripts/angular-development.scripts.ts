@@ -11,13 +11,13 @@ document.getElementById("angular-serve").addEventListener("click", function() {
     if(iconName === 'play') {
         iconTag.setAttribute('name', 'square');
         iconTag.innerHTML = icons['square'];
-        iconTag.querySelector('svg').classList.add('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.add('flip');
         this.querySelector('label').innerHTML = 'Stop Serve';
     }
     else {
         iconTag.setAttribute('name', 'play');
         iconTag.innerHTML = icons['play'];
-        iconTag.querySelector('svg').classList.remove('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.remove('flip');
         this.querySelector('label').innerHTML = 'Serve';
     }
     
@@ -40,13 +40,13 @@ document.getElementById("angular-test").addEventListener("click", function() {
     if(iconName === 'check-circle') {
         iconTag.setAttribute('name', 'square');
         iconTag.innerHTML = icons['square'];
-        iconTag.querySelector('svg').classList.add('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.add('flip');
         this.querySelector('label').innerHTML = 'Stop Test';
     }
     else {
         iconTag.setAttribute('name', 'check-circle');
         iconTag.innerHTML = icons['check-circle'];
-        iconTag.querySelector('svg').classList.remove('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.remove('flip');
         this.querySelector('label').innerHTML = 'Test';
     }
     
@@ -100,13 +100,13 @@ document.getElementById("angular-build-watch").addEventListener("click", functio
     if(iconName === 'eye') {
         iconTag.setAttribute('name', 'square');
         iconTag.innerHTML = icons['square'];
-        iconTag.querySelector('svg').classList.add('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.add('flip');
         this.querySelector('label').innerHTML = 'Stop Build';
     }
     else {
         iconTag.setAttribute('name', 'eye');
         iconTag.innerHTML = icons['eye'];
-        iconTag.querySelector('svg').classList.remove('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__slow');
+        iconTag.querySelector('svg').classList.remove('flip');
         this.querySelector('label').innerHTML = 'Build Watch';
     }
     
