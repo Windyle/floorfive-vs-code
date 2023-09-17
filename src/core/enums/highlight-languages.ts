@@ -1,0 +1,15 @@
+export enum HighlightLanguages {
+    bash = 'bash',
+    cSharp = 'csharp',
+    css = 'css',
+    html = 'xml',
+    javascript = 'javascript',
+    json = 'json',
+    markdown = 'markdown',
+    powershell = 'powershell',
+    scss = 'scss',
+    shell = 'shell',
+    sql = 'sql',
+    typescript = 'typescript',
+    xml = 'xml',
+}

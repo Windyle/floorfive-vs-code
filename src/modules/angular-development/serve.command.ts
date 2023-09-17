@@ -1,48 +1,160 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { Store } from '../../store';
+import { SpawnCommand } from '../../core/types/spawn-command';
+import { PackageJsonService } from '../../services/package-json.service';
+import { HighlightService } from '../../services/highlight.service';
+import { HighlightLanguages } from '../../core/enums/highlight-languages';
 
 export class ServeCommand {
 
-    private status: boolean = false;
-    private process: ChildProcessWithoutNullStreams | undefined;
+    private static status: boolean = false;
+    private static process: ChildProcessWithoutNullStreams | undefined;
+    private static port: number = 4200;
 
     public execute = () => {
 
-        this.status = !this.status;
+        HighlightService.registerLanguages();
 
-        if (this.status) {
+        ServeCommand.status = !ServeCommand.status;
+
+        if (ServeCommand.status) {
 
             // Run the process
-            this.process = spawn('ng', [`serve`], {
-                shell: true,
-                cwd: Store.rootPath
-            });
-
-            // Listen for data
-            this.process.stdout.on('data', (data: any) => {
-                console.log(data.toString());
-            });
-
-            // Listen for errors
-            this.process.stderr.on('data', (data: any) => {
-                console.log(data.toString());
-            });
-
-            // Listen for close
-            this.process.on('close', (code: any) => {
-                console.log(`Process closed with code ${code}`);
-                this.process = undefined;
-            });
+            this.runProcess();
 
         } else {
 
             // Kill the process
-            if (this.process) {
-                this.process.kill();
-                this.process = undefined;
+            if (ServeCommand.process) {
+                this.resetProcess(true);
             }
 
         }
+    };
+
+    private runProcess = () => {
+
+        // Get the command
+        const command = this.getCommand();
+
+        // Run the process
+        ServeCommand.process = spawn(command.command, command.args, {
+            shell: true,
+            cwd: Store.rootPath
+        });
+
+        // Listen for data
+        ServeCommand.process.stdout.on('data', (data: any) => {
+            console.log(HighlightService.highlight(data.toString(), HighlightLanguages.shell).toString());
+
+            if (data.toString().includes(`Port ${ServeCommand.port} is already in use`)) {
+                this.findPIDAndKill();
+            }
+        });
+
+        // Listen for errors
+        ServeCommand.process.stderr.on('data', (data: any) => {
+            console.error(data.toString());
+        });
+
+        // Listen for close
+        ServeCommand.process.on('close', (code: any) => {
+            this.resetProcess();
+        });
+
+    };
+
+    private getCommand = (): SpawnCommand => {
+
+        const serveScript = PackageJsonService.getScript(`serve`);
+        if (serveScript !== undefined && serveScript.toLowerCase().startsWith(`ng serve`)) {
+            return this.getCommandFromString(serveScript);
+        }
+
+        const startScript = PackageJsonService.getScript(`start`);
+        if (startScript !== undefined && startScript.toLowerCase().startsWith(`ng serve`)) {
+            return this.getCommandFromString(startScript);
+        }
+
+        return {
+            command: `ng`,
+            args: [`serve`]
+        };
+    };
+
+    private getCommandFromString = (command: string): SpawnCommand => {
+        const commandParts = command.split(` `);
+        const commandName = commandParts[0];
+        const commandArgs = commandParts.slice(1);
+
+        // Replace the port property if specified in the command
+        const portIndex = commandArgs.findIndex((arg: string) => arg.includes(`--port`));
+        if (portIndex >= 0) {
+            if (commandArgs.length > portIndex + 1) {
+                ServeCommand.port = parseInt(commandArgs[portIndex + 1]);
+            }
+            else if (commandArgs[portIndex].includes(`=`)) {
+                ServeCommand.port = parseInt(commandArgs[portIndex].split(`=`)[1]);
+            }
+        }
+
+        return {
+            command: commandName,
+            args: commandArgs
+        };
+    };
+
+    private findPIDAndKill = () => {
+
+        const netstatProcess = spawn('netstat', ['-a', `-n`, `-o`], {
+            shell: true,
+            cwd: Store.rootPath
+        });
+
+        netstatProcess.stdout.on('data', (data: any) => {
+            const lines = data.toString().split('\n');
+            const angularLine = lines.find((line: string) => line.includes(`:${ServeCommand.port}`));
+
+            if (angularLine) {
+                const pid = angularLine.split(' ').filter((item: string) => item.length > 0)[4];
+                this.killPID(pid);
+            }
+        });
+
+        netstatProcess.stderr.on('data', (data: any) => {
+            console.log(data.toString());
+        });
+
+    };
+
+    private killPID = (pid: string) => {
+
+        const killProcess = spawn('taskkill', ['/PID', pid, '/F'], {
+            shell: true,
+            cwd: Store.rootPath
+        });
+
+        killProcess.stderr.on('data', (data: any) => {
+            console.error(data.toString());
+        });
+
+        killProcess.on('close', (code: any) => {
+            if (ServeCommand.process?.killed === true) {
+                this.runProcess();
+            }
+        });
+
+    };
+
+    private resetProcess = (kill: boolean = false) => {
+
+        if (kill) {
+            ServeCommand.process?.kill();
+            this.findPIDAndKill();
+        }
+
+        ServeCommand.status = false;
+        ServeCommand.process = undefined;
     };
 
 }

@@ -155,6 +155,11 @@ h1 {
   opacity: 0.8;
 }
 
+.command-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .command-button.icon-button {
     display: flex;
     justify-content: space-between;

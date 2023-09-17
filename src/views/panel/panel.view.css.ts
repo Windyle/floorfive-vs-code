@@ -66,7 +66,7 @@ html, body {
 }
 
 .header .tab:not(.active):hover {
-    border-bottom: 3px solid var(--vscode-focusBorder);
+    border-bottom: 3px solid var(--vscode-panelTitle-activeBorder);
 }
 
 .header .tab.active {

@@ -19,6 +19,11 @@ document.getElementById("angular-serve").addEventListener("click", function() {
         iconTag.innerHTML = icons['play'];
         iconTag.querySelector('svg').classList.remove('flip');
         this.querySelector('label').innerHTML = 'Serve';
+
+        this.classList.add('disabled');
+        setTimeout(() => {
+            this.classList.remove('disabled');
+        }, 1500);
     }
     
     const message = {
