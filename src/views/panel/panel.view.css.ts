@@ -70,12 +70,14 @@ html, body {
 }
 
 .header .tab.active {
-    border-top: 1px solid var(--vscode-disabledForeground);
-    background-color: var(--vscode-editor-background);
+    border-bottom: 3px solid var(--vscode-panelTitle-activeBorder);
 }
 
 .section {
-    width: 100%;
+    max-width: calc(100vw - 250px);
     background-color: var(--vscode-editor-background);
+    overflow: auto;
+    margin: 0;
+    padding: 0 20px;
 }
 `;
