@@ -33,10 +33,10 @@ export const HTML: string = `<!DOCTYPE html>
     <main class="main">
 
       <header class="header">
-        <div class="tab active" name="angular-serve">Serve</div>
-        <div class="tab" name="angular-test">Test</div>
-        <div class="tab" name="angular-build">Build</div>
-        <div class="tab" name="angular-build-watch">Build Watch</div>
+        <div class="tab active" name="serve">Serve</div>
+        <div class="tab" name="test">Test</div>
+        <div class="tab" name="build">Build</div>
+        <div class="tab" name="build-watch">Build Watch</div>
       </header>
 
       <pre class="section hljs" id="console-panel">

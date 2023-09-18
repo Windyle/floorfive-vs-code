@@ -79,10 +79,10 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         return `
             {
                 "${ConsoleCategories.angularDevelopment}": {
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": ""
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "serve",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "build",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "test",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": "build watch"
                 }
             }
         `;
