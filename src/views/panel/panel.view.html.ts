@@ -20,7 +20,7 @@ export const HTML: string = `<!DOCTYPE html>
 
   <div class="container">
 
-    <aside class="sidebar">
+    <aside class="sidebar" id="categories-bar">
 
       <button id="angular">Angular Development</button>
       <button id="angular-deploy">Angular Deploy</button>
@@ -32,12 +32,7 @@ export const HTML: string = `<!DOCTYPE html>
 
     <main class="main">
 
-      <header class="header">
-        <div class="tab active" name="serve">Serve</div>
-        <div class="tab" name="test">Test</div>
-        <div class="tab" name="build">Build</div>
-        <div class="tab" name="build-watch">Build Watch</div>
-      </header>
+      <header class="header" id="tabs-bar"></header>
 
       <pre class="section hljs" id="console-panel">
         <!-- <code class="language-bash" id="console-panel"></code> -->

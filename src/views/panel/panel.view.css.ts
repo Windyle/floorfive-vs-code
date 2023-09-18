@@ -33,6 +33,11 @@ html, body {
     min-height: 30px;
     border-radius: 5px;
     cursor: pointer;
+    user-select: none;
+}
+
+.sidebar button.active {
+    border-right: 6px solid var(--vscode-panelTitle-activeBorder);
 }
 
 .main {
