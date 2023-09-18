@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 
 import { Views } from './views/_index';
-import { Highlight } from './services/highlight.service';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -23,9 +22,6 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
-
-    // Register highlight languages
-    Highlight.registerLanguages();
 
     // Register the views
     Views.activateAll(context);

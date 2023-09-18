@@ -5,7 +5,7 @@ export const HTML: string = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <title>KBS6 Dev</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
   <style>
@@ -39,8 +39,8 @@ export const HTML: string = `<!DOCTYPE html>
         <div class="tab" name="angular-build-watch">Build Watch</div>
       </header>
 
-      <pre class="section" id="console-section">
-        <code class="language-shell" id="console-panel"></code>
+      <pre class="section hljs" id="console-panel">
+        <!-- <code class="language-bash" id="console-panel"></code> -->
       </pre>
 
     </main>

@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
 import { HighlightLanguages } from "../core/enums/highlight-languages";
-import { Highlight } from "./highlight.service";
 
 export class ConsoleInstantiator {
 
@@ -40,13 +39,16 @@ export class FFConsole {
         });
     };
 
-    public log = (message: string) => {
-        const highlightedCode = Highlight.highlight(message + `\n`, this._defaultLanguage);
+    public log = (message: string, language?: HighlightLanguages) => {
+
+        // Set default language
+        language = language ? language : this._defaultLanguage;
 
         // Post message for the console
         FFConsole.webviewRef?.postMessage({
             command: `log-${this._categoryId}:${this._tabId}`,
-            content: highlightedCode
+            content: message,
+            language: language
         });
     };
 }

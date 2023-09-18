@@ -2,7 +2,6 @@ import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { Store } from '../../store';
 import { SpawnCommand } from '../../core/types/spawn-command';
 import { PackageJson } from '../../services/package-json.service';
-import { Highlight } from '../../services/highlight.service';
 import { HighlightLanguages } from '../../core/enums/highlight-languages';
 import { ConsoleInstantiator, FFConsole } from '../../services/console.service';
 import { ConsoleCategories } from '../../core/enums/console-categories';
@@ -19,7 +18,7 @@ export class ServeCommand {
         ServeCommand.console = ConsoleInstantiator.instantiate(
             ConsoleCategories.angularDevelopment,
             ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id,
-            HighlightLanguages.shell
+            HighlightLanguages.plaintext
         );
     }
 
@@ -48,7 +47,7 @@ export class ServeCommand {
         const command = this.getCommand();
 
         ServeCommand.console.clear();
-        ServeCommand.console.log(command.command + ` ` + command.args.join(` `) + `\n\n`);
+        ServeCommand.console.log(command.command + ` ` + command.args.join(` `), HighlightLanguages.css);
 
         // Run the process
         ServeCommand.process = spawn(command.command, command.args, {
