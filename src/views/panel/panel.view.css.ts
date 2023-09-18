@@ -77,7 +77,7 @@ html, body {
     max-width: calc(100vw - 250px);
     overflow: auto;
     margin: 0;
-    padding: 0 20px;
+    padding: 20px;
     position: relative;
     display: flex;
     flex-direction: column;

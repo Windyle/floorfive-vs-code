@@ -17,12 +17,18 @@ tabs.forEach(tab => {
     tab.addEventListener('click', () => {
         tabs.forEach(tab => tab.classList.remove('active'));
         tab.classList.add('active');
+
+        setActivePanelContent('angular', tab.getAttribute('name'));
     });
 });
 
 // ==== MESSAGE HANDLER ====
 
 function setActivePanelContent(categoryId, tabId) {
+    console.log('setActivePanelContent', categoryId, tabId);
+
+    activePanel = \`\${categoryId}:\${tabId}\`;
+
     document.getElementById('console-panel').innerHTML = panels[categoryId][tabId];
 
     // Scroll to bottom if the scroll is already at the bottom (or close to it) or if no scroll is active
