@@ -5,6 +5,9 @@ import { ICONS, ICONS_SCRIPT } from '../_icons';
 import { HTML } from './panel.view.html';
 import { CSS } from './panel.view.css';
 import { JS } from './panel.view.script';
+import { FFConsole } from '../../services/console.service';
+import { ConsoleCategories } from '../../core/enums/console-categories';
+import { ConsoleTabs } from '../../core/enums/console-tabs';
 
 // View class
 export class PanelView {
@@ -39,6 +42,10 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
 
+        // Register Console webview reference
+        FFConsole.webviewRef = webviewView.webview;
+
+        // Replace icons variables
         this.iconsScript = ICONS_SCRIPT;
         for (const key of Object.keys(this.iconsPaths)) {
             const icon = fs.readFileSync(this.iconsPaths[key].fsPath, 'utf8');
@@ -68,6 +75,23 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         return iconName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
     };
 
+    private getPanelsObject = (): string => {
+        return `
+            {
+                "${ConsoleCategories.angularDevelopment}": {
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "",
+                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": ""
+                }
+            }
+        `;
+    };
+
+    private getDefaultActivePanel = (): string => {
+        return `"${ConsoleCategories.angularDevelopment}:${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}"`;
+    };
+
     private prepareTemplate = (html: string): string => {
         html = this.replaceTemplateVariables(html);
         return html;
@@ -79,6 +103,8 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
             .replace(/(?<!')\{\{js\}\}(?!')/g, JS)
+            .replace(/(?<!')\{\{panels\}\}(?!')/g, this.getPanelsObject()) // After JS
+            .replace(/(?<!')\{\{activePanel\}\}(?!')/g, this.getDefaultActivePanel()) // After JS
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
     };
 

@@ -6,6 +6,7 @@ export enum HighlightLanguages {
     javascript = 'javascript',
     json = 'json',
     markdown = 'markdown',
+    plaintext = 'plaintext',
     powershell = 'powershell',
     scss = 'scss',
     shell = 'shell',
