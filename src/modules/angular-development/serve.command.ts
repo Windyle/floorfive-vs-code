@@ -48,7 +48,7 @@ export class ServeCommand {
         const command = this.getCommand();
 
         ServeCommand.console.clear();
-        ServeCommand.console.log(command.command + ` ` + command.args.join(` `));
+        ServeCommand.console.log(command.command + ` ` + command.args.join(` `) + `\n\n`);
 
         // Run the process
         ServeCommand.process = spawn(command.command, command.args, {

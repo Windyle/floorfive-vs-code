@@ -33,6 +33,8 @@ function setActivePanelContent(categoryId, tabId) {
             consoleSection.scrollTop = consoleSection.scrollHeight;
         }, 100);
     }
+
+    hljs.highlightAll();
 }
 
 window.addEventListener('message', event => {
