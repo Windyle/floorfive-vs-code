@@ -75,23 +75,6 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         return iconName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
     };
 
-    private getPanelsObject = (): string => {
-        return `
-            {
-                "${ConsoleCategories.angularDevelopment}": {
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "serve",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "build",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "test",
-                    "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": "build watch"
-                }
-            }
-        `;
-    };
-
-    private getDefaultActivePanel = (): string => {
-        return `"${ConsoleCategories.angularDevelopment}:${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}"`;
-    };
-
     private prepareTemplate = (html: string): string => {
         html = this.replaceTemplateVariables(html);
         return html;
@@ -103,8 +86,6 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
             .replace(/(?<!')\{\{js\}\}(?!')/g, JS)
-            .replace(/(?<!')\{\{panels\}\}(?!')/g, this.getPanelsObject()) // After JS
-            .replace(/(?<!')\{\{activePanel\}\}(?!')/g, this.getDefaultActivePanel()) // After JS
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
     };
 
