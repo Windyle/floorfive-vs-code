@@ -1,19 +1,29 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { Store } from '../../store';
 import { SpawnCommand } from '../../core/types/spawn-command';
-import { PackageJsonService } from '../../services/package-json.service';
-import { HighlightService } from '../../services/highlight.service';
+import { PackageJson } from '../../services/package-json.service';
+import { Highlight } from '../../services/highlight.service';
 import { HighlightLanguages } from '../../core/enums/highlight-languages';
+import { ConsoleInstantiator, FFConsole } from '../../services/console.service';
+import { ConsoleCategories } from '../../core/enums/console-categories';
+import { ConsoleTabs } from '../../core/enums/console-tabs';
 
 export class ServeCommand {
 
     private static status: boolean = false;
     private static process: ChildProcessWithoutNullStreams | undefined;
     private static port: number = 4200;
+    private static console: FFConsole;
+
+    constructor() {
+        ServeCommand.console = ConsoleInstantiator.instantiate(
+            ConsoleCategories.angularDevelopment,
+            ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id,
+            HighlightLanguages.shell
+        );
+    }
 
     public execute = () => {
-
-        HighlightService.registerLanguages();
 
         ServeCommand.status = !ServeCommand.status;
 
@@ -37,6 +47,9 @@ export class ServeCommand {
         // Get the command
         const command = this.getCommand();
 
+        ServeCommand.console.clear();
+        ServeCommand.console.log(command.command + ` ` + command.args.join(` `));
+
         // Run the process
         ServeCommand.process = spawn(command.command, command.args, {
             shell: true,
@@ -45,7 +58,7 @@ export class ServeCommand {
 
         // Listen for data
         ServeCommand.process.stdout.on('data', (data: any) => {
-            console.log(HighlightService.highlight(data.toString(), HighlightLanguages.shell).toString());
+            ServeCommand.console.log(data.toString());
 
             if (data.toString().includes(`Port ${ServeCommand.port} is already in use`)) {
                 this.findPIDAndKill();
@@ -54,7 +67,7 @@ export class ServeCommand {
 
         // Listen for errors
         ServeCommand.process.stderr.on('data', (data: any) => {
-            console.error(data.toString());
+            ServeCommand.console.log(data.toString());
         });
 
         // Listen for close
@@ -66,12 +79,12 @@ export class ServeCommand {
 
     private getCommand = (): SpawnCommand => {
 
-        const serveScript = PackageJsonService.getScript(`serve`);
+        const serveScript = PackageJson.getScript(`serve`);
         if (serveScript !== undefined && serveScript.toLowerCase().startsWith(`ng serve`)) {
             return this.getCommandFromString(serveScript);
         }
 
-        const startScript = PackageJsonService.getScript(`start`);
+        const startScript = PackageJson.getScript(`start`);
         if (startScript !== undefined && startScript.toLowerCase().startsWith(`ng serve`)) {
             return this.getCommandFromString(startScript);
         }

@@ -73,11 +73,19 @@ html, body {
     border-bottom: 3px solid var(--vscode-panelTitle-activeBorder);
 }
 
-.section {
+#console-section {
     max-width: calc(100vw - 250px);
     background-color: var(--vscode-editor-background);
     overflow: auto;
     margin: 0;
     padding: 0 20px;
+    position: relative;
+}
+
+#console-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 12px 20px;
 }
 `;

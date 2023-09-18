@@ -13,7 +13,7 @@ import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import { HighlightLanguages } from '../core/enums/highlight-languages';
 
-export class HighlightService {
+export class Highlight {
 
     public static registerLanguages = () => {
         hljs.registerLanguage('bash', bash);

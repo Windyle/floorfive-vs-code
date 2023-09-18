@@ -1,14 +1,14 @@
 import { Store } from "../store";
 import * as fs from 'node:fs';
 
-export class PackageJsonService {
+export class PackageJson {
 
     public static isNodeProject = (): boolean => {
         return fs.existsSync(`${Store.rootPath}/package.json`);
     };
 
     public static getScript = (scriptName: string): string | undefined => {
-        const scripts = PackageJsonService.getScripts();
+        const scripts = PackageJson.getScripts();
 
         if (scripts) {
             return scripts[scriptName];
@@ -28,7 +28,7 @@ export class PackageJsonService {
     };
 
     public static getDependencies = (): any => {
-        const packageJson = PackageJsonService.getPackageJson();
+        const packageJson = PackageJson.getPackageJson();
 
         if (packageJson) {
             return packageJson.dependencies;
@@ -38,7 +38,7 @@ export class PackageJsonService {
     };
 
     public static getDevDependencies = (): any => {
-        const packageJson = PackageJsonService.getPackageJson();
+        const packageJson = PackageJson.getPackageJson();
 
         if (packageJson) {
             return packageJson.devDependencies;
@@ -48,7 +48,7 @@ export class PackageJsonService {
     };
 
     public static getScripts = (): any => {
-        const packageJson = PackageJsonService.getPackageJson();
+        const packageJson = PackageJson.getPackageJson();
 
         if (packageJson) {
             return packageJson.scripts;
