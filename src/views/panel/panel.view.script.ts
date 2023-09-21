@@ -90,6 +90,17 @@ function setTabs(categoryId = 'angular') {
 
 setTabs();
 
+// ==== SIDEBAR COLLAPSE ====
+
+var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
+
+sidebarCollapseBtn.addEventListener('click', function() {
+    sidebarCollapseBtn.classList.toggle('collapsed');
+
+    var container = document.querySelector('.container');
+    container.classList.toggle('collapsed');
+});
+
 // ==== MESSAGE HANDLER ====
 
 function setActivePanelContent(categoryId, tabId) {

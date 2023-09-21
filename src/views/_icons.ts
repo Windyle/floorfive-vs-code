@@ -1,5 +1,7 @@
 export const ICONS = [
     `check-circle`,
+    `chevron-left`,
+    `chevron-right`,
     `copy`,
     `external-link`,
     `eye`,
@@ -16,6 +18,8 @@ export const ICONS_SCRIPT = `
 
 var icons = {
     "check-circle": \`{{checkCircleIcon}}\`,
+    "chevron-left": \`{{chevronLeftIcon}}\`,
+    "chevron-right": \`{{chevronRightIcon}}\`,
     "copy": \`{{copyIcon}}\`,
     "external-link": \`{{externalLinkIcon}}\`,
     "eye": \`{{eyeIcon}}\`,
