@@ -1,15 +1,15 @@
 import type { ConsoleTabs as ConsoleTabsType } from "../types/console-tab";
-import { ConsoleCategories } from "./console-categories";
+import { Modules } from "./console-categories";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ConsoleTabs: ConsoleTabsType = {
-    [ConsoleCategories.angularDeploy]: {
+    [Modules.angularDeploy]: {
         deploy: {
             id: `deploy`,
             label: `Deploy`,
         },
     },
-    [ConsoleCategories.kbs6Lib]: {
+    [Modules.kbs6Lib]: {
         installLatest: {
             id: `install-latest`,
             label: `Install latest`,
@@ -23,13 +23,13 @@ export const ConsoleTabs: ConsoleTabsType = {
             label: `Publish`,
         },
     },
-    [ConsoleCategories.lint]: {
+    [Modules.lint]: {
         lint: {
             id: `lint`,
             label: `Lint`,
         },
     },
-    [ConsoleCategories.kbsMobile]: {
+    [Modules.kbsMobile]: {
         setEnvironment: {
             id: `set-environment`,
             label: `Set environment`,

@@ -1,28 +1,28 @@
-import { ConsoleCategories } from "../../core/enums/console-categories";
+import { Modules } from "../../core/enums/console-categories";
 import { ConsoleTabs } from "../../core/enums/console-tabs";
 
 const panels: string = `
 // ==== PANELS ====
 
-var activePanel = "${ConsoleCategories.angularDeploy}:${ConsoleTabs[ConsoleCategories.angularDeploy][`deploy`].id}";
+var activePanel = "${Modules.angularDeploy}:${ConsoleTabs[Modules.angularDeploy][`deploy`].id}";
 var panels = {
-    "${ConsoleCategories.angularDeploy}": {
-        "${ConsoleTabs[ConsoleCategories.angularDeploy][`deploy`].id}": "deploy",
+    "${Modules.angularDeploy}": {
+        "${ConsoleTabs[Modules.angularDeploy][`deploy`].id}": "deploy",
     },
-    "${ConsoleCategories.kbs6Lib}": {
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`installLatest`].id}": "install latest",
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`compareVersions`].id}": "compare versions",
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`publish`].id}": "publish",
+    "${Modules.kbs6Lib}": {
+        "${ConsoleTabs[Modules.kbs6Lib][`installLatest`].id}": "install latest",
+        "${ConsoleTabs[Modules.kbs6Lib][`compareVersions`].id}": "compare versions",
+        "${ConsoleTabs[Modules.kbs6Lib][`publish`].id}": "publish",
     },
-    "${ConsoleCategories.lint}": {
-        "${ConsoleTabs[ConsoleCategories.lint][`lint`].id}": "lint",
+    "${Modules.lint}": {
+        "${ConsoleTabs[Modules.lint][`lint`].id}": "lint",
     },
-    "${ConsoleCategories.kbsMobile}": {
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`setEnvironment`].id}": "set environment",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`incrementVersion`].id}": "increment version",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`configurationsRoutes`].id}": "configurations routes",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`entitiesPropertiesList`].id}": "entities properties list",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`globalVariables`].id}": "global variables",
+    "${Modules.kbsMobile}": {
+        "${ConsoleTabs[Modules.kbsMobile][`setEnvironment`].id}": "set environment",
+        "${ConsoleTabs[Modules.kbsMobile][`incrementVersion`].id}": "increment version",
+        "${ConsoleTabs[Modules.kbsMobile][`configurationsRoutes`].id}": "configurations routes",
+        "${ConsoleTabs[Modules.kbsMobile][`entitiesPropertiesList`].id}": "entities properties list",
+        "${ConsoleTabs[Modules.kbsMobile][`globalVariables`].id}": "global variables",
     }
 };
 `;
@@ -32,7 +32,7 @@ const categories: string = `
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
-    btn.id === '${ConsoleCategories.angularDeploy}' ? btn.classList.add('active') : '';
+    btn.id === '${Modules.angularDeploy}' ? btn.classList.add('active') : '';
 
     btn.addEventListener('click', () => {
         categoriesBtns.forEach(btn => btn.classList.remove('active'));
@@ -48,7 +48,7 @@ export const tabs: string = `
 
 var tabsList = ${JSON.stringify(ConsoleTabs)};
 
-function setTabs(categoryId = '${ConsoleCategories.angularDeploy}') {
+function setTabs(categoryId = '${Modules.angularDeploy}') {
     var tabsBar = document.getElementById('tabs-bar');
 
     var categoryTabs = tabsList[categoryId];

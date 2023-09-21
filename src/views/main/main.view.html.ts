@@ -30,9 +30,9 @@ export const HTML: string = `<!DOCTYPE html>
       <div class="chevron-arrow"></div>
     </div>
     <div class="btns-container" id="kbs6-lib-btns-container">
-      <button class="command-button" id="kbs6-lib-install">Install Latest</button>
-      <button class="command-button" id="kbs6-lib-compare">Compare Version</button>
-      <button class="command-button" id="kbs6-lib-publish">Publish</button>
+      <button class="command-button icon-button" id="kbs6-lib-install"><icon name="download-cloud"></icon> <label>Install Latest</label></button>
+      <button class="command-button icon-button" id="kbs6-lib-compare"><icon name="arrows-right-left"></icon> <label>Compare Version</label></button>
+      <button class="command-button icon-button" id="kbs6-lib-publish"><icon name="upload-cloud"></icon> <label>Publish</label></button>
     </div>
 
     <div class="collapsible">

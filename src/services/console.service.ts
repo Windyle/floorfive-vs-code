@@ -6,7 +6,7 @@ export class ConsoleInstantiator {
 
     public static instances = new Map<string, FFConsole>();
 
-    public static instantiate = (categoryId: string, tabId: string, defaultLanguage: HighlightLanguages) => {
+    public static instantiate = (categoryId: string, tabId: string, defaultLanguage: HighlightLanguages = HighlightLanguages.plaintext) => {
         const instance = new FFConsole(categoryId, tabId, defaultLanguage);
         ConsoleInstantiator.instances.set(`${categoryId}:${tabId}`, instance);
 

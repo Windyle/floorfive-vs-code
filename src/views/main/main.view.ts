@@ -92,6 +92,17 @@ class MainViewProvider implements vscode.WebviewViewProvider {
                 .replace(`<div class="collapsible" id="kbs6-lib-collapsible">`, `<div class="collapsible" id="kbs6-lib-collapsible" style="display: none;">`)
                 .replace(`<div class="btns-container" id="kbs6-lib-btns-container">`, `<div class="btns-container" id="kbs6-lib-btns-container" style="display: none;">`);
         }
+        else {
+            if (!Kbs6LibModule.isKbs6LibWorkspace()) {
+                html = html
+                    .replace(`<button class="command-button icon-button" id="kbs6-lib-publish"><icon name="upload-cloud"></icon> <label>Publish</label></button>`, ``);
+            }
+            else {
+                html = html
+                    .replace(`<button class="command-button icon-button" id="kbs6-lib-install"><icon name="download-cloud"></icon> <label>Install Latest</label></button>`, ``)
+                    .replace(`<button class="command-button icon-button" id="kbs6-lib-compare"><icon name="arrows-right-left"></icon> <label>Compare Version</label></button>`, ``);
+            }
+        }
 
         // KBS Mobile
         if (!KbsMobileModule.show()) {
