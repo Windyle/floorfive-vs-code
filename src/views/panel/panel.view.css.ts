@@ -113,6 +113,39 @@ html, body {
     border-bottom: 3px solid var(--vscode-panelTitle-activeBorder);
 }
 
+.panel-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 25px;
+    gap: 10px;
+    position: absolute;
+    right: 0;
+    top: 30px;
+    z-index: 2;
+}
+
+.panel-buttons button {
+    background-color: transparent;
+    border: none;
+    color: var(--vscode-disabledForeground);
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0.5;
+}
+
+.panel-buttons button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.panel-buttons button:hover {
+    opacity: 0.3;
+}
+
 #console-panel {
     max-width: calc(100vw - 250px);
     overflow: auto;
