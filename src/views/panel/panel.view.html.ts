@@ -28,6 +28,8 @@ export const HTML: string = `<!DOCTYPE html>
       <button id="lint">Lint</button>
       <button id="kbs-mobile">KBS Mobile</button>
 
+      <button id="sidebar-collapse"><icon name="chevron-left"></icon></button>
+
     </aside>
 
     <main class="main">

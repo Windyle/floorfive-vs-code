@@ -13,11 +13,15 @@ html, body {
     overflow: hidden;
 }
 
+.container.collapsed {
+    grid-template-columns: 60px 1fr;
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    height: 100vh;
+    height: calc(100vh - 30px);
     max-height: 100vh;
     overflow-y: auto;
     border-right: 1px solid var(--vscode-disabledForeground);
@@ -36,8 +40,39 @@ html, body {
     user-select: none;
 }
 
+.container.collapsed .sidebar button {
+    display: none;
+}
+
+.sidebar button:hover {
+    opacity: 0.8;
+}
+
 .sidebar button.active {
     border-right: 6px solid var(--vscode-panelTitle-activeBorder);
+}
+
+.sidebar #sidebar-collapse {
+    margin-top: auto;
+    margin-bottom: 0;
+    background-color: transparent;
+    border: 1px solid var(--vscode-disabledForeground);
+    color: var(--vscode-disabledForeground);
+}
+
+.container.collapsed #sidebar-collapse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.sidebar #sidebar-collapse icon svg {
+    transition: transform 0.2s ease-in-out;
+}
+
+.sidebar #sidebar-collapse.collapsed icon svg {
+    transform: rotate(180deg);
 }
 
 .main {
@@ -86,6 +121,10 @@ html, body {
     position: relative;
     display: flex;
     flex-direction: column;
+}
+
+.container.collapsed #console-panel {
+    max-width: calc(100vw - 60px);
 }
 
 #console-panel code {
