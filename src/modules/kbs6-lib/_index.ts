@@ -1,16 +1,23 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { BaseModule } from '../../core/classes/base-module';
+import { Module } from '../../core/types/module';
 import { Store } from "../../store";
-import { Modules } from '../../core/enums/console-categories';
+import { CompareVersionCommand } from './commands/compare-version.command';
 
-export class Kbs6LibModule {
+export class Kbs6LibModule extends BaseModule implements Module {
 
-    public static readonly moduleName = Modules.kbs6Lib;
-    public static readonly commands = [
+    constructor() {
 
-    ];
+        super(`kbs6-lib`, `KBS6 Lib`);
 
-    public static show(): boolean {
+        const compareVersionCommand = new CompareVersionCommand();
+
+        // Add commands instances to the commands object
+        this.commands[compareVersionCommand.getId()] = compareVersionCommand;
+    }
+
+    public show(): boolean {
         // If the root path contains an angular.json file, show the view
         if (fs.existsSync(path.join(Store.rootPath, 'angular.json'))) {
             return true;
@@ -19,7 +26,9 @@ export class Kbs6LibModule {
         return false;
     }
 
-    public static isKbs6LibWorkspace(): boolean {
+    // Custom methods
+
+    public isKbs6LibWorkspace(): boolean {
         // If the root path contains a projects/kbs folder and a package.json file,
         // check if the package.json name field is '@kbs6/kbs-lib'
         if (fs.existsSync(path.join(Store.rootPath, 'projects', 'kbs'))

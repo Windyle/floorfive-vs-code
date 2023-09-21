@@ -1,13 +1,12 @@
-import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { AngularDeployModule } from '../../modules/angular-deploy/_index';
 import { KbsMobileModule } from '../../modules/kbs-mobile/_index';
-import { Kbs6LibModule } from '../../modules/kbs6-lib/_index';
+import { IconsService } from '../../services/icons.service';
 import { ANIMATIONS_CSS } from '../_animations';
-import { ICONS, ICONS_SCRIPT } from '../_icons';
 import { CSS } from './main.view.css';
 import { HTML } from './main.view.html';
 import { JS } from './main.view.script';
+import { Kbs6LibModule } from '../../modules/kbs6-lib/_index';
 
 // View class
 export class MainView {
@@ -16,7 +15,7 @@ export class MainView {
 
     public static activate = (context: vscode.ExtensionContext) => {
         // Create a new webview panel
-        const panel = vscode.window.registerWebviewViewProvider(MainView.viewType, new MainViewProvider(context));
+        vscode.window.registerWebviewViewProvider(MainView.viewType, new MainViewProvider(context));
     };
 
 }
@@ -24,29 +23,26 @@ export class MainView {
 // View provider class
 class MainViewProvider implements vscode.WebviewViewProvider {
 
-    private extensionUri: vscode.Uri;
-    private iconsPaths: { [key: string]: vscode.Uri } = {};
+    private readonly extensionUri: vscode.Uri;
     private iconsScript: string = '';
+
+    private modules: { [id: string]: any } = {};
 
     constructor(
         private readonly context: vscode.ExtensionContext
     ) {
-        // Get path to resource on disk
         this.extensionUri = context.extensionUri;
 
-        // Get icons paths
-        for (const icon of ICONS) {
-            this.iconsPaths[icon] = vscode.Uri.joinPath(this.extensionUri, 'assets', 'icons', `${icon}.svg`);
-        }
+        // Get modules instances
+        const kbs6LibModule = new Kbs6LibModule();
+
+        // Add modules instances to the modules object
+        this.modules[kbs6LibModule.getId()] = kbs6LibModule;
     }
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
 
-        this.iconsScript = ICONS_SCRIPT;
-        for (const key of Object.keys(this.iconsPaths)) {
-            const icon = fs.readFileSync(this.iconsPaths[key].fsPath, 'utf8');
-            this.iconsScript = this.iconsScript.replace(`{{${this.formatIconName(key)}Icon}}`, icon);
-        }
+        this.iconsScript = IconsService.getIconsScript(this.context);
 
         // Set the webview's initial html content
         webviewView.webview.html = this.prepareTemplate(HTML);
@@ -66,11 +62,6 @@ class MainViewProvider implements vscode.WebviewViewProvider {
         );
     }
 
-    private formatIconName = (iconName: string): string => {
-        // From 'check-circle' to 'checkCircle'
-        return iconName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-    };
-
     private prepareTemplate = (html: string): string => {
         html = this.replaceTemplateVariables(html);
         html = this.hideModules(html);
@@ -87,22 +78,22 @@ class MainViewProvider implements vscode.WebviewViewProvider {
         }
 
         // KBS6 Lib
-        if (!Kbs6LibModule.show()) {
-            html = html
-                .replace(`<div class="collapsible" id="kbs6-lib-collapsible">`, `<div class="collapsible" id="kbs6-lib-collapsible" style="display: none;">`)
-                .replace(`<div class="btns-container" id="kbs6-lib-btns-container">`, `<div class="btns-container" id="kbs6-lib-btns-container" style="display: none;">`);
-        }
-        else {
-            if (!Kbs6LibModule.isKbs6LibWorkspace()) {
-                html = html
-                    .replace(`<button class="command-button icon-button" id="kbs6-lib-publish"><icon name="upload-cloud"></icon> <label>Publish</label></button>`, ``);
-            }
-            else {
-                html = html
-                    .replace(`<button class="command-button icon-button" id="kbs6-lib-install"><icon name="download-cloud"></icon> <label>Install Latest</label></button>`, ``)
-                    .replace(`<button class="command-button icon-button" id="kbs6-lib-compare"><icon name="arrows-right-left"></icon> <label>Compare Version</label></button>`, ``);
-            }
-        }
+        // if (!Kbs6LibModule.show()) {
+        //     html = html
+        //         .replace(`<div class="collapsible" id="kbs6-lib-collapsible">`, `<div class="collapsible" id="kbs6-lib-collapsible" style="display: none;">`)
+        //         .replace(`<div class="btns-container" id="kbs6-lib-btns-container">`, `<div class="btns-container" id="kbs6-lib-btns-container" style="display: none;">`);
+        // }
+        // else {
+        //     if (!Kbs6LibModule.isKbs6LibWorkspace()) {
+        //         html = html
+        //             .replace(`<button class="command-button icon-button" id="kbs6-lib-publish"><icon name="upload-cloud"></icon> <label>Publish</label></button>`, ``);
+        //     }
+        //     else {
+        //         html = html
+        //             .replace(`<button class="command-button icon-button" id="kbs6-lib-install"><icon name="download-cloud"></icon> <label>Install Latest</label></button>`, ``)
+        //             .replace(`<button class="command-button icon-button" id="kbs6-lib-compare"><icon name="arrows-right-left"></icon> <label>Compare Version</label></button>`, ``);
+        //     }
+        // }
 
         // KBS Mobile
         if (!KbsMobileModule.show()) {
@@ -117,10 +108,21 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     private replaceTemplateVariables = (html: string): string => {
 
         return html
+            .replace(/(?<!')\{\{actionsHtml\}\}(?!')/g, this.generateModulesHtml())
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
             .replace(/(?<!')\{\{js\}\}(?!')/g, JS)
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
+    };
+
+    private generateModulesHtml = (): string => {
+        const modulesHtml: string[] = [];
+
+        Object.keys(this.modules).forEach((id: any) => {
+            modulesHtml.push(this.modules[id].getActionsHtml());
+        });
+
+        return modulesHtml.join('\n');
     };
 
     private messageHandler = (webview: vscode.Webview, message: any) => {

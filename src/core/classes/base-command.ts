@@ -30,4 +30,20 @@ export class BaseCommand {
             withLoader: this.withLoader
         };
     };
+
+    public getId = (): string => {
+        return this.id;
+    };
+
+    public getIcon = (): string => {
+        return this.icon;
+    };
+
+    public getLabel = (): string => {
+        return this.label;
+    };
+
+    public getWithLoader = (): boolean => {
+        return this.withLoader;
+    };
 }

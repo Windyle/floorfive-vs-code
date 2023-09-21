@@ -1,5 +1,6 @@
 import { Modules } from "../../core/enums/console-categories";
 import { ConsoleTabs } from "../../core/enums/console-tabs";
+import { KBS6_LIB_LOG_SCRIPTS } from "./scripts/kbs6-lib.log-scripts";
 
 const panels: string = `
 // ==== PANELS ====
@@ -176,6 +177,7 @@ window.addEventListener('message', event => {
                 setActivePanelContent(message.activePanel.split(':')[0], message.activePanel.split(':')[1], false);
             }
         break;
+        ${KBS6_LIB_LOG_SCRIPTS}
     }
 });
 `;
