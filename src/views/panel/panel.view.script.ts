@@ -2,11 +2,7 @@ import { ConsoleCategories } from "../../core/enums/console-categories";
 import { ConsoleTabs } from "../../core/enums/console-tabs";
 import { ANGULAR_DEVELOPMENT_LOG_SCRIPTS } from "./scripts/angular-development.log-scripts";
 
-export const JS: string = `
-var vscode = acquireVsCodeApi();
-
-hljs.highlightAll();
-
+const panels: string = `
 // ==== PANELS ====
 
 var activePanel = "${ConsoleCategories.angularDevelopment}:${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}";
@@ -36,9 +32,10 @@ var panels = {
         "${ConsoleTabs[ConsoleCategories.kbsMobile][`globalVariables`].id}": "global variables",
     }
 };
+`;
 
+const categories: string = `
 // ==== CATEGORIES ====
-
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
@@ -51,7 +48,9 @@ categoriesBtns.forEach(btn => {
         setTabs(btn.id);
     });
 });
+`;
 
+export const tabs: string = `
 // ==== TABS ====
 
 var tabsList = ${JSON.stringify(ConsoleTabs)};
@@ -89,7 +88,9 @@ function setTabs(categoryId = 'angular') {
 }
 
 setTabs();
+`;
 
+const sidebarCollapse: string = `
 // ==== SIDEBAR COLLAPSE ====
 
 var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
@@ -100,12 +101,25 @@ sidebarCollapseBtn.addEventListener('click', function() {
     var container = document.querySelector('.container');
     container.classList.toggle('collapsed');
 });
+`;
 
+const clearConsole: string = `
+// ==== CLEAR CONSOLE ====
+
+var clearConsoleBtn = document.getElementById('clear-console');
+
+clearConsoleBtn.addEventListener('click', function() {
+    // Clear active panel content
+    panels[activePanel.split(':')[0]][activePanel.split(':')[1]] = '';
+
+    setActivePanelContent(activePanel.split(':')[0], activePanel.split(':')[1]);
+});
+`;
+
+const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
 function setActivePanelContent(categoryId, tabId) {
-    console.log('setActivePanelContent', categoryId, tabId);
-
     activePanel = \`\${categoryId}:\${tabId}\`;
 
     document.getElementById('console-panel').innerHTML = panels[categoryId][tabId];
@@ -140,4 +154,22 @@ window.addEventListener('message', event => {
         ${ANGULAR_DEVELOPMENT_LOG_SCRIPTS}
     }
 });
+`;
+
+export const JS: string = `
+var vscode = acquireVsCodeApi();
+
+hljs.highlightAll();
+
+${panels}
+
+${categories}
+
+${tabs}
+
+${sidebarCollapse}
+
+${clearConsole}
+
+${messageHandler}
 `;
