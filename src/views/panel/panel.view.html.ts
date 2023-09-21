@@ -22,7 +22,6 @@ export const HTML: string = `<!DOCTYPE html>
 
     <aside class="sidebar" id="categories-bar">
 
-      <button id="angular">Angular Development</button>
       <button id="angular-deploy">Angular Deploy</button>
       <button id="kbs6-lib">KBS6 Lib</button>
       <button id="lint">Lint</button>

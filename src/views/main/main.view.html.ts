@@ -17,17 +17,6 @@ export const HTML: string = `<!DOCTYPE html>
 
   <div class="container">
 
-    <div class="collapsible" id="angular-collapsible">
-      <h1>Angular Development</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container" id="angular-btns-container">
-      <button class="command-button icon-button" id="angular-serve"><icon name="play"></icon> <label>Serve</label></button>
-      <button class="command-button icon-button" id="angular-test"><icon name="check-circle"></icon> <label>Test</label></button>
-      <button class="command-button icon-button" id="angular-build"><icon name="package"></icon> <label>Build</label></button>
-      <button class="command-button icon-button" id="angular-build-watch"><icon name="eye"></icon> <label>Build Watch</label></button>
-    </div>
-
     <div class="collapsible" id="angular-deploy-collapsible">
       <h1>Angular Deploy</h1>
       <div class="chevron-arrow"></div>

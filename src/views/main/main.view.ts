@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { AngularDeployModule } from '../../modules/angular-deploy/_index';
-import { AngularDevelopmentModule } from '../../modules/angular-development/_index';
 import { KbsMobileModule } from '../../modules/kbs-mobile/_index';
 import { Kbs6LibModule } from '../../modules/kbs6-lib/_index';
 import { ANIMATIONS_CSS } from '../_animations';
@@ -80,13 +79,6 @@ class MainViewProvider implements vscode.WebviewViewProvider {
 
     private hideModules = (html: string): string => {
 
-        // Angular Development
-        if (!AngularDevelopmentModule.show()) {
-            html = html
-                .replace(`<div class="collapsible" id="angular-collapsible">`, `<div class="collapsible" id="angular-collapsible" style="display: none;">`)
-                .replace(`<div class="btns-container" id="angular-btns-container">`, `<div class="btns-container" id="angular-btns-container" style="display: none;">`);
-        }
-
         // Angular Deploy
         if (!AngularDeployModule.show()) {
             html = html
@@ -123,15 +115,6 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         switch (message.command) {
-            case 'angular-serve':
-                AngularDevelopmentModule.serve.execute();
-                return;
-            case 'angular-build':
-                AngularDevelopmentModule.build.execute();
-                return;
-            case 'angular-build-watch':
-                AngularDevelopmentModule.buildWatch.execute();
-                return;
         }
     };
 }

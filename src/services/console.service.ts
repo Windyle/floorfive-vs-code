@@ -31,6 +31,26 @@ export class FFConsole {
         this._defaultLanguage = defaultLanguage;
     };
 
+    // Static methods
+
+    public static formatLinks = (text: string): string => {
+        // Replace every link with a <a> tag if it's not already in an <a> tag
+        const formattedText = text.replace(/(https?:\/\/[^\s<]+)/g, (match) => {
+            // Check if the match is already inside an <a> tag
+            if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
+                // Return the match as is if it's already in an <a> tag
+                return match;
+            } else {
+                // Wrap the match in an <a> tag
+                return `<a href="${match}" target="_blank">${match}</a>`;
+            }
+        });
+
+        return formattedText;
+    };
+
+    // Public methods
+
     public clear = () => {
         FFConsole.webviewRef?.postMessage({
             command: `clear-log`,
@@ -39,7 +59,7 @@ export class FFConsole {
         });
     };
 
-    public log = (message: string, language?: HighlightLanguages) => {
+    public log = (message: string, isCode: boolean = false, language?: HighlightLanguages) => {
 
         // Set default language
         language = language ? language : this._defaultLanguage;
@@ -48,6 +68,7 @@ export class FFConsole {
         FFConsole.webviewRef?.postMessage({
             command: `log-${this._categoryId}:${this._tabId}`,
             content: message,
+            isCode: isCode,
             language: language
         });
     };

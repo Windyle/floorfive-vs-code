@@ -3,24 +3,6 @@ import { ConsoleCategories } from "./console-categories";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ConsoleTabs: ConsoleTabsType = {
-    [ConsoleCategories.angularDevelopment]: {
-        serve: {
-            id: `serve`,
-            label: `Serve`,
-        },
-        build: {
-            id: `build`,
-            label: `Build`,
-        },
-        test: {
-            id: `test`,
-            label: `Test`,
-        },
-        buildWatch: {
-            id: `build-watch`,
-            label: `Build watch`,
-        },
-    },
     [ConsoleCategories.angularDeploy]: {
         deploy: {
             id: `deploy`,

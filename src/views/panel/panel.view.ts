@@ -6,8 +6,6 @@ import { HTML } from './panel.view.html';
 import { CSS } from './panel.view.css';
 import { JS } from './panel.view.script';
 import { FFConsole } from '../../services/console.service';
-import { ConsoleCategories } from '../../core/enums/console-categories';
-import { ConsoleTabs } from '../../core/enums/console-tabs';
 
 // View class
 export class PanelView {
@@ -92,6 +90,16 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         switch (message.command) {
+            case `format-links`:
+                const formattedText = FFConsole.formatLinks(message.text);
+
+                webview.postMessage({
+                    command: `format-links:response`,
+                    text: formattedText,
+                    activePanel: message.activePanel
+                });
+                break;
+                break;
         }
     };
 }

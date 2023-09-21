@@ -1,18 +1,11 @@
 import { ConsoleCategories } from "../../core/enums/console-categories";
 import { ConsoleTabs } from "../../core/enums/console-tabs";
-import { ANGULAR_DEVELOPMENT_LOG_SCRIPTS } from "./scripts/angular-development.log-scripts";
 
 const panels: string = `
 // ==== PANELS ====
 
-var activePanel = "${ConsoleCategories.angularDevelopment}:${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}";
+var activePanel = "${ConsoleCategories.angularDeploy}:${ConsoleTabs[ConsoleCategories.angularDeploy][`deploy`].id}";
 var panels = {
-    "${ConsoleCategories.angularDevelopment}": {
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "serve",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "build",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "test",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": "build watch"
-    },
     "${ConsoleCategories.angularDeploy}": {
         "${ConsoleTabs[ConsoleCategories.angularDeploy][`deploy`].id}": "deploy",
     },
@@ -39,7 +32,7 @@ const categories: string = `
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
-    btn.id === 'angular' ? btn.classList.add('active') : '';
+    btn.id === '${ConsoleCategories.angularDeploy}' ? btn.classList.add('active') : '';
 
     btn.addEventListener('click', () => {
         categoriesBtns.forEach(btn => btn.classList.remove('active'));
@@ -55,7 +48,7 @@ export const tabs: string = `
 
 var tabsList = ${JSON.stringify(ConsoleTabs)};
 
-function setTabs(categoryId = 'angular') {
+function setTabs(categoryId = '${ConsoleCategories.angularDeploy}') {
     var tabsBar = document.getElementById('tabs-bar');
 
     var categoryTabs = tabsList[categoryId];
@@ -116,10 +109,27 @@ clearConsoleBtn.addEventListener('click', function() {
 });
 `;
 
-const messageHandler: string = `
-// ==== MESSAGE HANDLER ====
+const formatLinks: string = `
+// ==== FORMAT LINKS ====
 
-function setActivePanelContent(categoryId, tabId) {
+function formatLinks() {
+
+    var consolePanel = document.getElementById('console-panel');
+    var consolePanelText = consolePanel.innerHTML;
+
+    vscode.postMessage({
+        command: 'format-links',
+        text: consolePanelText,
+        activePanel: activePanel
+    });
+
+}
+`;
+
+const setActivePanelContent: string = `
+// ==== SET ACTIVE PANEL CONTENT ====
+
+function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
     activePanel = \`\${categoryId}:\${tabId}\`;
 
     document.getElementById('console-panel').innerHTML = panels[categoryId][tabId];
@@ -136,7 +146,15 @@ function setActivePanelContent(categoryId, tabId) {
     }
 
     hljs.highlightAll();
+
+    if(execFormatLinks) {
+        formatLinks();
+    }
 }
+`;
+
+const messageHandler: string = `
+// ==== MESSAGE HANDLER ====
 
 window.addEventListener('message', event => {
 
@@ -150,8 +168,14 @@ window.addEventListener('message', event => {
                 setActivePanelContent(message.categoryId, message.tabId);
             }
             
-            break;
-        ${ANGULAR_DEVELOPMENT_LOG_SCRIPTS}
+        break;
+        case 'format-links:response':
+            panels[message.activePanel.split(':')[0]][message.activePanel.split(':')[1]] = message.text;
+
+            if(activePanel === message.activePanel) {
+                setActivePanelContent(message.activePanel.split(':')[0], message.activePanel.split(':')[1], false);
+            }
+        break;
     }
 });
 `;
@@ -170,6 +194,10 @@ ${tabs}
 ${sidebarCollapse}
 
 ${clearConsole}
+
+${formatLinks}
+
+${setActivePanelContent}
 
 ${messageHandler}
 `;
