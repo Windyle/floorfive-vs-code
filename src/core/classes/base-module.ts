@@ -9,6 +9,21 @@ export class BaseModule {
         this.label = label;
     }
 
+    // Public methods
+
+    public commandHandler = (commandId: string): void => {
+        const command = this.commands[commandId];
+        if (command) {
+            command.execute();
+        }
+    };
+
+    // Getters
+
+    public getCommandsArray(): any[] {
+        return Object.keys(this.commands).map((id: string) => this.commands[id]);
+    }
+
     public getId = (): string => {
         return this.id;
     };
@@ -18,6 +33,12 @@ export class BaseModule {
     };
 
     public getActionsHtml(): string {
+
+        if (Object.keys(this.commands).length === 0
+            || Object.keys(this.commands).every((id: string) => !this.commands[id].show())) {
+            return ``;
+        }
+
         return `
         <div class="collapsible">
             <h1>${this.getLabel()}</h1>

@@ -66,7 +66,7 @@ export class FFConsole {
 
         // Post message for the console
         FFConsole.webviewRef?.postMessage({
-            command: `log-${this._categoryId}:${this._tabId}`,
+            command: `${this._categoryId}:${this._tabId}:log`,
             content: message,
             isCode: isCode,
             language: language

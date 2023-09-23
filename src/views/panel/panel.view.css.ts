@@ -38,6 +38,7 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
+    text-transform: uppercase;
 }
 
 .container.collapsed .sidebar button {

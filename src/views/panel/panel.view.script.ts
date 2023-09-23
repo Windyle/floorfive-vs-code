@@ -1,55 +1,71 @@
-import { Modules } from "../../core/enums/console-categories";
-import { ConsoleTabs } from "../../core/enums/console-tabs";
-import { KBS6_LIB_LOG_SCRIPTS } from "./scripts/kbs6-lib.log-scripts";
+import { Modules } from "../../modules/_index";
 
-const panels: string = `
+export class PanelViewScript {
+
+    public static getScript = (): string => {
+
+        const firstModuleId: string = Object.keys(Modules.getModules())[0];
+        const firstModuleFirstCommandId: string = Object.keys(Modules.getModule(firstModuleId).commands)[0];
+
+        const panels: string = `
 // ==== PANELS ====
 
-var activePanel = "${Modules.angularDeploy}:${ConsoleTabs[Modules.angularDeploy][`deploy`].id}";
+var activePanel = "${Modules.getModule(firstModuleId)}:${firstModuleFirstCommandId}";
 var panels = {
-    "${Modules.angularDeploy}": {
-        "${ConsoleTabs[Modules.angularDeploy][`deploy`].id}": "deploy",
-    },
-    "${Modules.kbs6Lib}": {
-        "${ConsoleTabs[Modules.kbs6Lib][`installLatest`].id}": "install latest",
-        "${ConsoleTabs[Modules.kbs6Lib][`compareVersions`].id}": "compare versions",
-        "${ConsoleTabs[Modules.kbs6Lib][`publish`].id}": "publish",
-    },
-    "${Modules.lint}": {
-        "${ConsoleTabs[Modules.lint][`lint`].id}": "lint",
-    },
-    "${Modules.kbsMobile}": {
-        "${ConsoleTabs[Modules.kbsMobile][`setEnvironment`].id}": "set environment",
-        "${ConsoleTabs[Modules.kbsMobile][`incrementVersion`].id}": "increment version",
-        "${ConsoleTabs[Modules.kbsMobile][`configurationsRoutes`].id}": "configurations routes",
-        "${ConsoleTabs[Modules.kbsMobile][`entitiesPropertiesList`].id}": "entities properties list",
-        "${ConsoleTabs[Modules.kbsMobile][`globalVariables`].id}": "global variables",
-    }
+    ${Modules.getModulesArray().map((module: any) => {
+            if (module.show()) {
+                return `'${module.getId()}': {
+                    ${module.getCommandsArray().map((command: any) => {
+                    if (command.show()) {
+                        return `'${command.getId()}': ''`;
+                    }
+                }).join(',\n')}
+                }`;
+            }
+        }).join(',\n')
+            }
 };
 `;
 
-const categories: string = `
+        const categories: string = `
 // ==== CATEGORIES ====
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
-    btn.id === '${Modules.angularDeploy}' ? btn.classList.add('active') : '';
+    if(btn.id !== 'sidebar-collapse') {
+        btn.id === '${Modules.getModule(firstModuleId).getId()}' ? btn.classList.add('active') : '';
 
-    btn.addEventListener('click', () => {
-        categoriesBtns.forEach(btn => btn.classList.remove('active'));
-        btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            categoriesBtns.forEach(btn => btn.classList.remove('active'));
+            btn.classList.add('active');
 
-        setTabs(btn.id);
-    });
+            setTabs(btn.id);
+        });
+    }
 });
 `;
 
-export const tabs: string = `
+        const tabs: string = `
 // ==== TABS ====
 
-var tabsList = ${JSON.stringify(ConsoleTabs)};
+var tabsList = ${JSON.stringify(
+            Modules.getModulesArray().reduce((acc: any, module: any) => {
+                if (module.show()) {
+                    acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
+                        if (command.show()) {
+                            acc[command.getId()] = {
+                                id: command.getId(),
+                                label: command.getLabel()
+                            };
+                        }
+                        return acc;
+                    }, {});
+                }
+                return acc;
+            }, {})
+        )};
 
-function setTabs(categoryId = '${Modules.angularDeploy}') {
+function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
     var tabsBar = document.getElementById('tabs-bar');
 
     var categoryTabs = tabsList[categoryId];
@@ -84,7 +100,7 @@ function setTabs(categoryId = '${Modules.angularDeploy}') {
 setTabs();
 `;
 
-const sidebarCollapse: string = `
+        const sidebarCollapse: string = `
 // ==== SIDEBAR COLLAPSE ====
 
 var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
@@ -97,7 +113,7 @@ sidebarCollapseBtn.addEventListener('click', function() {
 });
 `;
 
-const clearConsole: string = `
+        const clearConsole: string = `
 // ==== CLEAR CONSOLE ====
 
 var clearConsoleBtn = document.getElementById('clear-console');
@@ -110,7 +126,7 @@ clearConsoleBtn.addEventListener('click', function() {
 });
 `;
 
-const formatLinks: string = `
+        const formatLinks: string = `
 // ==== FORMAT LINKS ====
 
 function formatLinks() {
@@ -127,7 +143,7 @@ function formatLinks() {
 }
 `;
 
-const setActivePanelContent: string = `
+        const setActivePanelContent: string = `
 // ==== SET ACTIVE PANEL CONTENT ====
 
 function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
@@ -154,7 +170,7 @@ function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
 }
 `;
 
-const messageHandler: string = `
+        const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
 window.addEventListener('message', event => {
@@ -177,12 +193,21 @@ window.addEventListener('message', event => {
                 setActivePanelContent(message.activePanel.split(':')[0], message.activePanel.split(':')[1], false);
             }
         break;
-        ${KBS6_LIB_LOG_SCRIPTS}
+        ${Modules.getModulesArray().map((module: any) => {
+            if (module.show()) {
+                return module.getCommandsArray().map((command: any) => {
+                    if (command.show()) {
+                        return command.getLogScript();
+                    }
+                }).join('\n');
+            }
+        }).join('\n')
+            }
     }
 });
 `;
 
-export const JS: string = `
+        return `
 var vscode = acquireVsCodeApi();
 
 hljs.highlightAll();
@@ -203,3 +228,6 @@ ${setActivePanelContent}
 
 ${messageHandler}
 `;
+
+    };
+}

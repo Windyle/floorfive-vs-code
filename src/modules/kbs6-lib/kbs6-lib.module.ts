@@ -18,6 +18,11 @@ export class Kbs6LibModule extends BaseModule implements Module {
     }
 
     public show(): boolean {
+        // If every command in the module is hidden, don't show the view
+        if (Object.keys(this.commands).every((id: string) => !this.commands[id].show())) {
+            return false;
+        }
+
         // If the root path contains an angular.json file, show the view
         if (fs.existsSync(path.join(Store.rootPath, 'angular.json'))) {
             return true;
