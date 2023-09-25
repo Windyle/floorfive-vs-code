@@ -17,43 +17,25 @@ export class CompareVersionCommand extends BaseCommand implements Command {
         return true;
     }
 
-    execute(): void {
-        console.log('Compare Version Command');
-    }
-
     getScript(): string {
         return `
 // => Compare Command
 
 document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
 
-    const iconTag = this.querySelector('icon');
-    const iconName = iconTag.getAttribute('name');
-
-    if(iconName === 'arrows-right-left') {
-        iconTag.setAttribute('name', 'square');
-        iconTag.innerHTML = icons['square'];
-        iconTag.querySelector('svg').classList.add('flip');
-        this.querySelector('label').innerHTML = 'Stop ${this.getLabel()}';
-    }
-    else {
-        iconTag.setAttribute('name', 'arrows-right-left');
-        iconTag.innerHTML = icons['arrows-right-left'];
-        iconTag.querySelector('svg').classList.remove('flip');
-        this.querySelector('label').innerHTML = '${this.getLabel()}';
-
-        this.classList.add('disabled');
-        setTimeout(() => {
-            this.classList.remove('disabled');
-        }, 1500);
-    }
+    setExecutingById(this, '${this.getIcon()}', '${this.getLabel()}');
     
     const message = {
-        command: '${this.getModule()}-${this.getId()}:execute'
+        command: '${this.getModule()}:${this.getId()}:execute'
     };
 
     vscode.postMessage(message);
 });
+
+${this.executing ? `
+        setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');
+    ` : ``
+            }
 
 // => End - Compare Command
         `;
@@ -61,8 +43,20 @@ document.getElementById("${this.getModule()}-${this.getId()}").addEventListener(
 
     getListenerScript(): string {
         return `
-case '${this.getModule()}-${this.getId()}:listener':
+case '${this.getModule()}:${this.getId()}:listener':
     break;
         `;
     };
+
+    // Execute region
+
+    execute(): void {
+        this.executing = !this.executing;
+        if (this.executing) {
+            console.log('compare version');
+        }
+        else {
+            console.log('Stop compare version');
+        }
+    }
 }

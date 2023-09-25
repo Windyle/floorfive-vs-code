@@ -74,7 +74,12 @@ class MainViewProvider implements vscode.WebviewViewProvider {
 
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
-        switch (message.command) {
+        if (message.command !== undefined && message.command !== null) {
+
+            if (message.command.endsWith(':execute')) {
+                const [moduleId, commandId] = message.command.split(':');
+                Modules.getModule(moduleId).commands[commandId].execute();
+            }
         }
     };
 }

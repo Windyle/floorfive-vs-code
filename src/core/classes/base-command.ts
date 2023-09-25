@@ -8,6 +8,7 @@ export class BaseCommand {
     private icon: string;
     private label: string;
     private withLoader: boolean;
+    public executing: boolean = false;
 
     protected console: FFConsole;
 
