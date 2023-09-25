@@ -32,6 +32,12 @@ export class FFConsole {
         this._defaultLanguage = defaultLanguage;
     };
 
+    // Getters
+
+    public getLog = (): string => {
+        return this._log;
+    };
+
     // Log Methods
 
     private _logMethods: { [method: string]: any } = {

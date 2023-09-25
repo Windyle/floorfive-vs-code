@@ -83,14 +83,14 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         switch (message.command) {
-            case `format-links`:
-                const formattedText = FFConsole.formatLinks(message.text);
-
+            case `set-active-panel`:
                 webview.postMessage({
-                    command: `format-links:response`,
-                    text: formattedText,
-                    activePanel: message.activePanel
+                    command: `set-active-panel:response`,
+                    content: Modules.getModule(message.moduleId).commands[message.commandId].getLogContent()
                 });
+                break;
+            case `clear-log`:
+                Modules.getModule(message.moduleId).commands[message.commandId].clearConsole();
                 break;
         }
     };
