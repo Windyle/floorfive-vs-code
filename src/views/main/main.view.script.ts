@@ -1,4 +1,4 @@
-import { Modules } from "../../modules/_index";
+import { Modules } from "../../modules/modules.index";
 
 export class MainViewScript {
 
@@ -25,6 +25,13 @@ export class MainViewScript {
                 }).join('\n');
             }
         });
+
+        const isExecutingListenerScript = `
+case '@is-executing:listener':
+    console.log('is-executing:listener', message);
+    setExecutingById(message.moduleId + '-' + message.commandId, message.icon, message.label);
+    break;
+        `;
 
         return `
 const vscode = acquireVsCodeApi();
@@ -54,11 +61,15 @@ function setExecuting(element, icon, label) {
     }
 }
 
-function setExecutingById(element, icon, label) {
-    var element = document.getElementById(element.id);
+function setExecutingById(id, icon, label) {
+    var element = document.getElementById(id);
 
     setExecuting(element, icon, label);
 }
+
+vscode.postMessage({
+    command: '@is-executing:check'
+});
 
 ${scripts}
 
@@ -69,6 +80,7 @@ window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
 
     switch (message.command) {
+        ${isExecutingListenerScript}
         ${listenersScripts}
     }
 });

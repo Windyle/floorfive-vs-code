@@ -23,7 +23,7 @@ export class CompareVersionCommand extends BaseCommand implements Command {
 
 document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
 
-    setExecutingById(this, '${this.getIcon()}', '${this.getLabel()}');
+    setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');
     
     const message = {
         command: '${this.getModule()}:${this.getId()}:execute'

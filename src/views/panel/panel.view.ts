@@ -4,7 +4,7 @@ import { IconsService } from '../../services/icons.service';
 import { ANIMATIONS_CSS } from '../_animations';
 import { CSS } from './panel.view.css';
 import { HTML } from './panel.view.html';
-import { Modules } from '../../modules/_index';
+import { Modules } from '../../modules/modules.index';
 import { PanelViewScript } from './panel.view.script';
 
 // View class

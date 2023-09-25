@@ -1,4 +1,4 @@
-import { Modules } from "../../modules/_index";
+import { Modules } from "../../modules/modules.index";
 
 export class PanelViewScript {
 
