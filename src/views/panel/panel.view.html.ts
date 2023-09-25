@@ -22,11 +22,7 @@ export const HTML: string = `<!DOCTYPE html>
 
     <aside class="sidebar" id="categories-bar">
 
-      <button id="angular">Angular Development</button>
-      <button id="angular-deploy">Angular Deploy</button>
-      <button id="kbs6-lib">KBS6 Lib</button>
-      <button id="lint">Lint</button>
-      <button id="kbs-mobile">KBS Mobile</button>
+      {{categoriesButtons}}
 
       <button id="sidebar-collapse"><icon name="chevron-left"></icon></button>
 
@@ -42,9 +38,9 @@ export const HTML: string = `<!DOCTYPE html>
         <button id="open-console"><icon name="external-link"></icon></button>
       </div>
 
-      <pre class="section hljs" id="console-panel">
+      <div class="section hljs" id="console-panel">
         <!-- <code class="language-bash" id="console-panel"></code> -->
-      </pre>
+      </div>
 
     </main>
 

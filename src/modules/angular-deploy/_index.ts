@@ -8,7 +8,7 @@ export class AngularDeployModule {
         Store.rootPath;
 
         // If the root path contains an angular.json file, show the view
-        if (fs.existsSync(path.join(Store.rootPath, 'angular.json'))) {
+        if (fs.existsSync(path.join(Store.rootPath, `angular.json`))) {
             return true;
         }
 

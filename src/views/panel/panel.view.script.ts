@@ -1,61 +1,71 @@
-import { ConsoleCategories } from "../../core/enums/console-categories";
-import { ConsoleTabs } from "../../core/enums/console-tabs";
-import { ANGULAR_DEVELOPMENT_LOG_SCRIPTS } from "./scripts/angular-development.log-scripts";
+import { Modules } from "../../modules/modules.index";
 
-const panels: string = `
+export class PanelViewScript {
+
+    public static getScript = (): string => {
+
+        const firstModuleId: string = Object.keys(Modules.getModules())[0];
+        const firstModuleFirstCommandId: string = Object.keys(Modules.getModule(firstModuleId).commands)[0];
+
+        const panels: string = `
 // ==== PANELS ====
 
-var activePanel = "${ConsoleCategories.angularDevelopment}:${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}";
+var activePanel = "${Modules.getModule(firstModuleId)}:${firstModuleFirstCommandId}";
 var panels = {
-    "${ConsoleCategories.angularDevelopment}": {
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`serve`].id}": "serve",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`build`].id}": "build",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`test`].id}": "test",
-        "${ConsoleTabs[ConsoleCategories.angularDevelopment][`buildWatch`].id}": "build watch"
-    },
-    "${ConsoleCategories.angularDeploy}": {
-        "${ConsoleTabs[ConsoleCategories.angularDeploy][`deploy`].id}": "deploy",
-    },
-    "${ConsoleCategories.kbs6Lib}": {
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`installLatest`].id}": "install latest",
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`compareVersions`].id}": "compare versions",
-        "${ConsoleTabs[ConsoleCategories.kbs6Lib][`publish`].id}": "publish",
-    },
-    "${ConsoleCategories.lint}": {
-        "${ConsoleTabs[ConsoleCategories.lint][`lint`].id}": "lint",
-    },
-    "${ConsoleCategories.kbsMobile}": {
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`setEnvironment`].id}": "set environment",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`incrementVersion`].id}": "increment version",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`configurationsRoutes`].id}": "configurations routes",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`entitiesPropertiesList`].id}": "entities properties list",
-        "${ConsoleTabs[ConsoleCategories.kbsMobile][`globalVariables`].id}": "global variables",
-    }
+    ${Modules.getModulesArray().map((module: any) => {
+            if (module.show()) {
+                return `'${module.getId()}': {
+                    ${module.getCommandsArray().map((command: any) => {
+                    if (command.show()) {
+                        return `'${command.getId()}': ''`;
+                    }
+                }).join(`,\n`)}
+                }`;
+            }
+        }).join(`,\n`)
+            }
 };
 `;
 
-const categories: string = `
+        const categories: string = `
 // ==== CATEGORIES ====
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
-    btn.id === 'angular' ? btn.classList.add('active') : '';
+    if(btn.id !== 'sidebar-collapse') {
+        btn.id === '${Modules.getModule(firstModuleId).getId()}' ? btn.classList.add('active') : '';
 
-    btn.addEventListener('click', () => {
-        categoriesBtns.forEach(btn => btn.classList.remove('active'));
-        btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            categoriesBtns.forEach(btn => btn.classList.remove('active'));
+            btn.classList.add('active');
 
-        setTabs(btn.id);
-    });
+            setTabs(btn.id);
+        });
+    }
 });
 `;
 
-export const tabs: string = `
+        const tabs: string = `
 // ==== TABS ====
 
-var tabsList = ${JSON.stringify(ConsoleTabs)};
+var tabsList = ${JSON.stringify(
+            Modules.getModulesArray().reduce((acc: any, module: any) => {
+                if (module.show()) {
+                    acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
+                        if (command.show()) {
+                            acc[command.getId()] = {
+                                id: command.getId(),
+                                label: command.getLabel()
+                            };
+                        }
+                        return acc;
+                    }, {});
+                }
+                return acc;
+            }, {})
+        )};
 
-function setTabs(categoryId = 'angular') {
+function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
     var tabsBar = document.getElementById('tabs-bar');
 
     var categoryTabs = tabsList[categoryId];
@@ -90,7 +100,7 @@ function setTabs(categoryId = 'angular') {
 setTabs();
 `;
 
-const sidebarCollapse: string = `
+        const sidebarCollapse: string = `
 // ==== SIDEBAR COLLAPSE ====
 
 var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
@@ -103,7 +113,7 @@ sidebarCollapseBtn.addEventListener('click', function() {
 });
 `;
 
-const clearConsole: string = `
+        const clearConsole: string = `
 // ==== CLEAR CONSOLE ====
 
 var clearConsoleBtn = document.getElementById('clear-console');
@@ -116,10 +126,27 @@ clearConsoleBtn.addEventListener('click', function() {
 });
 `;
 
-const messageHandler: string = `
-// ==== MESSAGE HANDLER ====
+        const formatLinks: string = `
+// ==== FORMAT LINKS ====
 
-function setActivePanelContent(categoryId, tabId) {
+function formatLinks() {
+
+    var consolePanel = document.getElementById('console-panel');
+    var consolePanelText = consolePanel.innerHTML;
+
+    vscode.postMessage({
+        command: 'format-links',
+        text: consolePanelText,
+        activePanel: activePanel
+    });
+
+}
+`;
+
+        const setActivePanelContent: string = `
+// ==== SET ACTIVE PANEL CONTENT ====
+
+function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
     activePanel = \`\${categoryId}:\${tabId}\`;
 
     document.getElementById('console-panel').innerHTML = panels[categoryId][tabId];
@@ -136,7 +163,15 @@ function setActivePanelContent(categoryId, tabId) {
     }
 
     hljs.highlightAll();
+
+    if(execFormatLinks) {
+        formatLinks();
+    }
 }
+`;
+
+        const messageHandler: string = `
+// ==== MESSAGE HANDLER ====
 
 window.addEventListener('message', event => {
 
@@ -150,13 +185,29 @@ window.addEventListener('message', event => {
                 setActivePanelContent(message.categoryId, message.tabId);
             }
             
-            break;
-        ${ANGULAR_DEVELOPMENT_LOG_SCRIPTS}
+        break;
+        case 'format-links:response':
+            panels[message.activePanel.split(':')[0]][message.activePanel.split(':')[1]] = message.text;
+
+            if(activePanel === message.activePanel) {
+                setActivePanelContent(message.activePanel.split(':')[0], message.activePanel.split(':')[1], false);
+            }
+        break;
+        ${Modules.getModulesArray().map((module: any) => {
+            if (module.show()) {
+                return module.getCommandsArray().map((command: any) => {
+                    if (command.show()) {
+                        return command.getLogScript();
+                    }
+                }).join(`\n`);
+            }
+        }).join(`\n`)
+            }
     }
 });
 `;
 
-export const JS: string = `
+        return `
 var vscode = acquireVsCodeApi();
 
 hljs.highlightAll();
@@ -171,5 +222,12 @@ ${sidebarCollapse}
 
 ${clearConsole}
 
+${formatLinks}
+
+${setActivePanelContent}
+
 ${messageHandler}
 `;
+
+    };
+}

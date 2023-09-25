@@ -1,22 +1,21 @@
-import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { ANIMATIONS_CSS } from '../_animations';
-import { ICONS, ICONS_SCRIPT } from '../_icons';
-import { HTML } from './panel.view.html';
-import { CSS } from './panel.view.css';
-import { JS } from './panel.view.script';
 import { FFConsole } from '../../services/console.service';
-import { ConsoleCategories } from '../../core/enums/console-categories';
-import { ConsoleTabs } from '../../core/enums/console-tabs';
+import { IconsService } from '../../services/icons.service';
+import { ANIMATIONS_CSS } from '../_animations';
+import { CSS } from './panel.view.css';
+import { HTML } from './panel.view.html';
+import { Modules } from '../../modules/modules.index';
+import { PanelViewScript } from './panel.view.script';
+import { Store } from '../../store';
 
 // View class
 export class PanelView {
 
-    private static readonly viewType = 'floorfive-vs-code-panel.webview';
+    private static readonly viewType = `floorfive-vs-code-panel.webview`;
 
     public static activate = (context: vscode.ExtensionContext) => {
         // Create a new webview panel
-        const panel = vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
+        vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
     };
 
 }
@@ -25,8 +24,7 @@ export class PanelView {
 class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private extensionUri: vscode.Uri;
-    private iconsPaths: { [key: string]: vscode.Uri } = {};
-    private iconsScript: string = '';
+    private iconsScript: string = ``;
 
     constructor(
         private readonly context: vscode.ExtensionContext
@@ -34,30 +32,23 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         // Get path to resource on disk
         this.extensionUri = context.extensionUri;
 
-        // Get icons paths
-        for (const icon of ICONS) {
-            this.iconsPaths[icon] = vscode.Uri.joinPath(this.extensionUri, 'assets', 'icons', `${icon}.svg`);
-        }
     }
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
 
         // Register Console webview reference
         FFConsole.webviewRef = webviewView.webview;
+        Store.panelViewWebview = webviewView.webview;
 
         // Replace icons variables
-        this.iconsScript = ICONS_SCRIPT;
-        for (const key of Object.keys(this.iconsPaths)) {
-            const icon = fs.readFileSync(this.iconsPaths[key].fsPath, 'utf8');
-            this.iconsScript = this.iconsScript.replace(`{{${this.formatIconName(key)}Icon}}`, icon);
-        }
+        this.iconsScript = IconsService.getIconsScript(this.context);
 
         // Set the webview's initial html content
-        webviewView.webview.html = this.prepareTemplate(HTML);
+        webviewView.webview.html = this.replaceTemplateVariables(HTML);
 
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'assets')]
+            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, `assets`)]
         };
 
         // Handle messages from the webview
@@ -70,31 +61,37 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         );
     }
 
-    private formatIconName = (iconName: string): string => {
-        // From 'check-circle' to 'checkCircle'
-        return iconName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-    };
-
-    private prepareTemplate = (html: string): string => {
-        html = this.replaceTemplateVariables(html);
-        return html;
-    };
-
     private replaceTemplateVariables = (html: string): string => {
 
         return html
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
-            .replace(/(?<!')\{\{js\}\}(?!')/g, JS)
+            .replace(/(?<!')\{\{categoriesButtons\}\}(?!')/g, this.getCategoriesButtons())
+            .replace(/(?<!')\{\{js\}\}(?!')/g, PanelViewScript.getScript())
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
+    };
+
+    private getCategoriesButtons = (): string => {
+        return Object.keys(Modules.getModules()).map((id: any) => {
+            const module = Modules.getModule(id);
+            if (module.show()) {
+                return `<button class="category-button" id="${module.getId()}">${module.getLabel()}</button>`;
+            }
+        }).join(`\n`);
     };
 
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         switch (message.command) {
+            case `format-links`:
+                const formattedText = FFConsole.formatLinks(message.text);
+
+                webview.postMessage({
+                    command: `format-links:response`,
+                    text: formattedText,
+                    activePanel: message.activePanel
+                });
+                break;
         }
     };
 }
-
-export { JS };
-

@@ -8,7 +8,7 @@ export class KbsMobileModule {
         Store.rootPath;
 
         // If the root path contains an angular.json file, show the view
-        if (fs.existsSync(path.join(Store.rootPath, 'angular.json')) && fs.existsSync(path.join(Store.rootPath, 'capacitor.config.ts'))) {
+        if (fs.existsSync(path.join(Store.rootPath, `angular.json`)) && fs.existsSync(path.join(Store.rootPath, `capacitor.config.ts`))) {
             return true;
         }
 

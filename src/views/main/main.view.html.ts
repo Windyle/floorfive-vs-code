@@ -17,64 +17,7 @@ export const HTML: string = `<!DOCTYPE html>
 
   <div class="container">
 
-    <div class="collapsible" id="angular-collapsible">
-      <h1>Angular Development</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container" id="angular-btns-container">
-      <button class="command-button icon-button" id="angular-serve"><icon name="play"></icon> <label>Serve</label></button>
-      <button class="command-button icon-button" id="angular-test"><icon name="check-circle"></icon> <label>Test</label></button>
-      <button class="command-button icon-button" id="angular-build"><icon name="package"></icon> <label>Build</label></button>
-      <button class="command-button icon-button" id="angular-build-watch"><icon name="eye"></icon> <label>Build Watch</label></button>
-    </div>
-
-    <div class="collapsible" id="angular-deploy-collapsible">
-      <h1>Angular Deploy</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container" id="angular-deploy-btns-container">
-      <button class="command-button" id="angular-deploy">Deploy</button>
-    </div>
-
-    <div class="collapsible" id="kbs6-lib-collapsible">
-      <h1>KBS6 Lib</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container" id="kbs6-lib-btns-container">
-      <button class="command-button" id="kbs6-lib-install">Install Latest</button>
-      <button class="command-button" id="kbs6-lib-compare">Compare Version</button>
-      <button class="command-button" id="kbs6-lib-publish">Publish</button>
-    </div>
-
-    <div class="collapsible">
-      <h1>Lint</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container">
-      <h2>Full Project</h2>
-      <button class="command-button" id="lint-full-project">Lint</button>
-      <button class="command-button" id="lint-full-project-fix">Fix</button>
-
-      <h2>Staged Files</h2>
-      <button class="command-button" id="lint-staged-files">Lint</button>
-      <button class="command-button" id="lint-staged-files-fix">Fix</button>
-
-      <h2>Current File</h2>
-      <button class="command-button" id="lint-current-file">Lint</button>
-      <button class="command-button" id="lint-current-file-fix">Fix</button>
-    </div>
-
-    <div class="collapsible" id="kbs-mobile-collapsible">
-      <h1>KBS Mobile</h1>
-      <div class="chevron-arrow"></div>
-    </div>
-    <div class="btns-container" id="kbs-mobile-btns-container">
-      <button class="command-button" id="dev-kbs6-mobile-set-env">Set Environment</button>
-      <button class="command-button" id="dev-kbs6-mobile-increment-version">Increment Version</button>
-      <button class="command-button" class="btn-span-2" id="dev-kbs6-mobile-configurations-routes">Configurations Routes</button>
-      <button class="command-button" class="btn-span-2" id="dev-kbs6-mobile-entities-properties-list">Entities Properties List</button>
-      <button class="command-button" id="dev-kbs6-mobile-global-variables">Global Variables</button>
-    </div>
+    {{actionsHtml}}
 
     <div class="collapsible settings">
       <icon name="settings"></icon>

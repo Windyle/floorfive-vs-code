@@ -27,7 +27,7 @@ export class PackageJson {
         }
     };
 
-    public static getDependencies = (): any => {
+    public static getDependencies = (): { [dependency: string]: string } | undefined => {
         const packageJson = PackageJson.getPackageJson();
 
         if (packageJson) {
