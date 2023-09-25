@@ -102,6 +102,12 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
                     vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(message.path));
                 }
                 break;
+            case `show-info`:
+                vscode.window.showInformationMessage(message.content);
+                break;
+            case `show-simple-error`:
+                vscode.window.showErrorMessage(message.content);
+                break;
         }
     };
 }

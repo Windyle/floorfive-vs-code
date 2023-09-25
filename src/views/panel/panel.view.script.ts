@@ -158,6 +158,28 @@ function openLocalLink(path) {
 }
         `;
 
+        const copyConsole: string = `
+// ==== COPY CONSOLE ====
+
+document.getElementById('copy-console').addEventListener('click', () => {
+
+    const text = document.getElementById('console-panel').innerText;
+
+    navigator.clipboard.writeText(text).then(() => {
+        vscode.postMessage({
+            command: "show-info",
+            content: "Copied to clipboard!"
+        });
+    }, () => {
+        vscode.postMessage({
+            command: "show-simple-error",
+            content: "Failed to copy to clipboard!"
+        });
+    });
+
+});
+        `;
+
         const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
@@ -201,6 +223,8 @@ ${clearConsole}
 ${setActivePanel}
 
 ${openLocalLink}
+
+${copyConsole}
 
 ${messageHandler}
 `;

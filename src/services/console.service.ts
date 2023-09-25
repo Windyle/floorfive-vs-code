@@ -77,7 +77,7 @@ export class FFConsole {
             return `<span style="color: var(--vscode-terminal-ansiGreen)">${match}</span>`;
         });
 
-        return `<pre style="display: flex;">${formattedMessage}</pre>`;
+        return `<pre>${formattedMessage}</pre>`;
     };
 
     private formatLinks = (text: string): string => {

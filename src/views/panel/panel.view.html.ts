@@ -35,7 +35,6 @@ export const HTML: string = `<!DOCTYPE html>
       <div class="panel-buttons">
         <button id="clear-console"><icon name="x-circle"></icon></button>
         <button id="copy-console"><icon name="copy"></icon></button>
-        <button id="open-console"><icon name="external-link"></icon></button>
       </div>
 
       <div class="section hljs" id="console-panel">
