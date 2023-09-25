@@ -5,6 +5,7 @@ import { ANIMATIONS_CSS } from '../_animations';
 import { CSS } from './main.view.css';
 import { HTML } from './main.view.html';
 import { MainViewScript } from './main.view.script';
+import { Store } from '../../store';
 
 // View class
 export class MainView {
@@ -31,6 +32,8 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     }
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
+
+        Store.mainViewWebview = webviewView.webview;
 
         this.iconsScript = IconsService.getIconsScript(this.context);
 

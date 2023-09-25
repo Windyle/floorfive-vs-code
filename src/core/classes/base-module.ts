@@ -2,7 +2,9 @@ export class BaseModule {
 
     private id: string;
     private label: string;
+
     public commands: { [id: string]: any } = {};
+
 
     constructor(id: string, label: string) {
         this.id = id;

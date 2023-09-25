@@ -1,0 +1,1 @@
+export type ConsoleType = `plain` | `code` | `console-command`;

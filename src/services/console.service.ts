@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 
 import { HighlightLanguages } from "../core/enums/highlight-languages";
+import { ConsoleType } from "../core/types/console-type";
 
 export class ConsoleInstantiator {
 
@@ -59,7 +60,7 @@ export class FFConsole {
         });
     };
 
-    public log = (message: string, isCode: boolean = false, language?: HighlightLanguages) => {
+    public log = (message: string, type: ConsoleType = `plain`, language?: HighlightLanguages) => {
 
         // Set default language
         language = language ? language : this._defaultLanguage;
@@ -68,7 +69,7 @@ export class FFConsole {
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,
             content: message,
-            isCode: isCode,
+            isCode: type === `code` ? true : false,
             language: language
         });
     };

@@ -6,6 +6,7 @@ import { CSS } from './panel.view.css';
 import { HTML } from './panel.view.html';
 import { Modules } from '../../modules/modules.index';
 import { PanelViewScript } from './panel.view.script';
+import { Store } from '../../store';
 
 // View class
 export class PanelView {
@@ -37,6 +38,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
         // Register Console webview reference
         FFConsole.webviewRef = webviewView.webview;
+        Store.panelViewWebview = webviewView.webview;
 
         // Replace icons variables
         this.iconsScript = IconsService.getIconsScript(this.context);

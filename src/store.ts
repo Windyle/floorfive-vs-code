@@ -9,4 +9,7 @@ export class Store {
 
         return '';
     }
+
+    public static mainViewWebview: vscode.Webview | undefined;
+    public static panelViewWebview: vscode.Webview | undefined;
 }
