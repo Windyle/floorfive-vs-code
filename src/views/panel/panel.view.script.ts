@@ -147,6 +147,17 @@ function setActivePanelContent(content) {
 setActivePanel('${Modules.getModule(firstModuleId).getId()}', '${firstModuleFirstCommandId}');
 `;
 
+        const openLocalLink: string = `
+// ==== OPEN LOCAL LINK ====
+
+function openLocalLink(path) {
+    vscode.postMessage({
+        command: "open-local-link",
+        path: path
+    });
+}
+        `;
+
         const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
@@ -188,6 +199,8 @@ ${sidebarCollapse}
 ${clearConsole}
 
 ${setActivePanel}
+
+${openLocalLink}
 
 ${messageHandler}
 `;

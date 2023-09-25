@@ -80,11 +80,9 @@ export class FFConsole {
         return `<pre style="display: flex;">${formattedMessage}</pre>`;
     };
 
-    // Static methods
-
-    public static formatLinks = (text: string): string => {
-        // Replace every link with a <a> tag if it's not already in an <a> tag
-        const formattedText = text.replace(/(https?:\/\/[^\s<]+)/g, (match) => {
+    private formatLinks = (text: string): string => {
+        // Replace every http or https link with a <a> tag if it's not already in an <a> tag
+        let formattedText = text.replace(/(https?:\/\/[^\s<]+)/g, (match) => {
             // Check if the match is already inside an <a> tag
             if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
                 // Return the match as is if it's already in an <a> tag
@@ -92,6 +90,20 @@ export class FFConsole {
             } else {
                 // Wrap the match in an <a> tag
                 return `<a href="${match}" target="_blank">${match}</a>`;
+            }
+        });
+
+        // Replace every local directory with a <a> tag if it's not already in an <a> tag
+        // To recognize a local directory, it must start with a slash preceded by a space or with a letter followed by a colon
+        // and it must not contain any spaces
+        formattedText = formattedText.replace(/((?:\s|^)[a-zA-Z]:[^\s<]+|(?:\s|^)\/[^\s<]+)/g, (match) => {
+            // Check if the match is already inside an <a> tag
+            if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
+                // Return the match as is if it's already in an <a> tag
+                return match;
+            } else {
+                // Wrap the match in an <a> tag
+                return ` <a href="file://${match.trim()}" onclick="openLocalLink('${match.trim()}')">${match.trim()}</a>`;
             }
         });
 
@@ -119,7 +131,7 @@ export class FFConsole {
         // Post message for the console
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,
-            content: this._log += this._logMethods[type](message, language)
+            content: this._log += this.formatLinks(this._logMethods[type](message, language))
         });
     };
 }

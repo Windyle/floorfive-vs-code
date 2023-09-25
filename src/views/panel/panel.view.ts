@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'node:fs';
 import { FFConsole } from '../../services/console.service';
 import { IconsService } from '../../services/icons.service';
 import { ANIMATIONS_CSS } from '../_animations';
@@ -91,6 +92,15 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
                 break;
             case `clear-log`:
                 Modules.getModule(message.moduleId).commands[message.commandId].clearConsole();
+                break;
+            case `open-local-link`:
+                // Check if the path is a directory or a file
+                if (fs.lstatSync(message.path).isDirectory()) {
+                    // Open the directory in file explorer
+                    vscode.commands.executeCommand(`revealFileInOS`, vscode.Uri.file(message.path));
+                } else {
+                    vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(message.path));
+                }
                 break;
         }
     };
