@@ -57,7 +57,7 @@ export class BaseModule {
                     return `<button class="command-button" id="${this.getId()}-${command.getId()}">${command.getLabel()}</button>`;
                 }
             }
-        }).join('\n')
+        }).join(`\n`)
             }
         </div>
         `;

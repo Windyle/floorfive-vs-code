@@ -38,9 +38,9 @@ export const HTML: string = `<!DOCTYPE html>
         <button id="open-console"><icon name="external-link"></icon></button>
       </div>
 
-      <pre class="section hljs" id="console-panel">
+      <div class="section hljs" id="console-panel">
         <!-- <code class="language-bash" id="console-panel"></code> -->
-      </pre>
+      </div>
 
     </main>
 

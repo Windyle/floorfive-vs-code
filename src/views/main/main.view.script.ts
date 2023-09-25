@@ -11,7 +11,7 @@ export class MainViewScript {
                     if (command.show()) {
                         return command.getScript();
                     }
-                }).join('\n');
+                }).join(`\n`);
             }
         });
 
@@ -22,7 +22,7 @@ export class MainViewScript {
                     if (command.show()) {
                         return command.getListenerScript();
                     }
-                }).join('\n');
+                }).join(`\n`);
             }
         });
 

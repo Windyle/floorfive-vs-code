@@ -19,10 +19,10 @@ var panels = {
                     if (command.show()) {
                         return `'${command.getId()}': ''`;
                     }
-                }).join(',\n')}
+                }).join(`,\n`)}
                 }`;
             }
-        }).join(',\n')
+        }).join(`,\n`)
             }
 };
 `;
@@ -199,9 +199,9 @@ window.addEventListener('message', event => {
                     if (command.show()) {
                         return command.getLogScript();
                     }
-                }).join('\n');
+                }).join(`\n`);
             }
-        }).join('\n')
+        }).join(`\n`)
             }
     }
 });

@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { UtilitiesService } from "./utilities.service";
-import { ICONS } from '../icons';
+import { Store } from '../store';
 
 export class IconsService {
 
-    private static readonly iconsList: string[] = ICONS;
+    private static readonly iconsList: string[] = Store.icons;
 
     public static getIconsScript = (context: vscode.ExtensionContext): string => {
 
@@ -15,7 +15,7 @@ export class IconsService {
         // Get icons paths
         const iconsPaths: { [key: string]: vscode.Uri } = {};
         for (const icon of this.iconsList) {
-            iconsPaths[icon] = vscode.Uri.joinPath(extensionUri, 'assets', 'icons', `${icon}.svg`);
+            iconsPaths[icon] = vscode.Uri.joinPath(extensionUri, `assets`, `icons`, `${icon}.svg`);
         }
 
         let iconsScript = `
@@ -39,7 +39,7 @@ iconTags.forEach(function(iconTag) {
 });`;
 
         for (const key of Object.keys(iconsPaths)) {
-            const icon = fs.readFileSync(iconsPaths[key].fsPath, 'utf8');
+            const icon = fs.readFileSync(iconsPaths[key].fsPath, `utf8`);
             iconsScript = iconsScript.replace(`{{${UtilitiesService.snakeToCamel(key)}Icon}}`, icon);
         }
 

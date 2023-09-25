@@ -10,7 +10,7 @@ import { Store } from '../../store';
 // View class
 export class MainView {
 
-    private static readonly viewType = 'floorfive-vs-code.webview';
+    private static readonly viewType = `floorfive-vs-code.webview`;
 
     public static activate = (context: vscode.ExtensionContext) => {
         // Create a new webview panel
@@ -23,7 +23,7 @@ export class MainView {
 class MainViewProvider implements vscode.WebviewViewProvider {
 
     private readonly extensionUri: vscode.Uri;
-    private iconsScript: string = '';
+    private iconsScript: string = ``;
 
     constructor(
         private readonly context: vscode.ExtensionContext
@@ -42,7 +42,7 @@ class MainViewProvider implements vscode.WebviewViewProvider {
 
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'assets')]
+            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, `assets`)]
         };
 
         // Handle messages from the webview
@@ -72,26 +72,26 @@ class MainViewProvider implements vscode.WebviewViewProvider {
             modulesHtml.push(Modules.getModule(id).getActionsHtml());
         });
 
-        return modulesHtml.join('\n');
+        return modulesHtml.join(`\n`);
     };
 
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         if (message.command !== undefined && message.command !== null) {
 
-            if (message.command.endsWith(':execute')) {
-                const [moduleId, commandId] = message.command.split(':');
+            if (message.command.endsWith(`:execute`)) {
+                const [moduleId, commandId] = message.command.split(`:`);
                 Modules.getModule(moduleId).commands[commandId].execute();
             }
             else {
                 switch (message.command) {
-                    case '@is-executing:check':
+                    case `@is-executing:check`:
                         Modules.getModulesArray().forEach((module: any) => {
                             Object.keys(module.commands).forEach((commandId: string) => {
                                 const command = module.commands[commandId];
                                 if (command.executing) {
                                     webview.postMessage({
-                                        command: '@is-executing:listener',
+                                        command: `@is-executing:listener`,
                                         moduleId: module.id,
                                         commandId: command.id,
                                         icon: command.icon,

@@ -58,7 +58,7 @@ export class BaseCommand {
         return `
 // ==> Compare
 case '${this.getModule()}:${this.getId()}:log':
-    panels["${this.getModule()}"]["${this.getId()}"] += '<code class="language-' + message.language + '">' + message.content + '</code>';
+    panels["${this.getModule()}"]["${this.getId()}"] = message.content;
 
     if (activePanel === '${this.getModule()}:${this.getId()}') {
         setActivePanelContent('${this.getModule()}', '${this.getId()}');

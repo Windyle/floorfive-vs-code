@@ -11,7 +11,7 @@ import { Store } from '../../store';
 // View class
 export class PanelView {
 
-    private static readonly viewType = 'floorfive-vs-code-panel.webview';
+    private static readonly viewType = `floorfive-vs-code-panel.webview`;
 
     public static activate = (context: vscode.ExtensionContext) => {
         // Create a new webview panel
@@ -24,7 +24,7 @@ export class PanelView {
 class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private extensionUri: vscode.Uri;
-    private iconsScript: string = '';
+    private iconsScript: string = ``;
 
     constructor(
         private readonly context: vscode.ExtensionContext
@@ -48,7 +48,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'assets')]
+            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, `assets`)]
         };
 
         // Handle messages from the webview
@@ -77,7 +77,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             if (module.show()) {
                 return `<button class="category-button" id="${module.getId()}">${module.getLabel()}</button>`;
             }
-        }).join('\n');
+        }).join(`\n`);
     };
 
     private messageHandler = (webview: vscode.Webview, message: any) => {

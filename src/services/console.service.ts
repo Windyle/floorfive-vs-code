@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
 import { HighlightLanguages } from "../core/enums/highlight-languages";
-import { ConsoleType } from "../core/types/console-type";
 
 export class ConsoleInstantiator {
 
@@ -24,12 +23,55 @@ export class FFConsole {
     private _categoryId: string;
     private _tabId: string;
     private _defaultLanguage: HighlightLanguages;
+    private _log: string = ``;
     public static webviewRef: vscode.Webview | undefined;
 
     constructor(categoryId: string, tabId: string, defaultLanguage: HighlightLanguages) {
         this._categoryId = categoryId;
         this._tabId = tabId;
         this._defaultLanguage = defaultLanguage;
+    };
+
+    // Log Methods
+
+    private _logMethods: { [method: string]: any } = {
+        plain: (message: string): string => {
+            return `<pre>${message}</pre>`;
+        },
+        code: (message: string, language?: HighlightLanguages): string => {
+            language = language ? language : this._defaultLanguage;
+            return `<pre><code class="language-${language}">${message}</code></pre>`;
+        },
+        consoleCommand: (message: string): string => {
+            return this.consoleCommandFormat(message);
+        },
+        error: (message: string): string => {
+            return `<pre style="color: var(--vscode-terminal-ansiRed);">${message}</pre>`;
+        },
+        success: (message: string): string => {
+            return `<pre style="color: var(--vscode-terminal-ansiGreen);">${message}</pre>`;
+        },
+    };
+
+    public addLogMethod = (type: string, method: (message: string, config?: {}) => string) => {
+        this._logMethods[type] = method;
+    };
+
+    // Format Methods
+
+    private consoleCommandFormat = (message: string): string => {
+
+        // Highlight parameters (es: --depth=0 => --depth and 0 are highlighted)
+        let formattedMessage = message.replace(/(--[a-zA-Z0-9-]+)=([a-zA-Z0-9-]+)/g, (match, p1, p2) => {
+            return `<span style="color: var(--vscode-terminal-ansiYellow)">${p1}</span>=<span style="color: var(--vscode-terminal-ansiGreen)">${p2}</span>`;
+        });
+
+        // Highlight the command
+        formattedMessage = formattedMessage.replace(/(npm\s[a-zA-Z0-9-]+)/g, (match) => {
+            return `<span style="color: var(--vscode-terminal-ansiGreen)">${match}</span>`;
+        });
+
+        return `<pre style="display: flex;">${formattedMessage}</pre>`;
     };
 
     // Static methods
@@ -53,24 +95,25 @@ export class FFConsole {
     // Public methods
 
     public clear = () => {
-        FFConsole.webviewRef?.postMessage({
-            command: `clear-log`,
-            categoryId: this._categoryId,
-            tabId: this._tabId
-        });
-    };
-
-    public log = (message: string, type: ConsoleType = `plain`, language?: HighlightLanguages) => {
-
-        // Set default language
-        language = language ? language : this._defaultLanguage;
+        this._log = ``;
 
         // Post message for the console
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,
-            content: message,
-            isCode: type === `code` ? true : false,
-            language: language
+            content: this._log
+        });
+    };
+
+    public log = (message: string, type: string = `plain`, language?: HighlightLanguages) => {
+
+        if (!Object.keys(this._logMethods).includes(type)) {
+            type = `plain`;
+        }
+
+        // Post message for the console
+        FFConsole.webviewRef?.postMessage({
+            command: `${this._categoryId}:${this._tabId}:log`,
+            content: this._log += this._logMethods[type](message, language)
         });
     };
 }
