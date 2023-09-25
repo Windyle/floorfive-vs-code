@@ -88,21 +88,22 @@ case '${this.getModule()}:${this.getId()}:listener':
 
     execute(): void {
 
-        if (PackageJson.getDependencies() === undefined || !Object.keys(PackageJson.getDependencies()!).includes(`@kbs6/kbs-lib`)) {
-            this.console.clear();
-            this.console.log(`KBS6 Lib is not installed.`, `error`);
+        // if (PackageJson.getDependencies() === undefined || !Object.keys(PackageJson.getDependencies()!).includes(`@kbs6/kbs-lib`)) {
+        //     this.console.clear();
+        //     this.console.log(`KBS6 Lib is not installed.`, `error`);
 
-            Store.mainViewWebview!.postMessage({
-                command: `${this.getModule()}:${this.getId()}:listener`
-            });
+        //     Store.mainViewWebview!.postMessage({
+        //         command: `${this.getModule()}:${this.getId()}:listener`
+        //     });
 
-            return;
-        }
+        //     return;
+        // }
 
         this.executing = !this.executing;
         if (this.executing) {
 
-            const command = `npm outdated @kbs6/kbs-lib`;
+            // const command = `npm outdated @kbs6/kbs-lib`;
+            const command = `npm outdated ionicons`;
 
             this.console.clear();
             this.console.log(command, `consoleCommand`);
