@@ -7,24 +7,10 @@ export class PanelViewScript {
         const firstModuleId: string = Object.keys(Modules.getModules())[0];
         const firstModuleFirstCommandId: string = Object.keys(Modules.getModule(firstModuleId).commands)[0];
 
-        const panels: string = `
-// ==== PANELS ====
+        const activePanel: string = `
+// ==== ACTIVE PANEL ====
 
 var activePanel = "${Modules.getModule(firstModuleId)}:${firstModuleFirstCommandId}";
-var panels = {
-    ${Modules.getModulesArray().map((module: any) => {
-            if (module.show()) {
-                return `'${module.getId()}': {
-                    ${module.getCommandsArray().map((command: any) => {
-                    if (command.show()) {
-                        return `'${command.getId()}': ''`;
-                    }
-                }).join(`,\n`)}
-                }`;
-            }
-        }).join(`,\n`)
-            }
-};
 `;
 
         const categories: string = `
@@ -76,7 +62,7 @@ function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
         
         // Set first tab as active
         if(tab === Object.keys(categoryTabs)[0]) {
-            setActivePanelContent(categoryId, categoryTabs[tab].id);
+            setActivePanel(categoryId, categoryTabs[tab].id);
             firstTab = true;
         }
 
@@ -92,7 +78,7 @@ function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
             tabs.forEach(tab => tab.classList.remove('active'));
             tab.classList.add('active');
 
-            setActivePanelContent(categoryId, tab.getAttribute('name'));
+            setActivePanel(categoryId, tab.getAttribute('name'));
         });
     });
 }
@@ -119,37 +105,29 @@ sidebarCollapseBtn.addEventListener('click', function() {
 var clearConsoleBtn = document.getElementById('clear-console');
 
 clearConsoleBtn.addEventListener('click', function() {
-    // Clear active panel content
-    panels[activePanel.split(':')[0]][activePanel.split(':')[1]] = '';
-
-    setActivePanelContent(activePanel.split(':')[0], activePanel.split(':')[1]);
+    vscode.postMessage({
+        command: 'clear-log',
+        moduleId: activePanel.split(':')[0],
+        commandId: activePanel.split(':')[1]
+    });
 });
 `;
 
-        const formatLinks: string = `
-// ==== FORMAT LINKS ====
-
-function formatLinks() {
-
-    var consolePanel = document.getElementById('console-panel');
-    var consolePanelText = consolePanel.innerHTML;
-
-    vscode.postMessage({
-        command: 'format-links',
-        text: consolePanelText,
-        activePanel: activePanel
-    });
-
-}
-`;
-
-        const setActivePanelContent: string = `
+        const setActivePanel: string = `
 // ==== SET ACTIVE PANEL CONTENT ====
 
-function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
+function setActivePanel(categoryId, tabId) {
     activePanel = \`\${categoryId}:\${tabId}\`;
 
-    document.getElementById('console-panel').innerHTML = panels[categoryId][tabId];
+    vscode.postMessage({
+        command: "set-active-panel",
+        moduleId: categoryId,
+        commandId: tabId
+    });
+}
+
+function setActivePanelContent(content) {
+    document.getElementById('console-panel').innerHTML = content;
 
     // Scroll to bottom if the scroll is already at the bottom (or close to it) or if no scroll is active
     var consolePanel = document.getElementById('console-panel');
@@ -163,12 +141,22 @@ function setActivePanelContent(categoryId, tabId, execFormatLinks = true) {
     }
 
     hljs.highlightAll();
-
-    if(execFormatLinks) {
-        formatLinks();
-    }
 }
+
+// Set active panel on load (first module, first command)
+setActivePanel('${Modules.getModule(firstModuleId).getId()}', '${firstModuleFirstCommandId}');
 `;
+
+        const openLocalLink: string = `
+// ==== OPEN LOCAL LINK ====
+
+function openLocalLink(path) {
+    vscode.postMessage({
+        command: "open-local-link",
+        path: path
+    });
+}
+        `;
 
         const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
@@ -178,21 +166,9 @@ window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
 
     switch (message.command) {
-        case 'clear-log':
-            panels[message.categoryId][message.tabId] = '';
-            
-            if(activePanel === \`\${message.categoryId}:\${message.tabId}\`) {
-                setActivePanelContent(message.categoryId, message.tabId);
-            }
-            
-        break;
-        case 'format-links:response':
-            panels[message.activePanel.split(':')[0]][message.activePanel.split(':')[1]] = message.text;
-
-            if(activePanel === message.activePanel) {
-                setActivePanelContent(message.activePanel.split(':')[0], message.activePanel.split(':')[1], false);
-            }
-        break;
+        case 'set-active-panel:response':
+            setActivePanelContent(message.content);
+            break;
         ${Modules.getModulesArray().map((module: any) => {
             if (module.show()) {
                 return module.getCommandsArray().map((command: any) => {
@@ -212,7 +188,7 @@ var vscode = acquireVsCodeApi();
 
 hljs.highlightAll();
 
-${panels}
+${activePanel}
 
 ${categories}
 
@@ -222,9 +198,9 @@ ${sidebarCollapse}
 
 ${clearConsole}
 
-${formatLinks}
+${setActivePanel}
 
-${setActivePanelContent}
+${openLocalLink}
 
 ${messageHandler}
 `;

@@ -54,14 +54,20 @@ export class BaseCommand {
         return this.withLoader;
     };
 
+    public clearConsole = (): void => {
+        this.console.clear();
+    };
+
+    public getLogContent = (): string => {
+        return this.console.getLog();
+    }
+
     getLogScript(): string {
         return `
 // ==> Compare
 case '${this.getModule()}:${this.getId()}:log':
-    panels["${this.getModule()}"]["${this.getId()}"] = message.content;
-
     if (activePanel === '${this.getModule()}:${this.getId()}') {
-        setActivePanelContent('${this.getModule()}', '${this.getId()}');
+        setActivePanelContent(message.content);
     }
 break;
         `;

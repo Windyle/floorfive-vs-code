@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'node:fs';
 import { FFConsole } from '../../services/console.service';
 import { IconsService } from '../../services/icons.service';
 import { ANIMATIONS_CSS } from '../_animations';
@@ -83,14 +84,23 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
     private messageHandler = (webview: vscode.Webview, message: any) => {
 
         switch (message.command) {
-            case `format-links`:
-                const formattedText = FFConsole.formatLinks(message.text);
-
+            case `set-active-panel`:
                 webview.postMessage({
-                    command: `format-links:response`,
-                    text: formattedText,
-                    activePanel: message.activePanel
+                    command: `set-active-panel:response`,
+                    content: Modules.getModule(message.moduleId).commands[message.commandId].getLogContent()
                 });
+                break;
+            case `clear-log`:
+                Modules.getModule(message.moduleId).commands[message.commandId].clearConsole();
+                break;
+            case `open-local-link`:
+                // Check if the path is a directory or a file
+                if (fs.lstatSync(message.path).isDirectory()) {
+                    // Open the directory in file explorer
+                    vscode.commands.executeCommand(`revealFileInOS`, vscode.Uri.file(message.path));
+                } else {
+                    vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(message.path));
+                }
                 break;
         }
     };

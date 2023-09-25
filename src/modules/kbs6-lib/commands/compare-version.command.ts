@@ -89,6 +89,7 @@ case '${this.getModule()}:${this.getId()}:listener':
     execute(): void {
 
         if (PackageJson.getDependencies() === undefined || !Object.keys(PackageJson.getDependencies()!).includes(`@kbs6/kbs-lib`)) {
+            this.console.clear();
             this.console.log(`KBS6 Lib is not installed.`, `error`);
 
             Store.mainViewWebview!.postMessage({
