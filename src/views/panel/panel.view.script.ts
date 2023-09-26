@@ -1,10 +1,15 @@
 import { Modules } from "../../modules/modules.index";
 
+/**
+ * Represents the main script part for the panel view webview.
+ */
 export class PanelViewScript {
 
-    public static getScript = (): string => {
-
-        const categories: string = `
+    /**
+     * Categories buttons event listeners initialization for switching between categories.
+     * The categories are generated dynamically based on the modules.
+     */
+    private categories: string = `
 // ==== CATEGORIES ====
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
@@ -18,27 +23,33 @@ categoriesBtns.forEach(btn => {
         });
     }
 });
-`;
+    `;
 
-        const tabs: string = `
+    /**
+     * Tabs event listeners initialization for switching between tabs of a given category.
+     * The tabs are generated dynamically based on the commands of the modules.
+     */
+    private tabs: string = `
 // ==== TABS ====
 
 var tabsList = ${JSON.stringify(
-            Modules.getModulesArray().reduce((acc: any, module: any) => {
-                if (module.show()) {
-                    acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
-                        if (command.show()) {
-                            acc[command.getId()] = {
-                                id: command.getId(),
-                                label: command.getLabel()
-                            };
-                        }
-                        return acc;
-                    }, {});
-                }
-                return acc;
-            }, {})
-        )};
+        Modules.getModulesArray().reduce((acc: any, module: any) => {
+            if (module.show()) {
+                acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
+                    if (command.show()) {
+                        acc[command.getId()] = {
+                            id: command.getId(),
+                            label: command.getLabel()
+                        };
+                    }
+                    return acc;
+                }, {});
+            }
+            return acc;
+        }, {})
+    )};
+
+console.log(tabsList);
 
 var tabs;
 
@@ -67,7 +78,10 @@ function setTabs(categoryId = '') {
 }
 `;
 
-        const sidebarCollapse: string = `
+    /**
+     * Sidebar collapse button event listener initialization for collapsing the sidebar containing the categories buttons.
+     */
+    private sidebarCollapse: string = `
 // ==== SIDEBAR COLLAPSE ====
 
 var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
@@ -80,7 +94,10 @@ sidebarCollapseBtn.addEventListener('click', function() {
 });
 `;
 
-        const clearConsole: string = `
+    /**
+     * Clear console button event listener initialization for clearing the console panel manually.
+     */
+    private clearConsole: string = `
 // ==== CLEAR CONSOLE ====
 
 var clearConsoleBtn = document.getElementById('clear-console');
@@ -94,7 +111,11 @@ clearConsoleBtn.addEventListener('click', function() {
 });
 `;
 
-        const setActivePanel: string = `
+    /**
+     * Set active panel function for setting the active panel content and the active panel id.
+     * Also, it sends a first message on load to get the active panel id from the view.
+     */
+    private setActivePanel: string = `
 // ==== SET ACTIVE PANEL CONTENT ====
 
 function setActivePanel(categoryId, tabId) {
@@ -133,7 +154,10 @@ function getActivePanelFromView() {
 getActivePanelFromView();
 `;
 
-        const goToActivePanel: string = `
+    /**
+     * Go to active panel function for switching between panels programmatically.
+     */
+    private goToActivePanel: string = `
 // ==== GO TO ACTIVE PANEL ====
 
 function goToActivePanel(moduleId, commandId) {
@@ -158,7 +182,10 @@ function goToActivePanel(moduleId, commandId) {
 }
         `;
 
-        const openLocalLink: string = `
+    /**
+     * Open local link function for sending a message to the extension to open a local link in the editor.
+     */
+    private openLocalLink: string = `
 // ==== OPEN LOCAL LINK ====
 
 function openLocalLink(path) {
@@ -169,7 +196,10 @@ function openLocalLink(path) {
 }
         `;
 
-        const copyConsole: string = `
+    /**
+     * Copy console button event listener initialization for copying the console panel content to the clipboard.
+     */
+    private copyConsole: string = `
 // ==== COPY CONSOLE ====
 
 document.getElementById('copy-console').addEventListener('click', () => {
@@ -191,7 +221,10 @@ document.getElementById('copy-console').addEventListener('click', () => {
 });
         `;
 
-        const setOutputPanelTheme: string = `
+    /**
+     * Set output panel theme function for setting the stylesheet of the output panel.
+     */
+    private setOutputPanelTheme: string = `
 // ==== SET OUTPUT PANEL THEME ====
 
 function setOutputPanelTheme(theme) {
@@ -208,7 +241,10 @@ function getCurrentTheme() {
 getCurrentTheme();
         `;
 
-        const messageHandler: string = `
+    /**
+     * Message handler for handling messages from the extension to the view.
+     */
+    private messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
 window.addEventListener('message', event => {
@@ -226,45 +262,48 @@ window.addEventListener('message', event => {
             setOutputPanelTheme(message.theme);
             break;
         ${Modules.getModulesArray().map((module: any) => {
-            if (module.show()) {
-                return module.getCommandsArray().map((command: any) => {
-                    if (command.show()) {
-                        return command.getLogScript();
-                    }
-                }).join(`\n`);
-            }
-        }).join(`\n`)
-            }
+        if (module.show()) {
+            return module.getCommandsArray().map((command: any) => {
+                if (command.show()) {
+                    return command.getLogScript();
+                }
+            }).join(`\n`);
+        }
+    }).join(`\n`)
+        }
     }
 });
 `;
 
+    /**
+     * Get the script for the panel view.
+     */
+    public getScript = (): string => {
         return `
 var vscode = acquireVsCodeApi();
 var activePanel = '';
 
 hljs.highlightAll();
 
-${categories}
+${this.categories}
 
-${tabs}
+${this.tabs}
 
-${sidebarCollapse}
+${this.sidebarCollapse}
 
-${clearConsole}
+${this.clearConsole}
 
-${setActivePanel}
+${this.setActivePanel}
 
-${goToActivePanel}
+${this.goToActivePanel}
 
-${openLocalLink}
+${this.openLocalLink}
 
-${copyConsole}
+${this.copyConsole}
 
-${setOutputPanelTheme}
+${this.setOutputPanelTheme}
 
-${messageHandler}
+${this.messageHandler}
 `;
-
     };
 }

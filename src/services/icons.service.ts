@@ -3,10 +3,18 @@ import * as fs from 'fs';
 import { UtilitiesService } from "./utilities.service";
 import { Store } from '../store';
 
+/**
+ * Icons Service - manages the icons of the extension for the templates.
+ */
 export class IconsService {
 
     private static readonly iconsList: string[] = Store.icons;
 
+    /**
+     * Gets the icons script by generating the template variables from local icons.
+     * @param {vscode.ExtensionContext} context - The extension context.
+     * @returns {string} The icons script.
+     */
     public static getIconsScript = (context: vscode.ExtensionContext): string => {
 
         // Get path to resource on disk
@@ -38,6 +46,7 @@ iconTags.forEach(function(iconTag) {
     iconTag.innerHTML = icons[iconTag.getAttribute('name')];
 });`;
 
+        // Replace template variables with icons actual svg tags, read from files
         for (const key of Object.keys(iconsPaths)) {
             const icon = fs.readFileSync(iconsPaths[key].fsPath, `utf8`);
             iconsScript = iconsScript.replace(`{{${UtilitiesService.snakeToCamel(key)}Icon}}`, icon);

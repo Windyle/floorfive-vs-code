@@ -1,43 +1,56 @@
 import { Modules } from "../../modules/modules.index";
 
+/**
+ * Represents the main script part for the panel view webview.
+ */
 export class MainViewScript {
 
-    public static getScript = (): string => {
+    /**
+     * Retrieve commands front end execution scripts for each module.
+     */
+    private commandsScripts: string = Modules.getModulesArray().map((module: any) => {
+        if (module.show()) {
+            return Object.keys(module.commands).map((commandId: string) => {
+                const command = module.commands[commandId];
+                if (command.show()) {
+                    return command.getScript();
+                }
+            }).join(`\n`);
+        }
+    }).join(`\n`);
 
-        const scripts = Modules.getModulesArray().map((module: any) => {
-            if (module.show()) {
-                return Object.keys(module.commands).map((commandId: string) => {
-                    const command = module.commands[commandId];
-                    if (command.show()) {
-                        return command.getScript();
-                    }
-                }).join(`\n`);
-            }
-        }).join(`\n`);
+    /**
+     * Retrieve commands front end listeners scripts for each module.
+     */
+    private commandsListenersScripts: string = Modules.getModulesArray().map((module: any) => {
+        if (module.show()) {
+            return Object.keys(module.commands).map((commandId: string) => {
+                const command = module.commands[commandId];
+                if (command.show()) {
+                    return command.getListenerScript();
+                }
+            }).join(`\n`);
+        }
+    }).join(`\n`);
 
-        const listenersScripts = Modules.getModulesArray().map((module: any) => {
-            if (module.show()) {
-                return Object.keys(module.commands).map((commandId: string) => {
-                    const command = module.commands[commandId];
-                    if (command.show()) {
-                        return command.getListenerScript();
-                    }
-                }).join(`\n`);
-            }
-        }).join(`\n`);
-
-        const isExecutingListenerScript = `
+    /**
+     * Listener for the core is-executing:listener command.
+     */
+    private isExecutingListener: string = `
 case '@is-executing:listener':
     console.log('is-executing:listener', message);
     setExecutingById(message.moduleId + '-' + message.commandId, message.icon, message.label);
     break;
         `;
 
-        const modalScript = `
+    /**
+     * Modal management script.
+     * Show, dismiss and execute modal actions.
+     */
+    private modal: string = `
 // ==== MODAL ====
 
 var canDismissModal = true;
-
 
 var modal = document.getElementById("modal");
 var modalOverlay = document.getElementById("modal-overlay");
@@ -86,21 +99,25 @@ function dismissModal() {
 }
         `;
 
-        const modalListenerScript = `
-        case 'show-modal':
-            showModal(message.title, message.content, message.actions, message.canDismiss);
-            break;
-        case 'dismiss-modal':
-            dismissModal();
-            break;
+    /**
+     * Listener for the core @show-modal and @dismiss-modal commands, used for interacting with the modal from outside the webview.
+     */
+    private modalListener: string = `
+case '@show-modal':
+    showModal(message.title, message.content, message.actions, message.canDismiss);
+    break;
+case '@dismiss-modal':
+    dismissModal();
+    break;
         `;
 
-        return `
-const vscode = acquireVsCodeApi();
+    /**
+     * Modules collapsible sections management script.
+     * Used for collapsing and expanding the sections to show or hide the commands.
+     */
+    private collapsible: string = `
+// ==== COLLAPSIBLE ====
 
-// ==== SCRIPTS ====
-
-// Collapsible
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
@@ -126,6 +143,13 @@ for (i = 0; i < coll.length; i++) {
 
     });
 }
+        `;
+
+    /**
+     * Manage execution state of commands that can have a loading state.
+     */
+    private setExecuting: string = `
+// ==== SET EXECUTING ====
 
 function setExecuting(element, icon, label) {
     const iconTag = element.querySelector('icon');
@@ -163,10 +187,24 @@ function stopExecutingById(id, icon, label) {
 vscode.postMessage({
     command: '@is-executing:check'
 });
+        `;
 
-${scripts}
+    /**
+     * Generate the script for the main view webview.
+     * @returns {string} The script.
+     */
+    public getScript = (): string => {
 
-${modalScript}
+        return `
+const vscode = acquireVsCodeApi();
+
+${this.collapsible}
+
+${this.setExecuting}
+
+${this.commandsScripts}
+
+${this.modal}
 
 // ==== MESSAGE HANDLER ====
 
@@ -175,9 +213,9 @@ window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
 
     switch (message.command) {
-        ${isExecutingListenerScript}
-        ${modalListenerScript}
-        ${listenersScripts}
+        ${this.isExecutingListener}
+        ${this.modalListener}
+        ${this.commandsListenersScripts}
     }
 });
             `;

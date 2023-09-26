@@ -29,7 +29,7 @@ export class CompareVersionCommand extends BaseCommand implements Command {
         );
 
         // Custom Console Format Method
-        this.console.addLogMethod(`npm-outdated`, (message: string, config?: {}): string => {
+        this.console.addLogType(`npm-outdated`, (message: string): string => {
 
             const lines = message.split(`\n`);
             let output = `<pre>${lines[0]}`;
@@ -144,9 +144,6 @@ export class CompareVersionCommand extends BaseCommand implements Command {
         }
     }
 
-    /**
-     * Stops the execution of the command and resets state.
-     */
     private stopExecuting() {
         this.isOutdated = false;
         this.executing = false;

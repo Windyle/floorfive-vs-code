@@ -61,10 +61,6 @@ export class OpenNpmrcCommand extends BaseCommand implements Command {
         this.openFile(npmrcPath);
     }
 
-    /**
-     * Opens a file in the VS Code editor.
-     * @param {string} path - The path of the file to open.
-     */
     private openFile(path: string): void {
         vscode.workspace.openTextDocument(path).then((doc) => {
             vscode.window.showTextDocument(doc);

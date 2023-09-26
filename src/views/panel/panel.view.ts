@@ -21,7 +21,7 @@ export class PanelView {
      * Activates the panel view.
      * @param {vscode.ExtensionContext} context - The extension context.
      */
-    public static activate = (context: vscode.ExtensionContext) => {
+    public static activate(context: vscode.ExtensionContext) {
         // Create a new webview panel
         vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
     };
@@ -35,14 +35,15 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
     private extensionUri: vscode.Uri;
     private iconsScript: string = ``;
     private activePanel: string = ``;
-    private messageHandlerService: PanelViewMessageHandler = new PanelViewMessageHandler();
 
     /**
      * Creates an instance of PanelViewProvider.
      * @param {vscode.ExtensionContext} context - The extension context.
      */
     constructor(
-        private readonly context: vscode.ExtensionContext
+        private readonly context: vscode.ExtensionContext,
+        private panelViewScript: PanelViewScript = new PanelViewScript(),
+        private messageHandlerService: PanelViewMessageHandler = new PanelViewMessageHandler()
     ) {
         // Get path to resource on disk
         this.extensionUri = context.extensionUri;
@@ -90,7 +91,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      * @param {string} html - The HTML content.
      * @returns {string} The HTML content with replaced variables.
      */
-    private replaceTemplateVariables = (html: string): string => {
+    private replaceTemplateVariables(html: string): string {
         const outputPanelThemeConfiguration = vscode.workspace.getConfiguration().get(`floorfive-vs-code.output-panel-theme`) as string ?? `github-dark`;
 
         return html
@@ -98,7 +99,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
             .replace(/(?<!')\{\{categoriesButtons\}\}(?!')/g, this.getCategoriesButtons())
-            .replace(/(?<!')\{\{js\}\}(?!')/g, PanelViewScript.getScript())
+            .replace(/(?<!')\{\{js\}\}(?!')/g, this.panelViewScript.getScript())
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
     };
 
@@ -106,7 +107,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      * Retrieves the category buttons for the view.
      * @returns {string} The category buttons HTML.
      */
-    private getCategoriesButtons = (): string => {
+    private getCategoriesButtons(): string {
         return Object.keys(Modules.getModules()).map((id: any) => {
             const module = Modules.getModule(id);
             if (module.showInPanel()) {
@@ -120,7 +121,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      * @param {vscode.Webview} webview - The webview.
      * @param {any} message - The received message.
      */
-    private messageHandler = (webview: vscode.Webview, message: any) => {
+    private messageHandler(webview: vscode.Webview, message: any) {
         switch (message.command) {
             case `set-active-panel`:
                 this.activePanel = this.messageHandlerService.setActivePanel(webview, message.moduleId, message.commandId);

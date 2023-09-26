@@ -5,6 +5,9 @@ import { Command } from "../../../core/types/command";
 import { Store } from "../../../store";
 import { Kbs6LibModule } from "../kbs6-lib.module";
 
+/**
+ * Represents the InstallLatestVersionCommand class responsible for installing the latest version of the KBS6 Lib.
+ */
 export class InstallLatestVersionCommand extends BaseCommand implements Command {
 
     public showOnCommandPalette: boolean = false;
@@ -19,25 +22,34 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
             `Install Latest Version`,
             true
         );
-
     }
 
+    /**
+     * Determines whether to show the command.
+     * @returns {boolean} True if the command should be shown; otherwise, false.
+     */
     show(): boolean {
         return !Kbs6LibModule.isKbs6LibWorkspace();
     }
 
+    /**
+     * Determines whether to show the command in a panel.
+     * @returns {boolean} True if the command should be shown in a panel; otherwise, false.
+     */
     showInPanel(): boolean {
         return this.show();
     }
 
     // Execute region
 
+    /**
+     * Executes the command.
+     */
     execute(): void {
         this.openLogPanel();
 
         this.executing = !this.executing;
         if (this.executing) {
-
             const command = `npm install @kbs6/kbs-lib@latest`;
 
             this.console.clear();
@@ -65,21 +77,16 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
                     this.postInstall();
                 }
             });
-        }
-        else {
-
+        } else {
             if (this.process) {
                 this.process.kill();
-
                 this.console.log(`Process killed.`);
-
                 this.stopExecuting();
             }
         }
     }
 
     private postInstall() {
-
         try {
             // Move everything from the @kbs6/kbs-lib/assets/images/ged-fileicon folder to the project assets/images/ged-fileicon folder
             const source = `${Store.rootPath}/node_modules/@kbs6/kbs-lib/assets/images/ged-fileicon`;
@@ -104,13 +111,12 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
 
             this.console.log(`Files copied successfully.`, `success`);
             this.console.log(`Installation completed successfully.`, `success`);
-        }
-        catch (error) {
+        } catch (error) {
             this.console.log((error as Error).message, `error`);
         }
 
         this.stopExecuting();
-    };
+    }
 
     private stopExecuting() {
         this.executing = false;

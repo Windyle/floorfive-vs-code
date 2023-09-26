@@ -2,22 +2,42 @@ import * as vscode from "vscode";
 
 import { HighlightLanguages } from "../core/enums/highlight-languages";
 
+/**
+ * Instantiator class for the extension's custom console class.
+ * It's used to get a different instance of the console for each command.
+ */
 export class ConsoleInstantiator {
 
     public static instances = new Map<string, FFConsole>();
 
-    public static instantiate = (categoryId: string, tabId: string, defaultLanguage: HighlightLanguages = HighlightLanguages.plaintext) => {
-        const instance = new FFConsole(categoryId, tabId, defaultLanguage);
-        ConsoleInstantiator.instances.set(`${categoryId}:${tabId}`, instance);
+    /**
+     * Instantiate a new console instance for the command.
+     * @param moduleId The module ID of the command.
+     * @param commandId The command ID.
+     * @param defaultLanguage (optional) The default language for the code highlight.
+     * @returns {FFConsole} The new console instance.
+     */
+    public static instantiate = (moduleId: string, commandId: string, defaultLanguage: HighlightLanguages = HighlightLanguages.plaintext): FFConsole => {
+        const instance = new FFConsole(moduleId, commandId, defaultLanguage);
+        ConsoleInstantiator.instances.set(`${moduleId}:${commandId}`, instance);
 
         return instance;
     };
 
-    public static getInstance = (categoryId: string, tabId: string): FFConsole | undefined => {
-        return ConsoleInstantiator.instances.get(`${categoryId}:${tabId}`);
+    /**
+     * Get the console instance for the command.
+     * @param moduleId The module ID of the command.
+     * @param commandId The command ID.
+     * @returns {FFConsole} The console instance.
+     */
+    public static getInstance = (moduleId: string, commandId: string): FFConsole | undefined => {
+        return ConsoleInstantiator.instances.get(`${moduleId}:${commandId}`);
     };
 }
 
+/**
+ * Custom console class for the extension's custom output panel.
+ */
 export class FFConsole {
 
     private _categoryId: string;
@@ -26,21 +46,30 @@ export class FFConsole {
     private _log: string = ``;
     public static webviewRef: vscode.Webview | undefined;
 
-    constructor(categoryId: string, tabId: string, defaultLanguage: HighlightLanguages) {
-        this._categoryId = categoryId;
-        this._tabId = tabId;
+    /**
+     * Creates a new instance of the FFConsole class.
+     * @param moduleId The module ID of the command.
+     * @param commandId The command ID.
+     * @param defaultLanguage The default language for the code highlight.
+     */
+    constructor(moduleId: string, commandId: string, defaultLanguage: HighlightLanguages) {
+        this._categoryId = moduleId;
+        this._tabId = commandId;
         this._defaultLanguage = defaultLanguage;
     };
 
-    // Getters
-
+    /**
+     * Get the persisted log for the command.
+     * @returns {string} The persisted log.
+     */
     public getLog = (): string => {
         return this._log;
     };
 
-    // Log Methods
-
-    private _logMethods: { [method: string]: any } = {
+    /**
+     * Different message formats for the console, used by the log method.
+     */
+    private _logTypes: { [method: string]: any } = {
         plain: (message: string): string => {
             return `<pre>${message}</pre>`;
         },
@@ -65,12 +94,20 @@ export class FFConsole {
         },
     };
 
-    public addLogMethod = (type: string, method: (message: string, config?: {}) => string) => {
-        this._logMethods[type] = method;
+    /**
+     * Add a new log type to the console, used by the commands for easy customization.
+     * @param typeName the name of the type to reference it in the log method.
+     * @param type A function that returns the formatted message. It receives the message and an optional args object containing possible extra information.
+     */
+    public addLogType = (typeName: string, type: (message: string, args?: {}) => string) => {
+        this._logTypes[typeName] = type;
     };
 
-    // Format Methods
-
+    /**
+     * Custom method to stylize strings declared as console commands (es: npm install)
+     * @param message The message to format.
+     * @returns {string} The formatted message.
+     */
     private consoleCommandFormat = (message: string): string => {
 
         // Highlight parameters (es: --depth=0 => --depth and 0 are highlighted)
@@ -86,29 +123,26 @@ export class FFConsole {
         return `<pre>${formattedMessage}</pre>`;
     };
 
+    /**
+     * Format links in the message to be clickable.
+     * @param text The message to format.
+     * @returns {string} The formatted message.
+     */
     private formatLinks = (text: string): string => {
         // Replace every http or https link with a <a> tag if it's not already in an <a> tag
         let formattedText = text.replace(/(https?:\/\/[^\s<]+)/g, (match) => {
-            // Check if the match is already inside an <a> tag
             if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
-                // Return the match as is if it's already in an <a> tag
                 return match;
             } else {
-                // Wrap the match in an <a> tag
                 return `<a href="${match}" target="_blank">${match}</a>`;
             }
         });
 
         // Replace every local directory with a <a> tag if it's not already in an <a> tag
-        // To recognize a local directory, it must start with a slash preceded by a space or with a letter followed by a colon
-        // and it must not contain any spaces
         formattedText = formattedText.replace(/((?:\s|^)[a-zA-Z]:[^\s<]+|(?:\s|^)\/[^\s<]+)/g, (match) => {
-            // Check if the match is already inside an <a> tag
             if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
-                // Return the match as is if it's already in an <a> tag
                 return match;
             } else {
-                // Wrap the match in an <a> tag
                 return ` <a href="file://${match.trim()}" onclick="openLocalLink('${match.trim()}')">${match.trim()}</a>`;
             }
         });
@@ -116,8 +150,9 @@ export class FFConsole {
         return formattedText;
     };
 
-    // Public methods
-
+    /**
+     * Clear the console.
+     */
     public clear = () => {
         this._log = ``;
 
@@ -128,16 +163,20 @@ export class FFConsole {
         });
     };
 
+    /**
+     * Log a message to the console.
+     * @param message The message to log.
+     * @param type The type of the message (plain, code, consoleCommand, alert, error, success, step...).
+     * @param language The language for the code highlight.
+     */
     public log = (message: string, type: string = `plain`, language?: HighlightLanguages) => {
-
-        if (!Object.keys(this._logMethods).includes(type)) {
+        if (!Object.keys(this._logTypes).includes(type)) {
             type = `plain`;
         }
 
-        // Post message for the console
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,
-            content: this._log += this.formatLinks(this._logMethods[type](message, language))
+            content: this._log += this.formatLinks(this._logTypes[type](message, language))
         });
     };
 }

@@ -99,10 +99,6 @@ export class OutputPanelThemeCommand extends BaseCommand implements Command {
 
     // Custom methods
 
-    /**
-     * Updates the output panel with the selected theme.
-     * @param theme - The theme to apply to the output panel.
-     */
     private updateOutputPanel = (theme: string) => {
         Store.panelViewWebview?.postMessage({
             command: "update-output-panel-theme",

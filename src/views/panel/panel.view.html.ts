@@ -1,57 +1,63 @@
-export const HTML: string = `<!DOCTYPE html>
+export const HTML: string = `
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>KBS6 Dev</title>
+    <meta charset="UTF-8">
+    <title>KBS6 Dev</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/{{outputPanelTheme}}.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/{{outputPanelTheme}}.min.css">
 
-  <style>
-    {{css}}
-  </style>
-  <style>
-    {{animationsCss}}
-  </style>
+    <!-- JavaScript Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        {{css}}
+    </style>
+
+    <!-- Animations CSS -->
+    <style>
+        {{animationsCss}}
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <aside class="sidebar" id="categories-bar">
+            <!-- Category Buttons -->
+            {{categoriesButtons}}
 
-  <div class="container">
+            <!-- Sidebar Collapse Button -->
+            <button id="sidebar-collapse"><icon name="chevron-left"></icon></button>
+        </aside>
 
-    <aside class="sidebar" id="categories-bar">
+        <main class="main">
+            <header class="header" id="tabs-bar"></header>
 
-      {{categoriesButtons}}
+            <!-- Panel Buttons -->
+            <div class="panel-buttons">
+                <button id="clear-console"><icon name="x-circle"></icon></button>
+                <button id="copy-console"><icon name="copy"></icon></button>
+            </div>
 
-      <button id="sidebar-collapse"><icon name="chevron-left"></icon></button>
+            <!-- Console Panel -->
+            <div class="section hljs" id="console-panel"></div>
+        </main>
+    </div>
 
-    </aside>
+    <!-- Icon Variables -->
+    <script>
+        {{iconsVariables}}
+    </script>
 
-    <main class="main">
-
-      <header class="header" id="tabs-bar"></header>
-
-      <div class="panel-buttons">
-        <button id="clear-console"><icon name="x-circle"></icon></button>
-        <button id="copy-console"><icon name="copy"></icon></button>
-      </div>
-
-      <div class="section hljs" id="console-panel">
-        <!-- <code class="language-bash" id="console-panel"></code> -->
-      </div>
-
-    </main>
-
-  </div>
-
-  <script>
-    {{iconsVariables}}
-  </script>
-
-  <script>
-    {{js}}
-  </script>
+    <!-- Custom JavaScript -->
+    <script>
+        {{js}}
+    </script>
 </body>
 
-</html>`;
+</html>
+
+`;

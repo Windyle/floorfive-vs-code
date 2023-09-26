@@ -6,8 +6,10 @@ import { Store } from "../../../store";
 import { Kbs6LibModule } from "../kbs6-lib.module";
 import { WithModal } from "../../../core/types/with-modal";
 
+/**
+ * Represents the PublishCommand class responsible for publishing the KBS6 Lib.
+ */
 export class PublishCommand extends BaseCommand implements Command, WithModal {
-
     public showOnCommandPalette: boolean = false;
 
     private buildProcess: ChildProcessWithoutNullStreams | undefined;
@@ -23,10 +25,13 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
         );
     }
 
+    /**
+     * Executes a modal action based on the provided action ID.
+     * @param {string} actionId - The action ID to execute.
+     */
     executeModalAction(actionId: string): void {
-
         Store.mainViewWebview?.postMessage({
-            command: `dismiss-modal`
+            command: `@dismiss-modal`
         });
 
         switch (actionId) {
@@ -37,22 +42,33 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
                 this.stopExecuting();
                 break;
         }
-    };
+    }
 
+    /**
+     * Determines whether to show the command.
+     * @returns {boolean} True if the command should be shown; otherwise, false.
+     */
     show(): boolean {
         return Kbs6LibModule.isKbs6LibWorkspace();
     }
 
+    /**
+     * Determines whether to show the command in a panel.
+     * @returns {boolean} True if the command should be shown in a panel; otherwise, false.
+     */
     showInPanel(): boolean {
         return this.show();
     }
 
     // Execute region
 
+    /**
+     * Executes the command.
+     */
     execute(): void {
         if (!this.executing) {
             Store.mainViewWebview?.postMessage({
-                command: `show-modal`,
+                command: `@show-modal`,
                 title: `Publish`,
                 content: `
                     Are you sure you want to publish a new version of <b>@kbs6/kbs-lib</b>?
@@ -75,8 +91,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
                 ],
                 canDismiss: true
             });
-        }
-        else {
+        } else {
             this.executeProcess();
         }
     }
@@ -86,7 +101,6 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
 
         this.executing = !this.executing;
         if (this.executing) {
-
             this.console.clear();
 
             // 1. Patch the version of @kbs6/kbs-lib
@@ -115,9 +129,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
                     });
                 }
             });
-        }
-        else {
-
+        } else {
             if (this.buildProcess) {
                 this.buildProcess.kill();
             }
@@ -143,7 +155,6 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     }
 
     private patchLibVersion = (): void => {
-
         this.console.log(`1. Patching the version of @kbs6/kbs-lib...`, `step`);
 
         // Get the package.json file at projects/kbs/
@@ -171,7 +182,6 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     };
 
     private buildLib = (): ChildProcessWithoutNullStreams => {
-
         this.console.log(`2. Building the lib...`, `step`);
 
         const command = `npm run build-lib`;
@@ -195,7 +205,6 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     };
 
     private prePublish = (): void => {
-
         this.console.log(`3. Pre-publish actions: Move assets not to be published to a temporary folder...`, `step`);
 
         // If the folder exists, delete it
@@ -210,11 +219,9 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
 
         // Move the not-to-publish/images/ged-fileicon/ folder to dist/kbs/assets/images/ged-fileicon/
         fs.renameSync(`${tempFolder}/images/ged-fileicon`, `${Store.rootPath}/dist/kbs/assets/images/ged-fileicon`);
-
     };
 
     private publishLib = (): ChildProcessWithoutNullStreams => {
-
         this.console.log(`4. Publishing the lib...`, `step`);
 
         const command = `npm publish`;
@@ -238,7 +245,6 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     };
 
     private postPublish = (): void => {
-
         this.console.log(`5. Post-publish actions...`, `step`);
 
         this.console.log(`5.1. Move assets not to be published back to dist/kbs/assets/...`, `step`);
