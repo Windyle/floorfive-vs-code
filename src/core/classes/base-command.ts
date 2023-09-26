@@ -2,17 +2,53 @@ import { ConsoleInstantiator, FFConsole } from "../../services/console.service";
 import { Store } from "../../store";
 import { CommandConfig } from "../types/command-config";
 
+/**
+ * BaseCommand class represents a base command used in the application.
+ */
 export class BaseCommand {
-
+    /**
+     * The module name of the command.
+     */
     private module: string;
+
+    /**
+     * The unique identifier of the command.
+     */
     private id: string;
+
+    /**
+     * The icon associated with the command.
+     */
     private icon: string;
+
+    /**
+     * The label or name of the command.
+     */
     private label: string;
+
+    /**
+     * Indicates whether the command should display a loader.
+     */
     private withLoader: boolean;
+
+    /**
+     * Indicates whether the command is currently executing.
+     */
     public executing: boolean = false;
 
+    /**
+     * The console associated with the command.
+     */
     protected console: FFConsole;
 
+    /**
+     * Creates a new BaseCommand instance.
+     * @param module The module name of the command.
+     * @param id The unique identifier of the command.
+     * @param icon The icon associated with the command.
+     * @param label The label or name of the command.
+     * @param withLoader Indicates whether the command should display a loader.
+     */
     constructor(module: string, id: string, icon: string, label: string, withLoader: boolean) {
         this.module = module;
         this.id = id;
@@ -20,89 +56,137 @@ export class BaseCommand {
         this.label = label;
         this.withLoader = withLoader;
 
-        this.console = ConsoleInstantiator.instantiate(
-            module,
-            id,
-        );
+        this.console = ConsoleInstantiator.instantiate(module, id);
     }
 
-    public getConfig = (): CommandConfig => {
+    // Getters
+
+    /**
+     * Get the configuration of the command.
+     * @returns The command configuration.
+     */
+    public getConfig(): CommandConfig {
         return {
             id: this.id,
             icon: this.icon,
             label: this.label,
-            withLoader: this.withLoader
+            withLoader: this.withLoader,
         };
-    };
+    }
 
-    public getModule = (): string => {
+    /**
+     * Get the module name of the command.
+     * @returns The module name.
+     */
+    public getModule(): string {
         return this.module;
-    };
+    }
 
-    public getId = (): string => {
+    /**
+     * Get the unique identifier of the command.
+     * @returns The unique identifier.
+     */
+    public getId(): string {
         return this.id;
-    };
+    }
 
-    public getIcon = (): string => {
+    /**
+     * Get the icon associated with the command.
+     * @returns The icon.
+     */
+    public getIcon(): string {
         return this.icon;
-    };
+    }
 
-    public getLabel = (): string => {
+    /**
+     * Get the label or name of the command.
+     * @returns The label.
+     */
+    public getLabel(): string {
         return this.label;
-    };
+    }
 
-    public getWithLoader = (): boolean => {
+    /**
+     * Get the loader state of the command.
+     * @returns The loader state.
+     */
+    public getWithLoader(): boolean {
         return this.withLoader;
-    };
+    }
 
-    public clearConsole = (): void => {
+
+    // Methods
+
+    /**
+     * Clear the console associated with the command.
+     */
+    public clearConsole(): void {
         this.console.clear();
-    };
+    }
 
-    public getLogContent = (): string => {
+    /**
+     * Get the log content from the console associated with the command.
+     * @returns The log content.
+     */
+    public getLogContent(): string {
         return this.console.getLog();
-    };
+    }
 
-    public openLogPanel = (): void => {
+    /**
+     * Open the log panel for this command.
+     */
+    public openLogPanel(): void {
         Store.panelViewWebview?.postMessage({
             command: `set-active-panel:goto`,
-            moduleId: this.getModule(),
-            commandId: this.getId()
+            moduleId: this.module,
+            commandId: this.id,
         });
-    };
+    }
 
+    /**
+     * Get the script for the command.
+     * @returns The command script.
+     */
     public getScript(): string {
         return `
-// => Compare Command
+// => ${this.getLabel()} Command
 
-document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
+document.getElementById("${this.module}-${this.id}").addEventListener("click", function() {
 
-    ${this.getWithLoader() ? `setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');` : ``}
+    ${this.withLoader ? `setExecuting(this, '${this.icon}', '${this.label}');` : ``}
     
     const message = {
-        command: '${this.getModule()}:${this.getId()}:execute'
+        command: '${this.module}:${this.id}:execute'
     };
 
     vscode.postMessage(message);
 });
 
-// => End - Compare Command
+// => End - ${this.getLabel()} Command
         `;
-    };
+    }
 
+    /**
+     * Get the listener script for the command.
+     * @returns The listener script.
+     */
     public getListenerScript(): string {
         return `
-case '${this.getModule()}:${this.getId()}:listener':
-    ${this.getWithLoader() ? `stopExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');` : ``}
+case '${this.module}:${this.id}:listener':
+    ${this.withLoader ? `stopExecutingById("${this.module}-${this.id}", '${this.icon}', '${this.label}');` : ``}
     break;
         `;
-    };
+    }
 
-    getLogScript(): string {
+    /**
+     * Get the log script for the command.
+     * @returns The log script.
+     */
+    public getLogScript(): string {
         return `
-// ==> Compare
-case '${this.getModule()}:${this.getId()}:log':
-    if (activePanel === '${this.getModule()}:${this.getId()}') {
+// ==> ${this.getLabel()} Command Log
+case '${this.module}:${this.id}:log':
+    if (activePanel === '${this.module}:${this.id}') {
         setActivePanelContent(message.content);
     }
 break;

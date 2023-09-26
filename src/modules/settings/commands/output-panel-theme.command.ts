@@ -1,96 +1,121 @@
-import * as fs from "node:fs";
 import * as vscode from "vscode";
 import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
 import { Store } from "../../../store";
 
+/**
+ * A command for changing the output panel theme.
+ */
 export class OutputPanelThemeCommand extends BaseCommand implements Command {
 
+    // Command properties
     public showOnCommandPalette: boolean = true;
 
+    // Property initializations with default values in the class definition
     private accepted: boolean = false;
-    private theme: string = ``;
+    private theme: string = "github-dark";
 
     constructor() {
+        // Call the parent constructor to initialize the command
         super(
-            `settings`,
-            `output-panel-theme`,
-            `palette`,
-            `Output panel theme`,
+            "settings",
+            "output-panel-theme",
+            "palette",
+            "Output panel theme",
             false
         );
 
-        // Get the current theme
-        this.theme = vscode.workspace.getConfiguration().get(`floorfive-vs-code.output-panel-theme`) as string ?? `github-dark`;
+        // Initialize the theme property with the current value from VS Code settings, or use the default
+        this.theme = vscode.workspace.getConfiguration().get("floorfive-vs-code.output-panel-theme") as string || this.theme;
     }
 
+    /**
+     * Determines whether to show this command based on the current workspace.
+     * @returns True if the command should be shown, otherwise false.
+     */
     show(): boolean {
         return true;
     }
 
+    /**
+     * Determines whether to show this command in the panel.
+     * @returns True if the command should be shown in the panel, otherwise false.
+     */
     showInPanel(): boolean {
         return false;
     }
 
-    // Execute region
-
+    /**
+     * Executes the command to change the output panel theme.
+     */
     execute(): void {
         this.accepted = false;
 
+        // Create a quick pick for selecting a theme
         const themesQuickPick = vscode.window.createQuickPick();
-        themesQuickPick.placeholder = `Select a theme`;
+        themesQuickPick.placeholder = "Select a theme";
         themesQuickPick.ignoreFocusOut = true;
         themesQuickPick.items = HIGHLIGHT_JS_THEMES.map(theme => ({ label: theme }));
         themesQuickPick.activeItems = [themesQuickPick.items.find(item => item.label === this.theme) ?? themesQuickPick.items[0]];
+
         themesQuickPick.onDidChangeActive((selectedItems) => {
-            // Handle the user's selection change (using arrow keys)
-            const selectedTheme = selectedItems[0];
-            if (selectedTheme) {
-                // Update the preview based on the selected theme
-                this.updateOutputPanel(selectedTheme.label);
+            if (selectedItems.length > 0) {
+                const selectedTheme = selectedItems[0];
+                if (selectedTheme) {
+                    this.updateOutputPanel(selectedTheme.label);
+                }
             }
         });
+
         themesQuickPick.onDidHide(() => {
             if (!this.accepted) {
-                // User has cancelled the selection
                 themesQuickPick.dispose();
-
                 this.updateOutputPanelWithCurrentTheme();
             }
         });
-        themesQuickPick.onDidAccept(() => {
-            this.accepted = true;
 
-            // User has accepted the selection
+        themesQuickPick.onDidAccept(async () => {
+            this.accepted = true;
             const selectedTheme = themesQuickPick.selectedItems[0];
             if (selectedTheme) {
                 this.theme = selectedTheme.label;
 
-                // Update the theme in the settings
-                vscode.workspace
-                    .getConfiguration()
-                    .update(`floorfive-vs-code.output-panel-theme`, selectedTheme.label, vscode.ConfigurationTarget.Global);
+                try {
+                    await vscode.workspace
+                        .getConfiguration()
+                        .update("floorfive-vs-code.output-panel-theme", selectedTheme.label, vscode.ConfigurationTarget.Global);
+                } catch (err) {
+                    const error = err as Error;
+                    vscode.window.showErrorMessage(`Error while trying to update the theme: ${error.message}`);
+                }
 
-                // Update the output panel
                 this.updateOutputPanel(selectedTheme.label);
-
-                themesQuickPick.dispose(); // Close the quick pick after selection
+                themesQuickPick.dispose();
             }
         });
-        themesQuickPick.show();
 
+        themesQuickPick.show();
     }
 
+    // Custom methods
+
+    /**
+     * Updates the output panel with the selected theme.
+     * @param theme - The theme to apply to the output panel.
+     */
     private updateOutputPanel = (theme: string) => {
         Store.panelViewWebview?.postMessage({
-            command: `update-output-panel-theme`,
+            command: "update-output-panel-theme",
             theme: theme,
         });
     };
 
+    /**
+     * Updates the output panel with the current theme.
+     */
     public updateOutputPanelWithCurrentTheme = () => {
         Store.panelViewWebview?.postMessage({
-            command: `update-output-panel-theme`,
+            command: "update-output-panel-theme",
             theme: this.theme,
         });
     };

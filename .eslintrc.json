@@ -12,8 +12,7 @@
     "curly": "warn",
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
-    "semi": "off",
-    "quotes": ["warn", "backtick"]
+    "semi": "off"
   },
   "ignorePatterns": ["out", "dist", "**/*.d.ts"]
 }

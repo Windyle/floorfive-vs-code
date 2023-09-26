@@ -8,26 +8,39 @@ import { HTML } from './panel.view.html';
 import { Modules } from '../../modules/modules.index';
 import { PanelViewScript } from './panel.view.script';
 import { Store } from '../../store';
+import { PanelViewMessageHandler } from './panel.view.message-handler';
 
-// View class
+/**
+ * Represents the panel view for the extension.
+ */
 export class PanelView {
 
     private static readonly viewType = `floorfive-vs-code-panel.webview`;
 
+    /**
+     * Activates the panel view.
+     * @param {vscode.ExtensionContext} context - The extension context.
+     */
     public static activate = (context: vscode.ExtensionContext) => {
         // Create a new webview panel
         vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
     };
-
 }
 
-// View provider class
+/**
+ * Provider for the panel view.
+ */
 class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private extensionUri: vscode.Uri;
     private iconsScript: string = ``;
     private activePanel: string = ``;
+    private messageHandlerService: PanelViewMessageHandler = new PanelViewMessageHandler();
 
+    /**
+     * Creates an instance of PanelViewProvider.
+     * @param {vscode.ExtensionContext} context - The extension context.
+     */
     constructor(
         private readonly context: vscode.ExtensionContext
     ) {
@@ -37,11 +50,15 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         // Get initial active panel
         const initialCommand = Modules.getModulesArray()[0].getCommandsArray()[0];
         this.activePanel = `${initialCommand.getModule()}:${initialCommand.getId()}`;
-
     }
 
+    /**
+     * Resolves the webview view.
+     * @param {vscode.WebviewView} webviewView - The webview view to resolve.
+     * @param {vscode.WebviewViewResolveContext<unknown>} context - The webview view resolve context.
+     * @param {vscode.CancellationToken} token - The cancellation token.
+     */
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
-
         // Register Console webview reference
         FFConsole.webviewRef = webviewView.webview;
         Store.panelViewWebview = webviewView.webview;
@@ -68,8 +85,12 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         );
     }
 
+    /**
+     * Replaces template variables in HTML content.
+     * @param {string} html - The HTML content.
+     * @returns {string} The HTML content with replaced variables.
+     */
     private replaceTemplateVariables = (html: string): string => {
-
         const outputPanelThemeConfiguration = vscode.workspace.getConfiguration().get(`floorfive-vs-code.output-panel-theme`) as string ?? `github-dark`;
 
         return html
@@ -81,6 +102,10 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
     };
 
+    /**
+     * Retrieves the category buttons for the view.
+     * @returns {string} The category buttons HTML.
+     */
     private getCategoriesButtons = (): string => {
         return Object.keys(Modules.getModules()).map((id: any) => {
             const module = Modules.getModule(id);
@@ -90,49 +115,39 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         }).join(`\n`);
     };
 
+    /**
+     * Handles messages received from the webview.
+     * @param {vscode.Webview} webview - The webview.
+     * @param {any} message - The received message.
+     */
     private messageHandler = (webview: vscode.Webview, message: any) => {
-
         switch (message.command) {
             case `set-active-panel`:
-                this.activePanel = `${message.moduleId}:${message.commandId}`;
-
-                webview.postMessage({
-                    command: `set-active-panel:response`,
-                    content: Modules.getModule(message.moduleId).commands[message.commandId].getLogContent()
-                });
+                this.activePanel = this.messageHandlerService.setActivePanel(webview, message.moduleId, message.commandId);
                 break;
+
             case `set-active-panel:onload`:
-                webview.postMessage({
-                    command: `set-active-panel:goto`,
-                    moduleId: this.activePanel.split(`:`)[0],
-                    commandId: this.activePanel.split(`:`)[1]
-                });
+                this.messageHandlerService.setActivePanelOnLoad(webview, this.activePanel);
+                break;
 
-                webview.postMessage({
-                    command: `set-active-panel:response`,
-                    content: Modules.getModule(this.activePanel.split(`:`)[0]).commands[this.activePanel.split(`:`)[1]].getLogContent(),
-                });
-                break;
             case `clear-log`:
-                Modules.getModule(message.moduleId).commands[message.commandId].clearConsole();
+                this.messageHandlerService.clearLog(message.moduleId, message.commandId);
                 break;
+
             case `open-local-link`:
-                // Check if the path is a directory or a file
-                if (fs.lstatSync(message.path).isDirectory()) {
-                    // Open the directory in file explorer
-                    vscode.commands.executeCommand(`revealFileInOS`, vscode.Uri.file(message.path));
-                } else {
-                    vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(message.path));
-                }
+                this.messageHandlerService.openLocalLink(message.path);
                 break;
+
             case `update-output-panel-theme:current`:
-                Modules.getModule(`settings`).commands[`output-panel-theme`].updateOutputPanelWithCurrentTheme();
+                this.messageHandlerService.updateOutputPanelThemeCurrent();
                 break;
+
             case `show-info`:
-                vscode.window.showInformationMessage(message.content);
+                this.messageHandlerService.showInfo(message.content);
                 break;
-            case `show-simple-error`:
-                vscode.window.showErrorMessage(message.content);
+
+            case `show-error`:
+                this.messageHandlerService.showError(message.content);
                 break;
         }
     };
