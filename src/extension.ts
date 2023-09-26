@@ -25,8 +25,6 @@ export function activate(context: vscode.ExtensionContext) {
                     command.execute();
                 });
 
-                console.log(`Registering command: ${commandName}`);
-
                 context.subscriptions.push(disposable);
             }
         });

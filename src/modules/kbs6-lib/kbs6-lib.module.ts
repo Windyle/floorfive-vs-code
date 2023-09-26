@@ -4,6 +4,7 @@ import { BaseModule } from '../../core/classes/base-module';
 import { Module } from '../../core/types/module';
 import { Store } from "../../store";
 import { CompareVersionCommand } from './commands/compare-version.command';
+import { InstallLatestVersionCommand } from './commands/install-latest-version.command';
 
 export class Kbs6LibModule extends BaseModule implements Module {
 
@@ -12,9 +13,11 @@ export class Kbs6LibModule extends BaseModule implements Module {
         super(`kbs6-lib`, `KBS6 Lib`, `book`);
 
         const compareVersionCommand = new CompareVersionCommand();
+        const installLatestVersionCommand = new InstallLatestVersionCommand();
 
         // Add commands instances to the commands object
         this.commands[compareVersionCommand.getId()] = compareVersionCommand;
+        this.commands[installLatestVersionCommand.getId()] = installLatestVersionCommand;
     }
 
     public show(): boolean {

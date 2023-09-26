@@ -92,37 +92,46 @@ export class CompareVersionCommand extends BaseCommand implements Command {
             });
 
             this.process.stdout.on(`data`, (data) => {
-                this.isOutdated = data.toString().includes(`@kbs6/kbs-lib`);
-                this.console.log(data.toString(), `npm-outdated`);
+                if (!this.process?.killed) {
+                    this.isOutdated = data.toString().includes(`@kbs6/kbs-lib`);
+                    this.console.log(data.toString(), `npm-outdated`);
+                }
             });
 
             this.process.stderr.on(`data`, (data) => {
-                this.console.log(data.toString(), `error`);
+                if (!this.process?.killed) {
+                    this.console.log(data.toString(), `error`);
+                }
             });
 
             this.process.on(`close`, (code) => {
-                if (!this.isOutdated) {
-                    this.console.log(`KBS6 Lib is up to date.`, `success`);
+                if (!this.process?.killed) {
+                    if (!this.isOutdated) {
+                        this.console.log(`KBS6 Lib is up to date.`, `success`);
+                    }
+
+                    this.stopExecuting();
                 }
-
-                this.isOutdated = false;
-                this.executing = false;
-                this.process = undefined;
-
-                Store.mainViewWebview!.postMessage({
-                    command: `${this.getModule()}:${this.getId()}:listener`
-                });
             });
         }
         else {
 
             if (this.process) {
                 this.process.kill();
-                this.process = undefined;
-                this.isOutdated = false;
 
                 this.console.log(`Process killed.`);
+
+                this.stopExecuting();
             }
         }
+    }
+
+    private stopExecuting() {
+        this.isOutdated = false;
+        this.executing = false;
+
+        Store.mainViewWebview!.postMessage({
+            command: `${this.getModule()}:${this.getId()}:listener`
+        });
     }
 }
