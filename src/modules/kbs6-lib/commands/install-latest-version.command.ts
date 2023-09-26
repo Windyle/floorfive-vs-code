@@ -32,6 +32,7 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
     // Execute region
 
     execute(): void {
+        this.openLogPanel();
 
         this.executing = !this.executing;
         if (this.executing) {
@@ -101,7 +102,7 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
             });
 
             this.console.log(`Files copied successfully.`, `success`);
-            this.console.log(`Installation completed successfully.`, `success`)
+            this.console.log(`Installation completed successfully.`, `success`);
         }
         catch (error) {
             this.console.log((error as Error).message, `error`);

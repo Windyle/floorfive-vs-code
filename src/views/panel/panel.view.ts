@@ -26,12 +26,17 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private extensionUri: vscode.Uri;
     private iconsScript: string = ``;
+    private activePanel: string = ``;
 
     constructor(
         private readonly context: vscode.ExtensionContext
     ) {
         // Get path to resource on disk
         this.extensionUri = context.extensionUri;
+
+        // Get initial active panel
+        const initialCommand = Modules.getModulesArray()[0].getCommandsArray()[0];
+        this.activePanel = `${initialCommand.getModule()}:${initialCommand.getId()}`;
 
     }
 
@@ -89,9 +94,23 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
         switch (message.command) {
             case `set-active-panel`:
+                this.activePanel = `${message.moduleId}:${message.commandId}`;
+
                 webview.postMessage({
                     command: `set-active-panel:response`,
                     content: Modules.getModule(message.moduleId).commands[message.commandId].getLogContent()
+                });
+                break;
+            case `set-active-panel:onload`:
+                webview.postMessage({
+                    command: `set-active-panel:goto`,
+                    moduleId: this.activePanel.split(`:`)[0],
+                    commandId: this.activePanel.split(`:`)[1]
+                });
+
+                webview.postMessage({
+                    command: `set-active-panel:response`,
+                    content: Modules.getModule(this.activePanel.split(`:`)[0]).commands[this.activePanel.split(`:`)[1]].getLogContent(),
                 });
                 break;
             case `clear-log`:

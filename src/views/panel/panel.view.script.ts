@@ -4,23 +4,12 @@ export class PanelViewScript {
 
     public static getScript = (): string => {
 
-        const firstModuleId: string = Object.keys(Modules.getModules())[0];
-        const firstModuleFirstCommandId: string = Object.keys(Modules.getModule(firstModuleId).commands)[0];
-
-        const activePanel: string = `
-// ==== ACTIVE PANEL ====
-
-var activePanel = "${Modules.getModule(firstModuleId)}:${firstModuleFirstCommandId}";
-`;
-
         const categories: string = `
 // ==== CATEGORIES ====
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
 categoriesBtns.forEach(btn => {
     if(btn.id !== 'sidebar-collapse') {
-        btn.id === '${Modules.getModule(firstModuleId).getId()}' ? btn.classList.add('active') : '';
-
         btn.addEventListener('click', () => {
             categoriesBtns.forEach(btn => btn.classList.remove('active'));
             btn.classList.add('active');
@@ -51,27 +40,21 @@ var tabsList = ${JSON.stringify(
             }, {})
         )};
 
-function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
+var tabs;
+
+function setTabs(categoryId = '') {
     var tabsBar = document.getElementById('tabs-bar');
 
     var categoryTabs = tabsList[categoryId];
 
     var tabsBarContent = '';
     for (const tab of Object.keys(categoryTabs)) {
-        var firstTab = false;
-        
-        // Set first tab as active
-        if(tab === Object.keys(categoryTabs)[0]) {
-            setActivePanel(categoryId, categoryTabs[tab].id);
-            firstTab = true;
-        }
-
-        tabsBarContent += \`<div class="tab \${firstTab ? 'active' : ''}" name="\${categoryTabs[tab].id}">\${categoryTabs[tab].label}</div>\`;
+        tabsBarContent += \`<div class="tab" name="\${categoryTabs[tab].id}">\${categoryTabs[tab].label}</div>\`;
     }
 
     tabsBar.innerHTML = tabsBarContent;
 
-    var tabs = document.querySelectorAll('.tab');
+    tabs = document.querySelectorAll('.tab');
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -82,8 +65,6 @@ function setTabs(categoryId = '${Modules.getModule(firstModuleId).getId()}') {
         });
     });
 }
-
-setTabs();
 `;
 
         const sidebarCollapse: string = `
@@ -143,9 +124,40 @@ function setActivePanelContent(content) {
     hljs.highlightAll();
 }
 
-// Set active panel on load (first module, first command)
-setActivePanel('${Modules.getModule(firstModuleId).getId()}', '${firstModuleFirstCommandId}');
+function getActivePanelFromView() {
+    vscode.postMessage({
+        command: "set-active-panel:onload"
+    });
+}
+
+getActivePanelFromView();
 `;
+
+        const goToActivePanel: string = `
+// ==== GO TO ACTIVE PANEL ====
+
+function goToActivePanel(moduleId, commandId) {
+
+    for (const btn of categoriesBtns) {
+        if(btn.id === moduleId && !btn.classList.contains('active')) {
+            console.log("CLICKED CAT: ", btn);
+            btn.click();
+            break;
+        }
+    }
+
+    for (const tab of tabs) {
+        if(tab.getAttribute('name') === commandId) {
+            tab.classList.add('active');
+        }
+        else {
+            tab.classList.remove('active');
+        }
+    }
+
+    setActivePanel(moduleId, commandId);
+}
+        `;
 
         const openLocalLink: string = `
 // ==== OPEN LOCAL LINK ====
@@ -208,6 +220,9 @@ window.addEventListener('message', event => {
         case 'set-active-panel:response':
             setActivePanelContent(message.content);
             break;
+        case 'set-active-panel:goto':
+            goToActivePanel(message.moduleId, message.commandId);
+            break;
         case 'update-output-panel-theme':
             setOutputPanelTheme(message.theme);
             break;
@@ -227,10 +242,9 @@ window.addEventListener('message', event => {
 
         return `
 var vscode = acquireVsCodeApi();
+var activePanel = '';
 
 hljs.highlightAll();
-
-${activePanel}
 
 ${categories}
 
@@ -241,6 +255,8 @@ ${sidebarCollapse}
 ${clearConsole}
 
 ${setActivePanel}
+
+${goToActivePanel}
 
 ${openLocalLink}
 

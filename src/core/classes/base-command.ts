@@ -1,4 +1,5 @@
 import { ConsoleInstantiator, FFConsole } from "../../services/console.service";
+import { Store } from "../../store";
 import { CommandConfig } from "../types/command-config";
 
 export class BaseCommand {
@@ -60,6 +61,14 @@ export class BaseCommand {
 
     public getLogContent = (): string => {
         return this.console.getLog();
+    };
+
+    public openLogPanel = (): void => {
+        Store.panelViewWebview?.postMessage({
+            command: `set-active-panel:goto`,
+            moduleId: this.getModule(),
+            commandId: this.getId()
+        });
     };
 
     public getScript(): string {

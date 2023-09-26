@@ -66,6 +66,7 @@ export class CompareVersionCommand extends BaseCommand implements Command {
     // Execute region
 
     execute(): void {
+        this.openLogPanel();
 
         if (PackageJson.getDependencies() === undefined || !Object.keys(PackageJson.getDependencies()!).includes(`@kbs6/kbs-lib`)) {
             this.console.clear();
