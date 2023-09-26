@@ -57,32 +57,9 @@ export class CompareVersionCommand extends BaseCommand implements Command {
         return true;
     }
 
-    getScript(): string {
-        return `
-// => Compare Command
-
-document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
-
-    setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');
-    
-    const message = {
-        command: '${this.getModule()}:${this.getId()}:execute'
-    };
-
-    vscode.postMessage(message);
-});
-
-// => End - Compare Command
-        `;
-    };
-
-    getListenerScript(): string {
-        return `
-case '${this.getModule()}:${this.getId()}:listener':
-        setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');
-    break;
-        `;
-    };
+    showInPanel(): boolean {
+        return true;
+    }
 
     // Execute region
 
@@ -126,6 +103,7 @@ case '${this.getModule()}:${this.getId()}:listener':
                     this.console.log(`KBS6 Lib is up to date.`, `success`);
                 }
 
+                this.isOutdated = false;
                 this.executing = false;
                 this.process = undefined;
 

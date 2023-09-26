@@ -38,13 +38,13 @@ icon, label {
     margin-top: 30px;
 }
 
-.collapsible.settings icon {
+.collapsible icon {
     margin-right: 10px;
 }
 
-.collapsible.settings icon svg {
-    width: 20px;
-    height: 20px;
+.collapsible icon svg {
+    width: 18px;
+    height: 18px;
 }
 
 .collapsible:hover {
@@ -145,6 +145,10 @@ h1 {
   height: 30px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.command-button:has(svg.flip) {
+    background-color: var(--vscode-inputValidation-warningBorder) !important;
 }
 
 .command-button:hover {

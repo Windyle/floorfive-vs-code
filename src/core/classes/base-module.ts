@@ -1,14 +1,16 @@
 export class BaseModule {
 
-    private id: string;
-    private label: string;
+    private _id: string;
+    private _label: string;
+    private _icon: string;
 
     public commands: { [id: string]: any } = {};
 
 
-    constructor(id: string, label: string) {
-        this.id = id;
-        this.label = label;
+    constructor(id: string, label: string, icon: string) {
+        this._id = id;
+        this._label = label;
+        this._icon = icon;
     }
 
     // Public methods
@@ -27,11 +29,11 @@ export class BaseModule {
     }
 
     public getId = (): string => {
-        return this.id;
+        return this._id;
     };
 
     public getLabel = (): string => {
-        return this.label;
+        return this._label;
     };
 
     public getActionsHtml(): string {
@@ -43,6 +45,7 @@ export class BaseModule {
 
         return `
         <div class="collapsible">
+            <icon name="${this._icon}"></icon>
             <h1>${this.getLabel()}</h1>
             <div class="chevron-arrow"></div>
         </div>

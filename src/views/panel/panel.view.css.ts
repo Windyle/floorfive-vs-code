@@ -50,7 +50,7 @@ html, body {
 }
 
 .sidebar button.active {
-    border-right: 6px solid var(--vscode-panelTitle-activeBorder);
+    background-color: var(--vscode-inputValidation-warningBorder);
 }
 
 .sidebar #sidebar-collapse {

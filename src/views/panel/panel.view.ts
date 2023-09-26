@@ -75,7 +75,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
     private getCategoriesButtons = (): string => {
         return Object.keys(Modules.getModules()).map((id: any) => {
             const module = Modules.getModule(id);
-            if (module.show()) {
+            if (module.showInPanel()) {
                 return `<button class="category-button" id="${module.getId()}">${module.getLabel()}</button>`;
             }
         }).join(`\n`);

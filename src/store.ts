@@ -15,6 +15,7 @@ export class Store {
 
     public static icons = [
         `arrows-right-left`,
+        `book`,
         `check-circle`,
         `chevron-left`,
         `chevron-right`,

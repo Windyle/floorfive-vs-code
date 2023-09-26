@@ -60,7 +60,35 @@ export class BaseCommand {
 
     public getLogContent = (): string => {
         return this.console.getLog();
-    }
+    };
+
+    public getScript(): string {
+        return `
+// => Compare Command
+
+document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
+
+    ${this.getWithLoader() ? `setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');` : ``
+            }
+    
+    const message = {
+        command: '${this.getModule()}:${this.getId()}:execute'
+    };
+
+    vscode.postMessage(message);
+});
+
+// => End - Compare Command
+        `;
+    };
+
+    public getListenerScript(): string {
+        return `
+case '${this.getModule()}:${this.getId()}:listener':
+        setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');
+    break;
+        `;
+    };
 
     getLogScript(): string {
         return `

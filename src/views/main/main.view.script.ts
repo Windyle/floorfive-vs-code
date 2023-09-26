@@ -13,7 +13,7 @@ export class MainViewScript {
                     }
                 }).join(`\n`);
             }
-        });
+        }).join(`\n`);
 
         const listenersScripts = Modules.getModulesArray().map((module: any) => {
             if (module.show()) {
@@ -24,7 +24,7 @@ export class MainViewScript {
                     }
                 }).join(`\n`);
             }
-        });
+        }).join(`\n`);
 
         const isExecutingListenerScript = `
 case '@is-executing:listener':
@@ -37,6 +37,33 @@ case '@is-executing:listener':
 const vscode = acquireVsCodeApi();
 
 // ==== SCRIPTS ====
+
+// Collapsible
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.maxHeight){
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+
+        var j;
+        for (j = 0; j < coll.length; j++) {
+            if (coll[j] != this) {
+                coll[j].classList.remove("active");
+                var content = coll[j].nextElementSibling;
+                content.style.maxHeight = null;
+            }
+        }
+
+    });
+}
 
 function setExecuting(element, icon, label) {
     const iconTag = element.querySelector('icon');

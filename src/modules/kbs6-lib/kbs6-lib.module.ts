@@ -9,7 +9,7 @@ export class Kbs6LibModule extends BaseModule implements Module {
 
     constructor() {
 
-        super(`kbs6-lib`, `KBS6 Lib`);
+        super(`kbs6-lib`, `KBS6 Lib`, `book`);
 
         const compareVersionCommand = new CompareVersionCommand();
 
@@ -18,17 +18,23 @@ export class Kbs6LibModule extends BaseModule implements Module {
     }
 
     public show(): boolean {
-        // If every command in the module is hidden, don't show the view
-        if (Object.keys(this.commands).every((id: string) => !this.commands[id].show())) {
+        // If every command in the module is hidden or the project is not an angular project, don't show the view
+        if (Object.keys(this.commands).every((id: string) => !this.commands[id].show())
+            || !fs.existsSync(path.join(Store.rootPath, `angular.json`))) {
             return false;
         }
 
-        // If the root path contains an angular.json file, show the view
-        if (fs.existsSync(path.join(Store.rootPath, `angular.json`))) {
-            return true;
+        return true;
+    }
+
+    public showInPanel(): boolean {
+        // If every command in the module is hidden in the panel or the project is not an angular project, don't show the view
+        if (Object.keys(this.commands).every((id: string) => !this.commands[id].showInPanel())
+            || !fs.existsSync(path.join(Store.rootPath, `angular.json`))) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     // Custom methods
