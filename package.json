@@ -18,8 +18,8 @@
     "contributes": {
         "commands": [
             {
-                "command": "floorfive-vs-code.helloWorld",
-                "title": "Hello World"
+                "command": "floorfive-vs-code.settings.output-panel-theme",
+                "title": "FloorFive: Output Panel Theme"
             }
         ],
         "viewsContainers": {
@@ -55,6 +55,15 @@
                     "type": "webview"
                 }
             ]
+        },
+        "configuration": {
+            "properties": {
+                "floorfive-vs-code.output-panel-theme": {
+                    "type": "string",
+                    "default": "github-dark",
+                    "description": "The theme of the output panel"
+                }
+            }
         }
     },
     "scripts": {

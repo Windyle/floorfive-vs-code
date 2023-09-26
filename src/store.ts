@@ -10,8 +10,12 @@ export class Store {
         return ``;
     }
 
+    public static extensionContext: vscode.ExtensionContext | undefined;
+
     public static mainViewWebview: vscode.Webview | undefined;
+    public static mainViewWebviewContext: vscode.ExtensionContext | undefined;
     public static panelViewWebview: vscode.Webview | undefined;
+    public static panelViewWebviewContext: vscode.ExtensionContext | undefined;
 
     public static icons = [
         `arrows-right-left`,
@@ -21,10 +25,12 @@ export class Store {
         `chevron-right`,
         `copy`,
         `download-cloud`,
+        `edit`,
         `external-link`,
         `eye`,
         `loader`,
         `package`,
+        `palette`,
         `play`,
         `search`,
         `settings`,

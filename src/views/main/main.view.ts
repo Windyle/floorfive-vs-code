@@ -34,6 +34,7 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
 
         Store.mainViewWebview = webviewView.webview;
+        Store.mainViewWebviewContext = this.context;
 
         this.iconsScript = IconsService.getIconsScript(this.context);
 

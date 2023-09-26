@@ -53,12 +53,7 @@ export class BaseModule {
               ${Object.keys(this.commands).map((id: string) => {
             const command = this.commands[id];
             if (command.show()) {
-                if (command.getWithLoader()) {
-                    return `<button class="command-button icon-button" id="${this.getId()}-${command.getId()}"><icon name="${command.getIcon()}"></icon> <label>${command.getLabel()}</label></button>`;
-                }
-                else {
-                    return `<button class="command-button" id="${this.getId()}-${command.getId()}">${command.getLabel()}</button>`;
-                }
+                return `<button class="command-button icon-button" id="${this.getId()}-${command.getId()}" loader="${command.getWithLoader()}"><icon name="${command.getIcon()}"></icon> <label>${command.getLabel()}</label></button>`;
             }
         }).join(`\n`)
             }

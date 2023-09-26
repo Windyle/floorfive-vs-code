@@ -5,7 +5,7 @@ export const HTML: string = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <title>KBS6 Dev</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/{{outputPanelTheme}}.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
   <style>

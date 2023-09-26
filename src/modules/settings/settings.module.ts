@@ -1,9 +1,7 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
 import { BaseModule } from '../../core/classes/base-module';
 import { Module } from '../../core/types/module';
-import { Store } from "../../store";
 import { OpenNpmrcCommand } from './commands/open-npmrc.command';
+import { OutputPanelThemeCommand } from './commands/output-panel-theme.command';
 
 export class SettingsModule extends BaseModule implements Module {
 
@@ -13,9 +11,11 @@ export class SettingsModule extends BaseModule implements Module {
 
         // Get commands instances
         const openNpmrcCommand = new OpenNpmrcCommand();
+        const outputPanelThemeCommand = new OutputPanelThemeCommand();
 
         // Add commands instances to the commands object
         this.commands[openNpmrcCommand.getId()] = openNpmrcCommand;
+        this.commands[outputPanelThemeCommand.getId()] = outputPanelThemeCommand;
     }
 
     public show(): boolean {

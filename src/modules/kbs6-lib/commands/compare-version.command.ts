@@ -7,6 +7,8 @@ import { PackageJson } from "../../../services/package-json.service";
 
 export class CompareVersionCommand extends BaseCommand implements Command {
 
+    public showOnCommandPalette: boolean = false;
+
     private process: ChildProcessWithoutNullStreams | undefined;
     private isOutdated: boolean = false;
 

@@ -5,11 +5,13 @@ import { Command } from "../../../core/types/command";
 
 export class OpenNpmrcCommand extends BaseCommand implements Command {
 
+    public showOnCommandPalette: boolean = false;
+
     constructor() {
         super(
             `settings`,
             `open-npmrc`,
-            `open-external`,
+            `edit`,
             `Open .npmrc`,
             false
         );

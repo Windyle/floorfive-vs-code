@@ -40,6 +40,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         // Register Console webview reference
         FFConsole.webviewRef = webviewView.webview;
         Store.panelViewWebview = webviewView.webview;
+        Store.panelViewWebviewContext = this.context;
 
         // Replace icons variables
         this.iconsScript = IconsService.getIconsScript(this.context);
@@ -64,7 +65,10 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private replaceTemplateVariables = (html: string): string => {
 
+        const outputPanelThemeConfiguration = vscode.workspace.getConfiguration().get(`floorfive-vs-code.output-panel-theme`) as string ?? `github-dark`;
+
         return html
+            .replace(/(?<!')\{\{outputPanelTheme\}\}(?!')/g, outputPanelThemeConfiguration)
             .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
             .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
             .replace(/(?<!')\{\{categoriesButtons\}\}(?!')/g, this.getCategoriesButtons())
@@ -101,6 +105,9 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
                 } else {
                     vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(message.path));
                 }
+                break;
+            case `update-output-panel-theme:current`:
+                Modules.getModule(`settings`).commands[`output-panel-theme`].updateOutputPanelWithCurrentTheme();
                 break;
             case `show-info`:
                 vscode.window.showInformationMessage(message.content);

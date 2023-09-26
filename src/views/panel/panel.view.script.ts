@@ -180,6 +180,23 @@ document.getElementById('copy-console').addEventListener('click', () => {
 });
         `;
 
+        const setOutputPanelTheme: string = `
+// ==== SET OUTPUT PANEL THEME ====
+
+function setOutputPanelTheme(theme) {
+    // Change the href of the stylesheet
+    document.querySelector('link[href*="highlight.js"]').href = \`https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/\${theme}.min.css\`;
+}
+
+function getCurrentTheme() {
+    vscode.postMessage({
+        command: "update-output-panel-theme:current"
+    });
+}
+
+getCurrentTheme();
+        `;
+
         const messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
@@ -190,6 +207,9 @@ window.addEventListener('message', event => {
     switch (message.command) {
         case 'set-active-panel:response':
             setActivePanelContent(message.content);
+            break;
+        case 'update-output-panel-theme':
+            setOutputPanelTheme(message.theme);
             break;
         ${Modules.getModulesArray().map((module: any) => {
             if (module.show()) {
@@ -225,6 +245,8 @@ ${setActivePanel}
 ${openLocalLink}
 
 ${copyConsole}
+
+${setOutputPanelTheme}
 
 ${messageHandler}
 `;

@@ -68,8 +68,7 @@ export class BaseCommand {
 
 document.getElementById("${this.getModule()}-${this.getId()}").addEventListener("click", function() {
 
-    ${this.getWithLoader() ? `setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');` : ``
-            }
+    ${this.getWithLoader() ? `setExecuting(this, '${this.getIcon()}', '${this.getLabel()}');` : ``}
     
     const message = {
         command: '${this.getModule()}:${this.getId()}:execute'
@@ -85,7 +84,7 @@ document.getElementById("${this.getModule()}-${this.getId()}").addEventListener(
     public getListenerScript(): string {
         return `
 case '${this.getModule()}:${this.getId()}:listener':
-        setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');
+    ${this.getWithLoader() ? `setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');` : ``}
     break;
         `;
     };
