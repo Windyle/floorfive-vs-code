@@ -4,8 +4,9 @@ import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
 import { Store } from "../../../store";
 import { Kbs6LibModule } from "../kbs6-lib.module";
+import { WithModal } from "../../../core/types/with-modal";
 
-export class InstallLatestVersionCommand extends BaseCommand implements Command {
+export class PublishCommand extends BaseCommand implements Command, WithModal {
 
     public showOnCommandPalette: boolean = false;
 
@@ -14,16 +15,31 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
     constructor() {
         super(
             `kbs6-lib`,
-            `install-latest-version`,
-            `download-cloud`,
-            `Install Latest Version`,
+            `publish`,
+            `upload-cloud`,
+            `Publish`,
             true
         );
-
     }
 
+    executeModalAction(actionId: string): void {
+
+        Store.mainViewWebview?.postMessage({
+            command: `dismiss-modal`
+        });
+
+        switch (actionId) {
+            case `confirm`:
+                this.executeProcess();
+                break;
+            case `cancel`:
+                this.stopExecuting();
+                break;
+        }
+    };
+
     show(): boolean {
-        return !Kbs6LibModule.isKbs6LibWorkspace();
+        return Kbs6LibModule.isKbs6LibWorkspace();
     }
 
     showInPanel(): boolean {
@@ -33,6 +49,38 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
     // Execute region
 
     execute(): void {
+        if (!this.executing) {
+            Store.mainViewWebview?.postMessage({
+                command: `show-modal`,
+                title: `Publish`,
+                content: `
+                    Are you sure you want to publish a new version of <b>@kbs6/kbs-lib</b>?
+                `,
+                actions: [
+                    {
+                        module: this.getModule(),
+                        command: this.getId(),
+                        id: `cancel`,
+                        label: `Cancel`,
+                        class: `secondary`
+                    },
+                    {
+                        module: this.getModule(),
+                        command: this.getId(),
+                        id: `confirm`,
+                        label: `Confirm`,
+                        class: `primary`
+                    }
+                ],
+                canDismiss: true
+            });
+        }
+        else {
+            this.executeProcess();
+        }
+    }
+
+    private executeProcess(): void {
         this.openLogPanel();
 
         this.executing = !this.executing;
@@ -62,7 +110,7 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
 
             this.process.on(`close`, (code) => {
                 if (!this.process?.killed) {
-                    this.postInstall();
+                    this.stopExecuting();
                 }
             });
         }
@@ -77,40 +125,6 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
             }
         }
     }
-
-    private postInstall() {
-
-        try {
-            // Move everything from the @kbs6/kbs-lib/assets/images/ged-fileicon folder to the project assets/images/ged-fileicon folder
-            const source = `${Store.rootPath}/node_modules/@kbs6/kbs-lib/assets/images/ged-fileicon`;
-            const destination = `${Store.rootPath}/src/assets/images/ged-fileicon`;
-
-            // Check if the source folder exists
-            if (!fs.existsSync(source)) {
-                throw new Error(`Source folder doesn't exist.`);
-            }
-
-            // Check if the destination folder exists
-            if (!fs.existsSync(destination)) {
-                fs.mkdirSync(destination, { recursive: true });
-            }
-
-            this.console.log(`Copying files from ${source} to ${destination} ...`);
-
-            // Copy all files from the source folder to the destination folder
-            fs.readdirSync(source).forEach(file => {
-                fs.copyFileSync(`${source}/${file}`, `${destination}/${file}`);
-            });
-
-            this.console.log(`Files copied successfully.`, `success`);
-            this.console.log(`Installation completed successfully.`, `success`);
-        }
-        catch (error) {
-            this.console.log((error as Error).message, `error`);
-        }
-
-        this.stopExecuting();
-    };
 
     private stopExecuting() {
         this.executing = false;

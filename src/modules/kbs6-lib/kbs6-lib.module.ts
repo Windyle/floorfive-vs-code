@@ -5,6 +5,7 @@ import { Module } from '../../core/types/module';
 import { Store } from "../../store";
 import { CompareVersionCommand } from './commands/compare-version.command';
 import { InstallLatestVersionCommand } from './commands/install-latest-version.command';
+import { PublishCommand } from './commands/publish.command';
 
 export class Kbs6LibModule extends BaseModule implements Module {
 
@@ -14,10 +15,12 @@ export class Kbs6LibModule extends BaseModule implements Module {
 
         const compareVersionCommand = new CompareVersionCommand();
         const installLatestVersionCommand = new InstallLatestVersionCommand();
+        const publishCommand = new PublishCommand();
 
         // Add commands instances to the commands object
         this.commands[compareVersionCommand.getId()] = compareVersionCommand;
         this.commands[installLatestVersionCommand.getId()] = installLatestVersionCommand;
+        this.commands[publishCommand.getId()] = publishCommand;
     }
 
     public show(): boolean {
@@ -42,7 +45,7 @@ export class Kbs6LibModule extends BaseModule implements Module {
 
     // Custom methods
 
-    public isKbs6LibWorkspace(): boolean {
+    public static isKbs6LibWorkspace(): boolean {
         // If the root path contains a projects/kbs folder and a package.json file,
         // check if the package.json name field is '@kbs6/kbs-lib'
         if (fs.existsSync(path.join(Store.rootPath, `projects`, `kbs`))

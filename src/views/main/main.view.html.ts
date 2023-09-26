@@ -19,6 +19,17 @@ export const HTML: string = `<!DOCTYPE html>
     {{actionsHtml}}
   </div>
 
+  <div id="modal-overlay"></div>
+  <div id="modal">
+    <h1 id="modal-title">Modal Title</h1>
+    <p id="modal-description">Modal Description</p>
+    
+    <div id="modal-actions">
+        <button id="modal-cancel">Cancel</button>
+        <button id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+
   <script>
     {{iconsVariables}}
   </script>

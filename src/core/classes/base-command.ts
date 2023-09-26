@@ -93,7 +93,7 @@ document.getElementById("${this.getModule()}-${this.getId()}").addEventListener(
     public getListenerScript(): string {
         return `
 case '${this.getModule()}:${this.getId()}:listener':
-    ${this.getWithLoader() ? `setExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');` : ``}
+    ${this.getWithLoader() ? `stopExecutingById("${this.getModule()}-${this.getId()}", '${this.getIcon()}', '${this.getLabel()}');` : ``}
     break;
         `;
     };

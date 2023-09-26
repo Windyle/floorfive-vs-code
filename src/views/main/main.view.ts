@@ -102,6 +102,9 @@ class MainViewProvider implements vscode.WebviewViewProvider {
                             });
                         });
                         break;
+                    case `@modal-action`:
+                        Modules.getModule(message.moduleId).commands[message.commandId].executeModalAction(message.actionId);
+                        break;
                 }
             }
         }

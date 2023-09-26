@@ -140,7 +140,6 @@ function goToActivePanel(moduleId, commandId) {
 
     for (const btn of categoriesBtns) {
         if(btn.id === moduleId && !btn.classList.contains('active')) {
-            console.log("CLICKED CAT: ", btn);
             btn.click();
             break;
         }

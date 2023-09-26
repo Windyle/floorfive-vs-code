@@ -33,6 +33,68 @@ case '@is-executing:listener':
     break;
         `;
 
+        const modalScript = `
+// ==== MODAL ====
+
+var canDismissModal = true;
+
+
+var modal = document.getElementById("modal");
+var modalOverlay = document.getElementById("modal-overlay");
+var modalTitle = document.getElementById("modal-title");
+var modalDescription = document.getElementById("modal-description");
+var modalActions = document.getElementById("modal-actions");
+
+modalOverlay.addEventListener("click", function() {
+    if(canDismissModal) {
+        dismissModal();
+    }
+});
+
+function showModal(title, content, actions, canDismiss = true) {
+
+    canDismissModal = canDismiss;
+
+    modalTitle.innerHTML = title;
+    modalDescription.innerHTML = content;
+    
+    var actionsHtml = '';
+    actions.forEach(action => {
+        actionsHtml += '<button id="modal-' + action.module + ':' + action.command + ':' + action.id + '" class="' + action.class + '">' + action.label + '</button>';
+    });
+    modalActions.innerHTML = actionsHtml;
+
+    document.querySelectorAll('#modal-actions button').forEach(button => {
+        button.addEventListener('click', function() {
+            var [module, command, id] = this.id.split(':');
+            vscode.postMessage({
+                command:'@modal-action',
+                moduleId: module.replace('modal-', ''),
+                commandId: command,
+                actionId: id
+            });
+        });
+    });
+
+    modalOverlay.classList.add("show");
+    modal.classList.add("show");
+}
+
+function dismissModal() {
+    modalOverlay.classList.remove("show");
+    modal.classList.remove("show");
+}
+        `;
+
+        const modalListenerScript = `
+        case 'show-modal':
+            showModal(message.title, message.content, message.actions, message.canDismiss);
+            break;
+        case 'dismiss-modal':
+            dismissModal();
+            break;
+        `;
+
         return `
 const vscode = acquireVsCodeApi();
 
@@ -70,12 +132,14 @@ function setExecuting(element, icon, label) {
     const iconName = iconTag.getAttribute('name');
     
     if(iconName === icon) {
+
         iconTag.setAttribute('name', 'square');
         iconTag.innerHTML = icons['square'];
         iconTag.querySelector('svg').classList.add('flip');
         element.querySelector('label').innerHTML = 'Stop ' + label;
     }
     else {
+
         iconTag.setAttribute('name', icon);
         iconTag.innerHTML = icons[icon];
         iconTag.querySelector('svg').classList.remove('flip');
@@ -84,14 +148,16 @@ function setExecuting(element, icon, label) {
         element.classList.add('disabled');
         setTimeout(() => {
             element.classList.remove('disabled');
-        }, 1500);
+        }, 2500);
     }
 }
 
-function setExecutingById(id, icon, label) {
+function stopExecutingById(id, icon, label) {
     var element = document.getElementById(id);
 
-    setExecuting(element, icon, label);
+    if(element.querySelector('icon').getAttribute('name') === 'square') {
+        setExecuting(element, icon, label);
+    }
 }
 
 vscode.postMessage({
@@ -99,6 +165,8 @@ vscode.postMessage({
 });
 
 ${scripts}
+
+${modalScript}
 
 // ==== MESSAGE HANDLER ====
 
@@ -108,6 +176,7 @@ window.addEventListener('message', event => {
 
     switch (message.command) {
         ${isExecutingListenerScript}
+        ${modalListenerScript}
         ${listenersScripts}
     }
 });

@@ -4,6 +4,7 @@ import { Command } from "../../../core/types/command";
 import { HighlightLanguages } from "../../../core/enums/highlight-languages";
 import { Store } from "../../../store";
 import { PackageJson } from "../../../services/package-json.service";
+import { Kbs6LibModule } from "../kbs6-lib.module";
 
 export class CompareVersionCommand extends BaseCommand implements Command {
 
@@ -56,11 +57,11 @@ export class CompareVersionCommand extends BaseCommand implements Command {
     }
 
     show(): boolean {
-        return true;
+        return !Kbs6LibModule.isKbs6LibWorkspace();
     }
 
     showInPanel(): boolean {
-        return true;
+        return this.show();
     }
 
     // Execute region
