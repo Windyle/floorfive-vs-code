@@ -17,10 +17,10 @@ export class MainViewMessageHandler {
                 if (command.executing) {
                     webview.postMessage({
                         command: '@is-executing:listener',
-                        moduleId: module.id,
-                        commandId: command.id,
-                        icon: command.icon,
-                        label: command.label
+                        moduleId: module.getId(),
+                        commandId: command.getId(),
+                        icon: command.getIcon(),
+                        label: command.getLabel()
                     });
                 }
             });

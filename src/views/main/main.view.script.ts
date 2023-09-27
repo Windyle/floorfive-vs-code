@@ -38,8 +38,8 @@ export class MainViewScript {
      */
     private isExecutingListener: string = `
 case '@is-executing:listener':
-    console.log('is-executing:listener', message);
-    setExecutingById(message.moduleId + '-' + message.commandId, message.icon, message.label);
+    var element = document.getElementById(message.moduleId + '-' + message.commandId);
+    setExecuting(element, message.icon, message.label);
     break;
         `;
 

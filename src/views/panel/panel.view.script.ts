@@ -49,8 +49,6 @@ var tabsList = ${JSON.stringify(
         }, {})
     )};
 
-console.log(tabsList);
-
 var tabs;
 
 function setTabs(categoryId = '') {
