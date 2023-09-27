@@ -1,6 +1,6 @@
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import * as fs from 'node:fs';
-import * as vscode from "vscode";
+import * as path from 'node:path';
 import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
 import { WithModal } from "../../../core/types/with-modal";
@@ -175,7 +175,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             this.console.log(`1. Patching the version of @kbs6/kbs-lib...`, `step`);
 
             // Get the package.json file at projects/kbs/
-            const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
+            const packageJsonPath = path.join(Store.rootPath, `projects`, `kbs`, `package.json`);
 
             // Read the file
             const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
@@ -200,7 +200,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             this.console.log(`1.1. Update version and dependencies in globals.ts...`, `step`);
 
             // Get the globals.ts file at projects/kbs/src/globals.ts
-            const globalsPath = `${Store.rootPath}/projects/kbs/src/globals.ts`;
+            const globalsPath = path.join(Store.rootPath, `projects`, `kbs`, `src`, `globals.ts`);
 
             // Read the file
             const globalsFile = fs.readFileSync(globalsPath, `utf8`)
@@ -265,20 +265,20 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             this.console.log(`3.1. Move assets not to be published to a temporary folder...`, `step`);
 
             // If the folder exists, delete it
-            const tempFolder = `${Store.rootPath}/not-to-publish`;
+            const tempFolder = path.join(Store.rootPath, `not-to-publish`);
 
             if (fs.existsSync(tempFolder)) {
                 fs.rmSync(tempFolder, { recursive: true });
             }
 
             // Rename dist/kbs/assets/ folder into not-to-publish/
-            await fs.promises.rename(`${Store.rootPath}/dist/kbs/assets`, tempFolder);
+            await fs.promises.rename(path.join(Store.rootPath, `dist`, `kbs`, `assets`), tempFolder);
 
             // Add permissions to the folder (otherwise it can't be copied)
             await fs.promises.chmod(tempFolder, 0o777);
 
             // Move the not-to-publish/images/ged-fileicon/ folder to dist/kbs/assets/images/ged-fileicon/
-            await fs.promises.cp(`${tempFolder}/images/ged-fileicon/`, `${Store.rootPath}/dist/kbs/assets/images/ged-fileicon/`, { recursive: true });
+            await fs.promises.cp(path.join(tempFolder, `images`, `ged-fileicon/`), path.join(Store.rootPath, `dist`, `kbs`, `assets`, `images`, `ged-fileicon/`), { recursive: true });
 
             return true;
         }
@@ -333,7 +333,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             this.console.log(`5.1. Move assets not to be published back to dist/kbs/assets/...`, `step`);
 
             // Copy the contents of not-to-publish/ to dist/kbs/assets/
-            await fs.promises.cp(`${Store.rootPath}/not-to-publish/`, `${Store.rootPath}/dist/kbs/assets/`, { recursive: true });
+            await fs.promises.cp(path.join(Store.rootPath, `not-to-publish/`), path.join(Store.rootPath, `dist`, `kbs`, `assets/`), { recursive: true });
 
             // Delete the not-to-publish/ folder
             this.deleteNotToPublishFolder();
@@ -341,7 +341,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             this.console.log(`5.2. Update lastVersion property in package.json...`, `step`);
 
             // Get the package.json file at projects/kbs/
-            const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
+            const packageJsonPath = path.join(Store.rootPath, `projects`, `kbs`, `package.json`);
 
             // Read the file
             const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
@@ -365,7 +365,7 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     };
 
     private deleteNotToPublishFolder(): void {
-        const tempFolder = `${Store.rootPath}/not-to-publish`;
+        const tempFolder = path.join(Store.rootPath, `not-to-publish`);
 
         if (fs.existsSync(tempFolder)) {
             fs.rmSync(tempFolder, { recursive: true });

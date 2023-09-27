@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { UtilitiesService } from "./utilities.service";
+import { Utilities } from "./utilities.service";
 import { Store } from '../store';
 
 /**
@@ -31,7 +31,7 @@ export class IconsService {
 
 var icons = {
     ${IconsService.iconsList.map(icon => {
-            return `"${icon}": \`{{${UtilitiesService.snakeToCamel(icon)}Icon}}\``;
+            return `"${icon}": \`{{${Utilities.snakeToCamel(icon)}Icon}}\``;
         })
             }
 };
@@ -49,7 +49,7 @@ iconTags.forEach(function(iconTag) {
         // Replace template variables with icons actual svg tags, read from files
         for (const key of Object.keys(iconsPaths)) {
             const icon = fs.readFileSync(iconsPaths[key].fsPath, `utf8`);
-            iconsScript = iconsScript.replace(`{{${UtilitiesService.snakeToCamel(key)}Icon}}`, icon);
+            iconsScript = iconsScript.replace(`{{${Utilities.snakeToCamel(key)}Icon}}`, icon);
         }
 
         return iconsScript;

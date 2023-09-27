@@ -29,12 +29,16 @@ export class Store {
         `external-link`,
         `eye`,
         `loader`,
+        `mountain`,
         `package`,
         `palette`,
+        `plane-departure`,
+        `plane`,
         `play`,
         `search`,
         `settings`,
         `square`,
+        `trees`,
         `upload-cloud`,
         `x-circle`
     ];

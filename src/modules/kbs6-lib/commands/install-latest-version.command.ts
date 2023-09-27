@@ -1,5 +1,6 @@
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
 import { Store } from "../../../store";
@@ -89,8 +90,8 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
     private postInstall() {
         try {
             // Move everything from the @kbs6/kbs-lib/assets/images/ged-fileicon folder to the project assets/images/ged-fileicon folder
-            const source = `${Store.rootPath}/node_modules/@kbs6/kbs-lib/assets/images/ged-fileicon`;
-            const destination = `${Store.rootPath}/src/assets/images/ged-fileicon`;
+            const source = path.join(Store.rootPath, `node_modules`, `@kbs6`, `kbs-lib`, `assets`, `images`, `ged-fileicon`);
+            const destination = path.join(Store.rootPath, `src`, `assets`, `images`, `ged-fileicon`);
 
             // Check if the source folder exists
             if (!fs.existsSync(source)) {
@@ -106,7 +107,7 @@ export class InstallLatestVersionCommand extends BaseCommand implements Command 
 
             // Copy all files from the source folder to the destination folder
             fs.readdirSync(source).forEach(file => {
-                fs.copyFileSync(`${source}/${file}`, `${destination}/${file}`);
+                fs.copyFileSync(path.join(source, file), path.join(destination, file));
             });
 
             this.console.log(`Files copied successfully.`, `success`);

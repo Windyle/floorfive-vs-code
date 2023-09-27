@@ -73,6 +73,8 @@ function setTabs(categoryId = '') {
             setActivePanel(categoryId, tab.getAttribute('name'));
         });
     });
+
+    tabs[0].click();
 }
 `;
 
