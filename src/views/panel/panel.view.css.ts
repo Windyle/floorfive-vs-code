@@ -177,6 +177,11 @@ html, body {
     flex-direction: column;
 }
 
+/* Styling for console panel pre tags */
+#console-panel pre {
+    margin: 5px 0px;
+}
+
 /* Styling for collapsed console panel */
 .container.collapsed #console-panel {
     max-width: calc(100vw - 60px);

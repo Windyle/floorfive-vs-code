@@ -1,10 +1,11 @@
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import * as fs from 'node:fs';
+import * as vscode from "vscode";
 import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
+import { WithModal } from "../../../core/types/with-modal";
 import { Store } from "../../../store";
 import { Kbs6LibModule } from "../kbs6-lib.module";
-import { WithModal } from "../../../core/types/with-modal";
 
 /**
  * Represents the PublishCommand class responsible for publishing the KBS6 Lib.
@@ -15,6 +16,8 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     private buildProcess: ChildProcessWithoutNullStreams | undefined;
     private publishProcess: ChildProcessWithoutNullStreams | undefined;
 
+    private tarballDetailsPassed: boolean = false;
+
     constructor() {
         super(
             `kbs6-lib`,
@@ -23,6 +26,11 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
             `Publish`,
             true
         );
+
+        // Add log type for tarball details
+        this.console.addLogType(`tarballDetails`, (message: string): string => {
+            return `<pre style="color: var(--vscode-terminal-ansiBrightBlue);">${message}</pre>`;
+        });
     }
 
     /**
@@ -99,21 +107,28 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
     private executeProcess(): void {
         this.openLogPanel();
 
+        this.tarballDetailsPassed = false;
+
         this.executing = !this.executing;
         if (this.executing) {
             this.console.clear();
 
             // 1. Patch the version of @kbs6/kbs-lib
-            this.patchLibVersion();
+            if (!this.patchLibVersion()) {
+                this.stopExecuting();
+                return;
+            }
 
             // 2. Build the lib
             this.buildProcess = this.buildLib();
 
-            this.buildProcess.on(`close`, (code) => {
+            this.buildProcess.on(`close`, async () => {
                 if (!this.buildProcess?.killed) {
 
                     // 3. Pre-publish actions
-                    this.prePublish();
+                    if (!await this.prePublish()) {
+                        return;
+                    }
 
                     // 4. Publish the lib
                     this.publishProcess = this.publishLib();
@@ -148,45 +163,84 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
 
     private stopExecuting() {
         this.executing = false;
+        this.tarballDetailsPassed = false;
 
         Store.mainViewWebview!.postMessage({
             command: `${this.getModule()}:${this.getId()}:listener`
         });
     }
 
-    private patchLibVersion = (): void => {
-        this.console.log(`1. Patching the version of @kbs6/kbs-lib...`, `step`);
+    private patchLibVersion(): boolean {
+        try {
+            this.console.log(`1. Patching the version of @kbs6/kbs-lib...`, `step`);
 
-        // Get the package.json file at projects/kbs/
-        const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
+            // Get the package.json file at projects/kbs/
+            const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
 
-        // Read the file
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
+            // Read the file
+            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
 
-        // Get the version
-        const version = packageJson.version;
-        const lastVersion = packageJson.lastVersion;
+            // Get the version
+            const version = packageJson.version;
+            const lastVersion = packageJson.lastVersion;
 
-        // Increment its patch version if it's the same as the last version (to avoid incrementing the version when the lib is not published)
-        let newVersion = version;
-        if (parseInt(version.split(`.`)[2]) === parseInt(lastVersion.split(`.`)[2])) {
-            const [major, minor, patch] = version.split(`.`);
-            newVersion = `${major}.${minor}.${parseInt(patch) + 1}`;
+            // Increment its patch version if it's the same as the last version (to avoid incrementing the version when the lib is not published)
+            let newVersion = version;
+            if (parseInt(version.split(`.`)[2]) === parseInt(lastVersion.split(`.`)[2])) {
+                const [major, minor, patch] = version.split(`.`);
+                newVersion = `${major}.${minor}.${parseInt(patch) + 1}`;
+            }
+
+            // Update the version in the file
+            packageJson.version = newVersion;
+
+            // Write the file
+            fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, `\t`));
+
+            this.console.log(`1.1. Update version and dependencies in globals.ts...`, `step`);
+
+            // Get the globals.ts file at projects/kbs/src/globals.ts
+            const globalsPath = `${Store.rootPath}/projects/kbs/src/globals.ts`;
+
+            // Read the file
+            const globalsFile = fs.readFileSync(globalsPath, `utf8`)
+                .replace(`/* eslint-disable */\r\nexport const kbsGlobals = `, ``)
+                .replace(/\t/g, ``)
+                .replace(/\n/g, ``)
+                .replace(/\r/g, ``)
+                .replace(`};`, `}`);
+
+            // Parse the json in the file
+            const globals = JSON.parse(globalsFile);
+
+            // Update the version in the file
+            globals[`kbsLib`].version = newVersion;
+
+            // Update the dependencies in the file
+            globals[`kbsLib`].dependencies = {};
+            Object.keys(packageJson.peerDependencies).forEach((dependency) => {
+                globals[`kbsLib`].dependencies[dependency] = packageJson.peerDependencies[dependency];
+            });
+
+            // Write the file
+            fs.writeFileSync(globalsPath, `/* eslint-disable */\r\nexport const kbsGlobals = ${JSON.stringify(globals, null, `\t`)};`);
+
+            return true;
         }
+        catch (err) {
+            const error = err as Error;
+            this.console.log(error.message, `error`);
 
-        // Update the version in the file
-        packageJson.version = newVersion;
-
-        // Write the file
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, `\t`));
+            return false;
+        }
     };
 
-    private buildLib = (): ChildProcessWithoutNullStreams => {
+    private buildLib(): ChildProcessWithoutNullStreams {
         this.console.log(`2. Building the lib...`, `step`);
 
         const command = `npm run build-lib`;
 
-        this.console.log(command, `command`);
+        this.console.log(command, `consoleCommand`);
 
         const process = spawn(command.split(` `)[0], command.split(` `).slice(1), {
             cwd: `${Store.rootPath}`,
@@ -204,29 +258,45 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
         return process;
     };
 
-    private prePublish = (): void => {
-        this.console.log(`3. Pre-publish actions: Move assets not to be published to a temporary folder...`, `step`);
+    private async prePublish(): Promise<boolean> {
+        try {
+            this.console.log(`3. Pre-publish actions...`, `step`);
 
-        // If the folder exists, delete it
-        const tempFolder = `${Store.rootPath}/not-to-publish`;
+            this.console.log(`3.1. Move assets not to be published to a temporary folder...`, `step`);
 
-        if (fs.existsSync(tempFolder)) {
-            fs.rmSync(tempFolder, { recursive: true });
+            // If the folder exists, delete it
+            const tempFolder = `${Store.rootPath}/not-to-publish`;
+
+            if (fs.existsSync(tempFolder)) {
+                fs.rmSync(tempFolder, { recursive: true });
+            }
+
+            // Rename dist/kbs/assets/ folder into not-to-publish/
+            await fs.promises.rename(`${Store.rootPath}/dist/kbs/assets`, tempFolder);
+
+            // Add permissions to the folder (otherwise it can't be copied)
+            await fs.promises.chmod(tempFolder, 0o777);
+
+            // Move the not-to-publish/images/ged-fileicon/ folder to dist/kbs/assets/images/ged-fileicon/
+            await fs.promises.cp(`${tempFolder}/images/ged-fileicon/`, `${Store.rootPath}/dist/kbs/assets/images/ged-fileicon/`, { recursive: true });
+
+            return true;
         }
+        catch (err) {
+            const error = err as Error;
 
-        // Rename dist/kbs/assets/ folder into not-to-publish/
-        fs.renameSync(`${Store.rootPath}/dist/kbs/assets`, tempFolder);
+            this.console.log(error.message, `error`);
 
-        // Move the not-to-publish/images/ged-fileicon/ folder to dist/kbs/assets/images/ged-fileicon/
-        fs.renameSync(`${tempFolder}/images/ged-fileicon`, `${Store.rootPath}/dist/kbs/assets/images/ged-fileicon`);
+            return false;
+        }
     };
 
-    private publishLib = (): ChildProcessWithoutNullStreams => {
+    private publishLib(): ChildProcessWithoutNullStreams {
         this.console.log(`4. Publishing the lib...`, `step`);
 
         const command = `npm publish`;
 
-        this.console.log(command, `command`);
+        this.console.log(command, `consoleCommand`);
 
         const process = spawn(command.split(` `)[0], command.split(` `).slice(1), {
             cwd: `${Store.rootPath}/dist/kbs`,
@@ -234,51 +304,67 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
         });
 
         process.stdout.on(`data`, (data) => {
-            this.console.log(data.toString());
+            if (data.toString().includes(`+ @kbs6/kbs-lib@`)) {
+                this.console.log(data.toString(), `success`);
+            }
+            else {
+                this.console.log(data.toString());
+            }
         });
 
         process.stderr.on(`data`, (data) => {
-            this.console.log(data.toString(), `error`);
+            if (data.toString().includes(`=== Tarball Details ===`) || this.tarballDetailsPassed) {
+                this.console.log(data.toString(), `tarballDetails`);
+                this.tarballDetailsPassed = true;
+            }
+            else if ((data.toString().toLowerCase().includes(`error`) || data.toString().toLowerCase().includes(`err`))
+                && !data.toString().includes(`npm notice`)) {
+                this.console.log(data.toString(), `error`);
+            }
         });
 
         return process;
     };
 
-    private postPublish = (): void => {
-        this.console.log(`5. Post-publish actions...`, `step`);
+    private async postPublish(): Promise<void> {
+        try {
+            this.console.log(`5. Post-publish actions...`, `step`);
 
-        this.console.log(`5.1. Move assets not to be published back to dist/kbs/assets/...`, `step`);
+            this.console.log(`5.1. Move assets not to be published back to dist/kbs/assets/...`, `step`);
 
-        // Move the files from dist/kbs/assets/images/ged-fileicon/ to not-to-publish/images/ged-fileicon/
-        fs.renameSync(`${Store.rootPath}/dist/kbs/assets/images/ged-fileicon`, `${Store.rootPath}/not-to-publish/images/ged-fileicon`);
+            // Copy the contents of not-to-publish/ to dist/kbs/assets/
+            await fs.promises.cp(`${Store.rootPath}/not-to-publish/`, `${Store.rootPath}/dist/kbs/assets/`, { recursive: true });
 
-        // Rename not-to-publish/ back to dist/kbs/assets/
-        fs.renameSync(`${Store.rootPath}/not-to-publish`, `${Store.rootPath}/dist/kbs/assets`);
+            // Delete the not-to-publish/ folder
+            this.deleteNotToPublishFolder();
 
-        // Delete the not-to-publish/ folder
-        fs.rmdirSync(`${Store.rootPath}/not-to-publish`, { recursive: true });
+            this.console.log(`5.2. Update lastVersion property in package.json...`, `step`);
 
-        this.console.log(`5.2. Update lastVersion property in package.json...`, `step`);
+            // Get the package.json file at projects/kbs/
+            const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
 
-        // Get the package.json file at projects/kbs/
-        const packageJsonPath = `${Store.rootPath}/projects/kbs/package.json`;
+            // Read the file
+            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
 
-        // Read the file
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, `utf8`));
+            // Get the version
+            const version = packageJson.version;
 
-        // Get the version
-        const version = packageJson.version;
+            // Update the lastVersion property in the file
+            packageJson.lastVersion = version;
 
-        // Update the lastVersion property in the file
-        packageJson.lastVersion = version;
+            // Write the file
+            await fs.promises.writeFile(packageJsonPath, JSON.stringify(packageJson, null, `\t`));
 
-        // Write the file
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, `\t`));
+            this.console.log(`REMEMBER TO COMMIT AND PUSH THE PACKAGE.JSON FILE!!!`, `alert`);
+        }
+        catch (err) {
+            const error = err as Error;
 
-        this.console.log(`REMEMBER TO COMMIT AND PUSH THE PACKAGE.JSON FILE!!!`, `alert`);
+            this.console.log(error.message, `error`);
+        }
     };
 
-    private deleteNotToPublishFolder = (): void => {
+    private deleteNotToPublishFolder(): void {
         const tempFolder = `${Store.rootPath}/not-to-publish`;
 
         if (fs.existsSync(tempFolder)) {

@@ -90,7 +90,7 @@ export class FFConsole {
             return `<pre style="color: var(--vscode-terminal-ansiGreen);">${message}</pre>`;
         },
         step: (message: string): string => {
-            return `<pre><span style="color: var(--vscode-terminal-ansiBlue);">${message.split(` `)[0]}.</span> <span style="color: var(--vscode-terminal-ansiBrightBlue);">${message.split(` `).slice(1).join(` `)}</span></pre>`;
+            return `<pre><span style="color: var(--vscode-terminal-ansiBlue);">${message.split(` `)[0]}</span> <span style="color: var(--vscode-terminal-ansiBrightBlue);">${message.split(` `).slice(1).join(` `)}</span></pre>`;
         },
     };
 
