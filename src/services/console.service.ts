@@ -174,9 +174,11 @@ export class FFConsole {
             type = `plain`;
         }
 
+        this._log += this.formatLinks(this._logTypes[type](message, language));
+
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,
-            content: this._log += this.formatLinks(this._logTypes[type](message, language))
+            content: this._log
         });
     };
 }

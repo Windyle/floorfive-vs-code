@@ -169,10 +169,8 @@ function goToActivePanel(moduleId, commandId) {
 
     for (const tab of tabs) {
         if(tab.getAttribute('name') === commandId) {
-            tab.classList.add('active');
-        }
-        else {
-            tab.classList.remove('active');
+            tab.click();
+            break;
         }
     }
 

@@ -49,7 +49,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         this.extensionUri = context.extensionUri;
 
         // Get initial active panel
-        const initialCommand = Modules.getModulesArray()[0].getCommandsArray()[0];
+        const initialCommand = Modules.getModulesArray().filter((module: any) => module.showInPanel())[0].getCommandsArray().filter((command: any) => command.showInPanel())[0];
         this.activePanel = `${initialCommand.getModule()}:${initialCommand.getId()}`;
     }
 

@@ -111,44 +111,39 @@ export class PublishCommand extends BaseCommand implements Command, WithModal {
 
         this.executing = !this.executing;
         if (this.executing) {
-            this.console.log(`This is a test log message.`);
-            setInterval(() => {
-                this.console.log(`This is a test log message.`);
-            }, 5000);
+            this.console.clear();
 
-            // this.console.clear();
+            // 1. Patch the version of @kbs6/kbs-lib
+            if (!this.patchLibVersion()) {
+                this.stopExecuting();
+                return;
+            }
 
-            // // 1. Patch the version of @kbs6/kbs-lib
-            // if (!this.patchLibVersion()) {
-            //     this.stopExecuting();
-            //     return;
-            // }
+            // 2. Build the lib
+            this.buildProcess = this.buildLib();
 
-            // // 2. Build the lib
-            // this.buildProcess = this.buildLib();
+            this.buildProcess.on(`close`, async () => {
+                if (!this.buildProcess?.killed) {
 
-            // this.buildProcess.on(`close`, async () => {
-            //     if (!this.buildProcess?.killed) {
+                    // 3. Pre-publish actions
+                    if (!await this.prePublish()) {
+                        return;
+                    }
 
-            //         // 3. Pre-publish actions
-            //         if (!await this.prePublish()) {
-            //             return;
-            //         }
+                    // 4. Publish the lib
+                    this.publishProcess = this.publishLib();
 
-            //         // 4. Publish the lib
-            //         this.publishProcess = this.publishLib();
+                    this.publishProcess.on(`close`, (code) => {
+                        if (!this.publishProcess?.killed) {
 
-            //         this.publishProcess.on(`close`, (code) => {
-            //             if (!this.publishProcess?.killed) {
+                            // 5. Post-publish actions
+                            this.postPublish();
 
-            //                 // 5. Post-publish actions
-            //                 this.postPublish();
-
-            //                 this.stopExecuting();
-            //             }
-            //         });
-            //     }
-            // });
+                            this.stopExecuting();
+                        }
+                    });
+                }
+            });
         } else {
             if (this.buildProcess) {
                 this.buildProcess.kill();
