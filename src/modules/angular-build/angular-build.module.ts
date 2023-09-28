@@ -3,18 +3,18 @@ import * as path from 'node:path';
 import { BaseModule } from '../../core/classes/base-module';
 import { Module } from '../../core/types/module';
 import { Store } from "../../store";
-import { DeployCommand } from './commands/deploy.command';
+import { BuildCommand } from './commands/build.command';
 import { Utilities } from '../../services/utilities.service';
 
 /**
  * Represents the Kbs6LibModule class responsible for managing KBS6 Lib-related functionality.
  */
-export class AngularDeployModule extends BaseModule implements Module {
+export class AngularBuildModule extends BaseModule implements Module {
     /**
      * Creates an instance of the Kbs6LibModule.
      */
     constructor() {
-        super(`angular-deploy`, `Angular Deploy`, `plane-departure`);
+        super(`angular-build`, `Angular Build`, `hammer`);
 
         if (fs.existsSync(path.join(Store.rootPath, `angular.json`))) {
 
@@ -28,7 +28,7 @@ export class AngularDeployModule extends BaseModule implements Module {
             const configurations = projects.map((project: string) => Object.keys(angularJson.projects[project].architect.build.configurations)).flat();
 
             configurations.forEach((configuration: string) => {
-                this.commands[configuration] = new DeployCommand(configuration, Utilities.capitalize(Utilities.snakeToCamel(configuration, true)));
+                this.commands[configuration] = new BuildCommand(configuration, Utilities.capitalize(Utilities.snakeToCamel(configuration, true)));
             });
 
         }

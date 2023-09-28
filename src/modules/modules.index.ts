@@ -1,4 +1,4 @@
-import { AngularDeployModule } from "./angular-deploy/angular-deploy.module";
+import { AngularBuildModule } from "./angular-build/angular-build.module";
 import { Kbs6LibModule } from "./kbs6-lib/kbs6-lib.module";
 import { SettingsModule } from "./settings/settings.module";
 
@@ -16,12 +16,12 @@ export class Modules {
     public static setModules(): void {
         // Get modules instances
         const kbs6LibModule = new Kbs6LibModule();
-        const angularDeployModule = new AngularDeployModule();
+        const angularBuildModule = new AngularBuildModule();
         const settingsModule = new SettingsModule();
 
         // Add module instances to the modules object
         Modules.modules[kbs6LibModule.getId()] = kbs6LibModule;
-        Modules.modules[angularDeployModule.getId()] = angularDeployModule;
+        Modules.modules[angularBuildModule.getId()] = angularBuildModule;
         Modules.modules[settingsModule.getId()] = settingsModule;
     }
 

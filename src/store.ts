@@ -20,6 +20,7 @@ export class Store {
     public static icons = [
         `arrows-right-left`,
         `book`,
+        `building-castle`,
         `check-circle`,
         `chevron-left`,
         `chevron-right`,
@@ -28,6 +29,7 @@ export class Store {
         `edit`,
         `external-link`,
         `eye`,
+        `hammer`,
         `loader`,
         `mountain`,
         `package`,
