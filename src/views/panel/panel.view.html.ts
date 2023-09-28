@@ -6,12 +6,6 @@ export const HTML: string = `
     <meta charset="UTF-8">
     <title>KBS6 Dev</title>
 
-    <!-- External Stylesheets -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/{{outputPanelTheme}}.min.css">
-
-    <!-- JavaScript Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-
     <!-- Custom CSS -->
     <style>
         {{css}}
@@ -43,7 +37,7 @@ export const HTML: string = `
             </div>
 
             <!-- Console Panel -->
-            <div class="section hljs" id="console-panel"></div>
+            <div class="section" id="console-panel"></div>
         </main>
     </div>
 

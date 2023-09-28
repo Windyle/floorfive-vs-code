@@ -1,4 +1,6 @@
 export const CSS: string = `
+/* Base Styles */
+
 body {
     padding: 0 5px;
 }
@@ -16,19 +18,22 @@ body {
     width: 2px;
 }
 
-icon, label {
+icon,
+label {
     cursor: pointer;
 }
 
+/* Collapsible Section Styles */
+
 .collapsible {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 0 10px;
-}       
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0 10px;
+}
 
 .collapsible:first-child {
     margin-top: 10px;
@@ -65,24 +70,28 @@ icon, label {
     transform: rotate(45deg) translate(-4px, 0px);
 }
 
+/* Header Styles */
+
 .container h1 {
-  width: 100%;
-  font-size: 12px;
-  text-transform: uppercase;
-  color: var(--vscode-editor-foreground);
-  user-select: none;
+    width: 100%;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--vscode-editor-foreground);
+    user-select: none;
 }
 
+/* Button Container Styles */
+
 .btns-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 10px;
-  padding: 0;
-  transition: max-height 0.2s ease-out, padding 0.001s 0.2s ease-out;
-  max-height: 0;
-  background-color: var(--vscode-editor-background);
-  overflow: hidden;
-  border-radius: 5px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    padding: 0;
+    transition: max-height 0.2s ease-out, padding 0.001s 0.2s ease-out;
+    max-height: 0;
+    background-color: var(--vscode-editor-background);
+    overflow: hidden;
+    border-radius: 5px;
 }
 
 .collapsible.active + .btns-container {
@@ -137,26 +146,29 @@ icon, label {
     }
 }
 
+/* Command Button Styles */
+
 .command-button {
-  background-color: var(--vscode-button-background);
-  border: none;
-  color: var(--vscode-button-foreground);
-  width: 100%;
-  height: 30px;
-  border-radius: 5px;
-  cursor: pointer;
+    background-color: var(--vscode-button-background);
+    border: none;
+    color: var(--vscode-button-foreground);
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .command-button:has(svg.flip) {
-    background-color: var(--vscode-inputValidation-warningBorder) !important;
+    background-color: var(--vscode-button-background) !important;
+    filter: hue-rotate(60deg) brightness(1.22);
 }
 
 .command-button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .command-button:active {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .command-button.disabled {
@@ -177,7 +189,7 @@ icon, label {
     height: 20px;
 }
 
-/* ==== MODAL ==== */
+/* Modal Styles */
 
 #modal-overlay {
     z-index: 4;
@@ -267,4 +279,5 @@ icon, label {
     background-color: transparent;
     border: 1px solid var(--vscode-button-background);
 }
+
 `;

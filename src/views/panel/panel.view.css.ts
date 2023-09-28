@@ -57,7 +57,8 @@ html, body {
 
 /* Active sidebar button */
 .sidebar button.active {
-    background-color: var(--vscode-inputValidation-warningBorder);
+    background-color: var(--vscode-button-background);
+    filter: hue-rotate(60deg) brightness(1.22);
 }
 
 /* Sidebar collapse button */
@@ -175,6 +176,8 @@ html, body {
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground);
 }
 
 /* Styling for console panel pre tags */

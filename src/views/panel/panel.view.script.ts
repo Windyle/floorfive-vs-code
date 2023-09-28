@@ -141,8 +141,6 @@ function setActivePanelContent(content) {
             consolePanel.scrollTop = consolePanel.scrollHeight;
         }, 100);
     }
-
-    hljs.highlightAll();
 }
 
 function getActivePanelFromView() {
@@ -220,26 +218,6 @@ document.getElementById('copy-console').addEventListener('click', () => {
         `;
 
     /**
-     * Set output panel theme function for setting the stylesheet of the output panel.
-     */
-    private setOutputPanelTheme: string = `
-// ==== SET OUTPUT PANEL THEME ====
-
-function setOutputPanelTheme(theme) {
-    // Change the href of the stylesheet
-    document.querySelector('link[href*="highlight.js"]').href = \`https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/\${theme}.min.css\`;
-}
-
-function getCurrentTheme() {
-    vscode.postMessage({
-        command: "update-output-panel-theme:current"
-    });
-}
-
-getCurrentTheme();
-        `;
-
-    /**
      * Message handler for handling messages from the extension to the view.
      */
     private messageHandler: string = `
@@ -281,8 +259,6 @@ window.addEventListener('message', event => {
 var vscode = acquireVsCodeApi();
 var activePanel = '';
 
-hljs.highlightAll();
-
 ${this.categories}
 
 ${this.tabs}
@@ -298,8 +274,6 @@ ${this.goToActivePanel}
 ${this.openLocalLink}
 
 ${this.copyConsole}
-
-${this.setOutputPanelTheme}
 
 ${this.messageHandler}
 `;

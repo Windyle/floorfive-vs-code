@@ -1,7 +1,5 @@
 import * as vscode from "vscode";
 
-import { HighlightLanguages } from "../core/enums/highlight-languages";
-
 /**
  * Instantiator class for the extension's custom console class.
  * It's used to get a different instance of the console for each command.
@@ -14,11 +12,10 @@ export class ConsoleInstantiator {
      * Instantiate a new console instance for the command.
      * @param moduleId The module ID of the command.
      * @param commandId The command ID.
-     * @param defaultLanguage (optional) The default language for the code highlight.
      * @returns {FFConsole} The new console instance.
      */
-    public static instantiate = (moduleId: string, commandId: string, defaultLanguage: HighlightLanguages = HighlightLanguages.plaintext): FFConsole => {
-        const instance = new FFConsole(moduleId, commandId, defaultLanguage);
+    public static instantiate = (moduleId: string, commandId: string): FFConsole => {
+        const instance = new FFConsole(moduleId, commandId);
         ConsoleInstantiator.instances.set(`${moduleId}:${commandId}`, instance);
 
         return instance;
@@ -42,7 +39,6 @@ export class FFConsole {
 
     private _categoryId: string;
     private _tabId: string;
-    private _defaultLanguage: HighlightLanguages;
     private _log: string = ``;
     public static webviewRef: vscode.Webview | undefined;
 
@@ -50,12 +46,10 @@ export class FFConsole {
      * Creates a new instance of the FFConsole class.
      * @param moduleId The module ID of the command.
      * @param commandId The command ID.
-     * @param defaultLanguage The default language for the code highlight.
      */
-    constructor(moduleId: string, commandId: string, defaultLanguage: HighlightLanguages) {
+    constructor(moduleId: string, commandId: string) {
         this._categoryId = moduleId;
         this._tabId = commandId;
-        this._defaultLanguage = defaultLanguage;
     };
 
     /**
@@ -72,10 +66,6 @@ export class FFConsole {
     private _logTypes: { [method: string]: any } = {
         plain: (message: string): string => {
             return `<pre>${message}</pre>`;
-        },
-        code: (message: string, language?: HighlightLanguages): string => {
-            language = language ? language : this._defaultLanguage;
-            return `<pre><code class="language-${language}">${message}</code></pre>`;
         },
         consoleCommand: (message: string): string => {
             return this.consoleCommandFormat(message);
@@ -167,14 +157,13 @@ export class FFConsole {
      * Log a message to the console.
      * @param message The message to log.
      * @param type The type of the message (plain, code, consoleCommand, alert, error, success, step...).
-     * @param language The language for the code highlight.
      */
-    public log = (message: string, type: string = `plain`, language?: HighlightLanguages) => {
+    public log = (message: string, type: string = `plain`) => {
         if (!Object.keys(this._logTypes).includes(type)) {
             type = `plain`;
         }
 
-        this._log += this.formatLinks(this._logTypes[type](message, language));
+        this._log += this.formatLinks(this._logTypes[type](message));
 
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,

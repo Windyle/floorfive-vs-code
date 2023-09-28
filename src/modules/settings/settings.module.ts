@@ -1,7 +1,6 @@
 import { BaseModule } from '../../core/classes/base-module';
 import { Module } from '../../core/types/module';
 import { OpenNpmrcCommand } from './commands/open-npmrc.command';
-import { OutputPanelThemeCommand } from './commands/output-panel-theme.command';
 
 /**
  * Represents the SettingsModule class responsible for managing settings-related functionality.
@@ -15,11 +14,9 @@ export class SettingsModule extends BaseModule implements Module {
 
         // Get command instances
         const openNpmrcCommand = new OpenNpmrcCommand();
-        const outputPanelThemeCommand = new OutputPanelThemeCommand();
 
         // Add command instances to the commands object
         this.commands[openNpmrcCommand.getId()] = openNpmrcCommand;
-        this.commands[outputPanelThemeCommand.getId()] = outputPanelThemeCommand;
     }
 
     /**
