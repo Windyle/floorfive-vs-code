@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { VSCodeTerminalColors } from "../core/enums/vscode-terminal-colors";
 
 /**
  * Instantiator class for the extension's custom console class.
@@ -73,6 +74,9 @@ export class FFConsole {
         alert: (message: string): string => {
             return `<pre style="color: var(--vscode-terminal-ansiBrightYellow);">${message}</pre>`;
         },
+        warning: (message: string): string => {
+            return `<pre style="color: var(--vscode-terminal-ansiYellow);">${message}</pre>`;
+        },
         error: (message: string): string => {
             return `<pre style="color: var(--vscode-terminal-ansiRed);">${message}</pre>`;
         },
@@ -81,6 +85,9 @@ export class FFConsole {
         },
         step: (message: string): string => {
             return `<pre><span style="color: var(--vscode-terminal-ansiBlue);">${message.split(` `)[0]}</span> <span style="color: var(--vscode-terminal-ansiBrightBlue);">${message.split(` `).slice(1).join(` `)}</span></pre>`;
+        },
+        color: (message: string, color: VSCodeTerminalColors): string => {
+            return `<pre style="color: var(--vscode-terminal-ansi${color});">${message}</pre>`;
         },
     };
 
@@ -158,12 +165,17 @@ export class FFConsole {
      * @param message The message to log.
      * @param type The type of the message (plain, code, consoleCommand, alert, error, success, step...).
      */
-    public log = (message: string, type: string = `plain`) => {
+    public log = (message: string, type: string = `plain`, args?: any[]) => {
         if (!Object.keys(this._logTypes).includes(type)) {
             type = `plain`;
         }
 
-        this._log += this.formatLinks(this._logTypes[type](message));
+        if (args !== undefined) {
+            this._log += this.formatLinks(this._logTypes[type](message, ...args));
+        }
+        else {
+            this._log += this.formatLinks(this._logTypes[type](message));
+        }
 
         FFConsole.webviewRef?.postMessage({
             command: `${this._categoryId}:${this._tabId}:log`,

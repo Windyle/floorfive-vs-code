@@ -2,6 +2,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { BaseCommand } from "../../../core/classes/base-command";
 import { Command } from "../../../core/types/command";
 import { Store } from "../../../store";
+import { VSCodeTerminalColors } from "../../../core/enums/vscode-terminal-colors";
 
 /**
  * Represents the BuildCommand class responsible for managing the Build command.
@@ -59,13 +60,32 @@ export class BuildCommand extends BaseCommand implements Command {
 
             this.process.stdout.on(`data`, (data) => {
                 if (!this.process?.killed) {
-                    this.console.log(data.toString());
+                    if (data.toString().includes(`Build at:`)) {
+                        const splitData = data.toString().split(`Build at:`);
+                        this.console.log(splitData[0]);
+                        this.console.log(`Build at:${splitData[1]}`, `color`, [VSCodeTerminalColors.green]);
+                    }
+                    else {
+                        this.console.log(data.toString());
+                    }
                 }
             });
 
             this.process.stderr.on(`data`, (data) => {
                 if (!this.process?.killed) {
-                    this.console.log(data.toString(), `error`);
+                    if (data.toString().startsWith(`- `)) {
+                        this.console.log(data.toString(), `color`, [VSCodeTerminalColors.cyan]);
+                    }
+                    else if (data.toString().startsWith(`√ `)) {
+                        this.console.log(data.toString(), `color`, [VSCodeTerminalColors.green]);
+                    }
+                    else if (data.toString().includes(`TypeScript compiler options "target" and "useDefineForClassFields"`)
+                        || data.toString().includes(`One or more browsers which are configured in the project's Browserslist`)) {
+                        this.console.log(data.toString(), `warning`);
+                    }
+                    else {
+                        this.console.log(data.toString(), `error`);
+                    }
                 }
             });
 
