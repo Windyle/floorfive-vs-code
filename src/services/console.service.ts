@@ -107,14 +107,16 @@ export class FFConsole {
      */
     private consoleCommandFormat = (message: string): string => {
 
-        // Highlight parameters (es: --depth=0 => --depth and 0 are highlighted)
-        let formattedMessage = message.replace(/(--[a-zA-Z0-9-]+)=([a-zA-Z0-9-]+)/g, (match, p1, p2) => {
-            return `<span style="color: var(--vscode-terminal-ansiYellow)">${p1}</span>=<span style="color: var(--vscode-terminal-ansiGreen)">${p2}</span>`;
-        });
+        const splitMessage = message.split(` `);
 
-        // Highlight the command
-        formattedMessage = formattedMessage.replace(/(npm\s[a-zA-Z0-9-]+)/g, (match) => {
-            return `<span style="color: var(--vscode-terminal-ansiGreen)">${match}</span>`;
+        const command = `<span style="color: var(--vscode-terminal-ansiGreen)">${splitMessage[0]}</span>`;
+        const mainArgument = splitMessage[1] !== undefined ? `<span style="color: var(--vscode-terminal-ansiYellow)">${splitMessage[1]}</span>` : ``;
+
+        let formattedMessage = `${command} ${mainArgument} ${splitMessage.slice(2).join(` `)}`;
+
+        // Highlight parameters (es: --depth=0 => --depth and 0 are highlighted)
+        formattedMessage = formattedMessage.replace(/(--[a-zA-Z0-9-]+)=([a-zA-Z0-9-]+)/g, (match, p1, p2) => {
+            return `<span style="color: var(--vscode-terminal-ansiYellow)">${p1}</span>=<span style="color: var(--vscode-terminal-ansiGreen)">${p2}</span>`;
         });
 
         return `<pre>${formattedMessage}</pre>`;

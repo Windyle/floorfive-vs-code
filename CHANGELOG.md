@@ -2,8 +2,13 @@
 
 All notable changes to the "floorfive-vs-code" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [1.0.0] - Fundamentals
 
-## [Unreleased]
+- First release of **FloorFive - VS Code Extension Boilerplate**.
 
-- Initial release
+### Added
+
+- Basic structure for creating modules and commands.
+- Output panel.
+- Icons injection system.
+- Themes support.

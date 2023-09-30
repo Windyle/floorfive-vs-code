@@ -1,9 +1,13 @@
 {
     "name": "floorfive-vs-code",
     "displayName": "FloorFive VS Code",
-    "description": "Errevi developers extension with QoL functions",
+    "description": "VS Code extension boilerplate for custom automations and utilities",
     "version": "0.0.1",
-    "publisher": "Errevi System srl",
+    "publisher": "FloorFive",
+    "author": {
+        "name": "Alberto Denti",
+        "email": "albertodenti2@gmail.com"
+    },
     "engines": {
         "vscode": "^1.81.0"
     },
@@ -16,12 +20,6 @@
     "main": "./out/extension.js",
     "icon": "assets/logo/FloorFive.png",
     "contributes": {
-        "commands": [
-            {
-                "command": "floorfive-vs-code.settings.output-panel-theme",
-                "title": "FloorFive: Output Panel Theme"
-            }
-        ],
         "viewsContainers": {
             "activitybar": [
                 {
@@ -43,7 +41,6 @@
                 {
                     "id": "floorfive-vs-code.webview",
                     "name": "",
-                    "icon": "assets/icons/code.svg",
                     "type": "webview"
                 }
             ],
@@ -51,19 +48,9 @@
                 {
                     "id": "floorfive-vs-code-panel.webview",
                     "name": "",
-                    "icon": "assets/icons/code.svg",
                     "type": "webview"
                 }
             ]
-        },
-        "configuration": {
-            "properties": {
-                "floorfive-vs-code.output-panel-theme": {
-                    "type": "string",
-                    "default": "github-dark",
-                    "description": "The theme of the output panel"
-                }
-            }
         }
     },
     "scripts": {

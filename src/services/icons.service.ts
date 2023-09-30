@@ -1,14 +1,14 @@
-import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as vscode from 'vscode';
+import { ICONS } from '../icons';
 import { Utilities } from "./utilities.service";
-import { Store } from '../store';
 
 /**
  * Icons Service - manages the icons of the extension for the templates.
  */
 export class IconsService {
 
-    private static readonly iconsList: string[] = Store.icons;
+    private static readonly iconsList: string[] = ICONS;
 
     /**
      * Gets the icons script by generating the template variables from local icons.

@@ -58,12 +58,6 @@ var modalTitle = document.getElementById("modal-title");
 var modalDescription = document.getElementById("modal-description");
 var modalActions = document.getElementById("modal-actions");
 
-modalOverlay.addEventListener("click", function() {
-    if(canDismissModal) {
-        dismissModal();
-    }
-});
-
 function showModal(title, content, actions, canDismiss = true) {
 
     canDismissModal = canDismiss;
@@ -87,6 +81,19 @@ function showModal(title, content, actions, canDismiss = true) {
                 actionId: id
             });
         });
+    });
+
+    modalOverlay.removeEventListener("click", function() {});    
+    modalOverlay.addEventListener("click", function() {
+        if(canDismissModal) {
+            var refAction = actions[0];
+            vscode.postMessage({
+                command:'@modal-action',
+                moduleId: refAction.module,
+                commandId: refAction.command,
+                actionId: 'cancel'
+            });
+        }
     });
 
     modalOverlay.classList.add("show");
