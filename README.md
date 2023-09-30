@@ -57,7 +57,7 @@ There are no known issues at this time.
 
 Check the [CHANGELOG.md](CHANGELOG.md) file for more information.
 
-### 1.0.0
+### 1.0.0 - Coming soon
 
 Initial release of **FloorFive - VS Code Extension Boilerplate**.
 Contains the basic structure for creating commands and the output panel.
