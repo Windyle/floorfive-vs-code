@@ -10,6 +10,10 @@ This boilerplate was created with the aim of providing a simple foundation for a
 
 With the FloorFive - VS Code base, it's possible to set up a new command in just a few minutes, with easy definition of both functional and aesthetic attributes such as icon, provision for a loader in case of long-running commands, label, pre-execution confirmation prompt, and the execution itself.
 
+## Usage
+
+For usage instructions, check the [USAGE.md](USAGE.md) file.
+
 ## Features
 
 ### Commands
