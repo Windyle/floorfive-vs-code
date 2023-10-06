@@ -47,8 +47,8 @@ export class DynamicEchoCommand extends BaseCommand implements Command {
     execute(): void {
         this.openLogPanel();
 
-        this.executing = !this.executing;
-        if (this.executing) {
+        this.toggleExecuting();
+        if (this.isExecuting()) {
 
             this.console.clear();
             this.console.log(`Starting process...`, `color`, [VSCodeTerminalColors.brightMagenta]);
@@ -73,7 +73,7 @@ export class DynamicEchoCommand extends BaseCommand implements Command {
             clearTimeout(this.timeout);
         }
 
-        this.executing = false;
+        this.setExecuting(false);
 
         Store.mainViewWebview!.postMessage({
             command: `${this.getModule()}:${this.getId()}:listener`

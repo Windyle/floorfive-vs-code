@@ -32,14 +32,14 @@ export class BaseCommand {
     private withLoader: boolean;
 
     /**
-     * Indicates whether the command is currently executing.
-     */
-    public executing: boolean = false;
-
-    /**
      * The console associated with the command.
      */
     protected console: FFConsole;
+
+    /**
+     * Indicates whether the command is currently executing.
+     */
+    private _executing: boolean = false;
 
     /**
      * Creates a new BaseCommand instance.
@@ -114,6 +114,13 @@ export class BaseCommand {
         return this.withLoader;
     }
 
+    /**
+     * Get the current state of the command.
+     * @returns The current state.
+     */
+    public isExecuting(): boolean {
+        return this._executing;
+    }
 
     // Methods
 
@@ -122,6 +129,21 @@ export class BaseCommand {
      */
     public clearConsole(): void {
         this.console.clear();
+    }
+
+    /**
+     * Toggle the executing state of the command.
+     */
+    public toggleExecuting(): void {
+        this._executing = !this._executing;
+    }
+
+    /**
+     * Set the executing state of the command.
+     * @param state The state to set.
+     */
+    public setExecuting(state: boolean): void {
+        this._executing = state;
     }
 
     /**

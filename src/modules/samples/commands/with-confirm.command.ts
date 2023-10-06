@@ -70,7 +70,7 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
      * Executes the command.
      */
     execute(): void {
-        if (!this.executing) {
+        if (!this.isExecuting()) {
             Store.mainViewWebview?.postMessage({
                 command: `@show-modal`,
                 title: `Sample Confirm`,
@@ -103,8 +103,8 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
     private executeProcess(): void {
         this.openLogPanel();
 
-        this.executing = !this.executing;
-        if (this.executing) {
+        this.toggleExecuting();
+        if (this.isExecuting()) {
             this.console.clear();
             this.console.log(`Executing command: ${this.getId()}`);
 
@@ -132,7 +132,7 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
             clearInterval(this.interval);
         }
 
-        this.executing = false;
+        this.setExecuting(false);
 
         Store.mainViewWebview!.postMessage({
             command: `${this.getModule()}:${this.getId()}:listener`

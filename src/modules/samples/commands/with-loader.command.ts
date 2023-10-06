@@ -48,14 +48,14 @@ export class WithLoaderCommand extends BaseCommand implements Command {
      */
     execute(): void {
 
-        if (!this.executing) {
+        if (!this.isExecuting()) {
             this.console.clear();
 
             // Navigate to the command's output panel if the extension's panel is active
             this.openLogPanel();
 
             // Set the command's execution state to true
-            this.executing = true;
+            this.setExecuting(true);
 
             // Using the custom console to log a message in the extension's own output panel
             this.console.log(`Executing command: ${this.getId()}`);
@@ -91,7 +91,7 @@ export class WithLoaderCommand extends BaseCommand implements Command {
         }
 
         // End the command's execution state and notify the webview that the command has finished
-        this.executing = false;
+        this.setExecuting(false);
 
         // Note: it is possible to add properties to the message object, you can override the getListenerScript()
         // method declared in the BaseCommand class to add custom logic for the command's webview listener
