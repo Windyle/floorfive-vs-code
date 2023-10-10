@@ -23,7 +23,8 @@ export class WithLoaderCommand extends BaseCommand implements Command {
             "with-loader",
             "loader",
             "With Loader",
-            true
+            true,
+            "Executing command with loader..." // Optional loader label, if not provided, the command label will be used
         );
     }
 

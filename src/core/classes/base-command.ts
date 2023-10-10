@@ -1,6 +1,7 @@
 import { ConsoleInstantiator, FFConsole } from "../../services/console.service";
 import { Store } from "../../store";
 import { CommandConfig } from "../types/command-config";
+import * as vscode from "vscode";
 
 /**
  * BaseCommand class represents a base command used in the application.
@@ -9,27 +10,32 @@ export class BaseCommand {
     /**
      * The module name of the command.
      */
-    private module: string;
+    private _module: string;
 
     /**
      * The unique identifier of the command.
      */
-    private id: string;
+    private _id: string;
 
     /**
      * The icon associated with the command.
      */
-    private icon: string;
+    private _icon: string;
 
     /**
      * The label or name of the command.
      */
-    private label: string;
+    private _label: string;
+
+    /**
+     * The label to display in the loader.
+     */
+    private _loaderLabel: string;
 
     /**
      * Indicates whether the command should display a loader.
      */
-    private withLoader: boolean;
+    private _withLoader: boolean;
 
     /**
      * The console associated with the command.
@@ -42,6 +48,11 @@ export class BaseCommand {
     private _executing: boolean = false;
 
     /**
+     * The loader item associated with the command.
+     */
+    private _loaderItem: vscode.StatusBarItem | undefined;
+
+    /**
      * Creates a new BaseCommand instance.
      * @param module The module name of the command.
      * @param id The unique identifier of the command.
@@ -49,12 +60,13 @@ export class BaseCommand {
      * @param label The label or name of the command.
      * @param withLoader Indicates whether the command should display a loader.
      */
-    constructor(module: string, id: string, icon: string, label: string, withLoader: boolean) {
-        this.module = module;
-        this.id = id;
-        this.icon = icon;
-        this.label = label;
-        this.withLoader = withLoader;
+    constructor(module: string, id: string, icon: string, label: string, withLoader: boolean, loaderLabel?: string) {
+        this._module = module;
+        this._id = id;
+        this._icon = icon;
+        this._label = label;
+        this._withLoader = withLoader;
+        this._loaderLabel = loaderLabel || `Executing ${label}...`;
 
         this.console = ConsoleInstantiator.instantiate(module, id);
     }
@@ -67,10 +79,10 @@ export class BaseCommand {
      */
     public getConfig(): CommandConfig {
         return {
-            id: this.id,
-            icon: this.icon,
-            label: this.label,
-            withLoader: this.withLoader,
+            id: this._id,
+            icon: this._icon,
+            label: this._label,
+            withLoader: this._withLoader,
         };
     }
 
@@ -79,7 +91,7 @@ export class BaseCommand {
      * @returns The module name.
      */
     public getModule(): string {
-        return this.module;
+        return this._module;
     }
 
     /**
@@ -87,7 +99,7 @@ export class BaseCommand {
      * @returns The unique identifier.
      */
     public getId(): string {
-        return this.id;
+        return this._id;
     }
 
     /**
@@ -95,7 +107,7 @@ export class BaseCommand {
      * @returns The icon.
      */
     public getIcon(): string {
-        return this.icon;
+        return this._icon;
     }
 
     /**
@@ -103,7 +115,15 @@ export class BaseCommand {
      * @returns The label.
      */
     public getLabel(): string {
-        return this.label;
+        return this._label;
+    }
+
+    /**
+     * Get the label to display in the loader.
+     * @returns The label.
+     */
+    public getLoaderLabel(): string {
+        return this._loaderLabel;
     }
 
     /**
@@ -111,7 +131,7 @@ export class BaseCommand {
      * @returns The loader state.
      */
     public getWithLoader(): boolean {
-        return this.withLoader;
+        return this._withLoader;
     }
 
     /**
@@ -131,11 +151,33 @@ export class BaseCommand {
         this.console.clear();
     }
 
+    private manageLoaderState(): void {
+        if (this._executing && this._withLoader) {
+            this.createLoaderItem();
+        }
+        else if (!this._executing && this._withLoader) {
+            this._loaderItem?.dispose();
+        }
+    }
+
+    private createLoaderItem(): void {
+        // Create a new status bar item
+        this._loaderItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, -99999);
+
+        // Set the text and tooltip for the status bar item
+        this._loaderItem.text = `$(sync~spin) ${this.getLoaderLabel()}`;
+        this._loaderItem.tooltip = `Executing ${this.getLabel()}`;
+
+        // Show the status bar item
+        this._loaderItem.show();
+    }
+
     /**
      * Toggle the executing state of the command.
      */
     public toggleExecuting(): void {
         this._executing = !this._executing;
+        this.manageLoaderState();
     }
 
     /**
@@ -144,6 +186,7 @@ export class BaseCommand {
      */
     public setExecuting(state: boolean): void {
         this._executing = state;
+        this.manageLoaderState();
     }
 
     /**
@@ -160,8 +203,8 @@ export class BaseCommand {
     public openLogPanel(): void {
         Store.panelViewWebview?.postMessage({
             command: `set-active-panel:goto`,
-            moduleId: this.module,
-            commandId: this.id,
+            moduleId: this._module,
+            commandId: this._id,
         });
     }
 
@@ -173,12 +216,12 @@ export class BaseCommand {
         return `
 // => ${this.getLabel()} Command
 
-document.getElementById("${this.module}-${this.id}").addEventListener("click", function() {
+document.getElementById("${this._module}-${this._id}").addEventListener("click", function() {
 
-    ${this.withLoader ? `setExecuting(this, '${this.icon}', '${this.label}');` : ``}
+    ${this._withLoader ? `setExecuting(this, '${this._icon}', '${this._label}');` : ``}
     
     const message = {
-        command: '${this.module}:${this.id}:execute'
+        command: '${this._module}:${this._id}:execute'
     };
 
     vscode.postMessage(message);
@@ -194,8 +237,8 @@ document.getElementById("${this.module}-${this.id}").addEventListener("click", f
      */
     public getListenerScript(): string {
         return `
-case '${this.module}:${this.id}:listener':
-    ${this.withLoader ? `stopExecutingById("${this.module}-${this.id}", '${this.icon}', '${this.label}');` : ``}
+case '${this._module}:${this._id}:listener':
+    ${this._withLoader ? `stopExecutingById("${this._module}-${this._id}", '${this._icon}', '${this._label}');` : ``}
     break;
         `;
     }
@@ -207,8 +250,8 @@ case '${this.module}:${this.id}:listener':
     public getLogScript(): string {
         return `
 // ==> ${this.getLabel()} Command Log
-case '${this.module}:${this.id}:log':
-    if (activePanel === '${this.module}:${this.id}') {
+case '${this._module}:${this._id}:log':
+    if (activePanel === '${this._module}:${this._id}') {
         setActivePanelContent(message.content);
     }
 break;

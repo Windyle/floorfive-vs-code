@@ -22,7 +22,7 @@ export class PackageJson {
      */
     public static getPackageJson = (): object | undefined => {
         try {
-            if (!PackageJson.packageJson === undefined) {
+            if (PackageJson.packageJson === undefined) {
                 PackageJson.packageJson = JSON.parse(fs.readFileSync(`${Store.rootPath}/package.json`, `utf-8`));
             }
 
