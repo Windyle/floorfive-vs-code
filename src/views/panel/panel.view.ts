@@ -9,6 +9,7 @@ import { Modules } from "../../modules/modules.index";
 import { PanelViewScript } from "./panel.view.script";
 import { Store } from "../../store";
 import { PanelViewMessageHandler } from "./panel.view.message-handler";
+import { PANEL_EMPTY_HTML } from "./panel-empty.view.html";
 
 /**
  * Represents the panel view for the extension.
@@ -23,7 +24,7 @@ export class PanelView {
      */
     public static activate(context: vscode.ExtensionContext) {
         // Create a new webview panel
-        vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
+            vscode.window.registerWebviewViewProvider(PanelView.viewType, new PanelViewProvider(context));
     };
 }
 
@@ -49,8 +50,11 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         this.extensionUri = context.extensionUri;
 
         // Get initial active panel
+        
+        if(Modules.getModulesArray().filter((module: any) => module.showInPanel())[0] !== undefined) {
         const initialCommand = Modules.getModulesArray().filter((module: any) => module.showInPanel())[0].getCommandsArray().filter((command: any) => command.showInPanel())[0];
         this.activePanel = `${ initialCommand.getModule() }:${ initialCommand.getId() }`;
+        }
     }
 
     /**
@@ -60,6 +64,8 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      * @param {vscode.CancellationToken} token - The cancellation token.
      */
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
+        
+        if(Modules.getModulesArray().filter((module: any) => module.showInPanel())[0] !== undefined) {
         // Register Console webview reference
         FFConsole.webviewRef = webviewView.webview;
         Store.panelViewWebview = webviewView.webview;
@@ -84,6 +90,10 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
             undefined,
             this.context.subscriptions
         );
+        }
+        else {
+            webviewView.webview.html = PANEL_EMPTY_HTML;
+        }
     }
 
     /**

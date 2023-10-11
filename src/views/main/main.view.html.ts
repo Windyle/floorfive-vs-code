@@ -3,7 +3,6 @@ export const HTML: string = `<!DOCTYPE html>
 
 <head>
   <meta charset="UTF-8">
-  <title>KBS6 Dev</title>
 
   <style>
     {{css}}

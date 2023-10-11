@@ -34,9 +34,9 @@ categoriesBtns.forEach(btn => {
 
 var tabsList = ${ JSON.stringify(
         Modules.getModulesArray().reduce((acc: any, module: any) => {
-            if (module.show()) {
+            if (module.showInPanel()) {
                 acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
-                    if (command.show()) {
+                    if (command.showInPanel()) {
                         acc[command.getId()] = {
                             id: command.getId(),
                             label: command.getLabel()
@@ -238,9 +238,9 @@ window.addEventListener('message', event => {
             setOutputPanelTheme(message.theme);
             break;
         ${ Modules.getModulesArray().map((module: any) => {
-        if (module.show()) {
+        if (module.showInPanel()) {
             return module.getCommandsArray().map((command: any) => {
-                if (command.show()) {
+                if (command.showInPanel()) {
                     return command.getLogScript();
                 }
             }).join("\n");

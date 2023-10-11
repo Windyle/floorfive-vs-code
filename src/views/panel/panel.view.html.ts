@@ -4,7 +4,6 @@ export const HTML: string = `
 
 <head>
     <meta charset="UTF-8">
-    <title>KBS6 Dev</title>
 
     <!-- Custom CSS -->
     <style>

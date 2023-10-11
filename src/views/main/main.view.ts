@@ -116,6 +116,10 @@ class MainViewProvider implements vscode.WebviewViewProvider {
         const modulesHtml: string[] = [];
 
         Object.keys(Modules.getModules()).forEach((id: any) => {
+            if(!Modules.getModule(id).show()) {
+                return;
+            }
+
             modulesHtml.push(Modules.getModule(id).getActionsHtml());
         });
 
