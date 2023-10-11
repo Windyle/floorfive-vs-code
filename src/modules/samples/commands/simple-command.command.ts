@@ -14,13 +14,12 @@ export class SimpleCommandCommand extends BaseCommand implements Command {
 
     constructor() {
         // Call the parent constructor to initialize the command
-        super(
-            "samples",
-            "sample-command",
-            "code",
-            "Sample Command",
-            false
-        );
+        super({
+            module: "samples",
+            id: "sample-command",
+            icon: "code",
+            label: "Sample Command"
+        });
     }
 
     /**
@@ -45,7 +44,7 @@ export class SimpleCommandCommand extends BaseCommand implements Command {
     execute(): void {
 
         // Open a new file in the editor
-        const newFile = vscode.Uri.parse(`untitled:${path.join(vscode.workspace.workspaceFolders![0].uri.fsPath, "new-file.txt")}`);
+        const newFile = vscode.Uri.parse(`untitled:${ path.join(vscode.workspace.workspaceFolders![0].uri.fsPath, "new-file.txt") }`);
         vscode.workspace.openTextDocument(newFile).then((document) => {
             vscode.window.showTextDocument(document);
         });

@@ -18,14 +18,14 @@ export class WithLoaderCommand extends BaseCommand implements Command {
 
     constructor() {
         // Call the parent constructor to initialize the command
-        super(
-            "samples",
-            "with-loader",
-            "loader",
-            "With Loader",
-            true,
-            "Executing command with loader..." // Optional loader label, if not provided, the command label will be used
-        );
+        super({
+            module: "samples",
+            id: "with-loader",
+            icon: "loader",
+            label: "With Loader",
+            withLoader: true,
+            loaderLabel: "Executing command with loader..." // Optional loader label, if not provided, the command label will be used
+        });
     }
 
     /**
@@ -59,16 +59,16 @@ export class WithLoaderCommand extends BaseCommand implements Command {
             this.setExecuting(true);
 
             // Using the custom console to log a message in the extension's own output panel
-            this.console.log(`Executing command: ${this.getId()}`);
+            this.console.log(`Executing command: ${ this.getId() }`);
 
             let counter = 0;
             this.interval = setInterval(() => {
                 // Custom console has a type definition for the log style
-                this.console.log(`echo '${counter}'`, `consoleCommand`);
+                this.console.log(`echo '${ counter }'`, "consoleCommand");
                 counter++;
 
                 if (counter > 10) {
-                    this.console.log(`Done!`, `success`);
+                    this.console.log("Done!", "success");
 
                     this.cancel();
                 }
@@ -77,7 +77,7 @@ export class WithLoaderCommand extends BaseCommand implements Command {
         else {
 
             // If a command is clicked while it is executing, cancel the command
-            this.console.log(`Command cancelled!`, `error`);
+            this.console.log("Command cancelled!", "error");
 
             this.cancel();
         }
@@ -97,7 +97,7 @@ export class WithLoaderCommand extends BaseCommand implements Command {
         // Note: it is possible to add properties to the message object, you can override the getListenerScript()
         // method declared in the BaseCommand class to add custom logic for the command's webview listener
         Store.mainViewWebview!.postMessage({
-            command: `${this.getModule()}:${this.getId()}:listener`
+            command: `${ this.getModule() }:${ this.getId() }:listener`
         });
     }
 

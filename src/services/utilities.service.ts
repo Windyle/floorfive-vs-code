@@ -13,13 +13,13 @@ export class Utilities {
         if (!useSpaces) {
             return str.replace(/([-][a-z])/ig, ($1) => {
                 return $1.toUpperCase()
-                    .replace(`-`, ``);
+                    .replace("-", "");
             });
         }
         else {
             return str.replace(/([-][a-z])/ig, ($1) => {
-                return ` ${$1.toUpperCase()
-                    .replace(`-`, ` `)}`;
+                return ` ${ $1.toUpperCase()
+                    .replace("-", " ") }`;
             });
         }
     };

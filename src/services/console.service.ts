@@ -17,7 +17,7 @@ export class ConsoleInstantiator {
      */
     public static instantiate = (moduleId: string, commandId: string): FFConsole => {
         const instance = new FFConsole(moduleId, commandId);
-        ConsoleInstantiator.instances.set(`${moduleId}:${commandId}`, instance);
+        ConsoleInstantiator.instances.set(`${ moduleId }:${ commandId }`, instance);
 
         return instance;
     };
@@ -29,7 +29,7 @@ export class ConsoleInstantiator {
      * @returns {FFConsole} The console instance.
      */
     public static getInstance = (moduleId: string, commandId: string): FFConsole | undefined => {
-        return ConsoleInstantiator.instances.get(`${moduleId}:${commandId}`);
+        return ConsoleInstantiator.instances.get(`${ moduleId }:${ commandId }`);
     };
 }
 
@@ -40,7 +40,7 @@ export class FFConsole {
 
     private _categoryId: string;
     private _tabId: string;
-    private _log: string = ``;
+    private _log: string = "";
     public static webviewRef: vscode.Webview | undefined;
 
     /**
@@ -66,28 +66,28 @@ export class FFConsole {
      */
     private _logTypes: { [method: string]: any } = {
         plain: (message: string): string => {
-            return `<pre>${message}</pre>`;
+            return `<pre>${ message }</pre>`;
         },
         consoleCommand: (message: string): string => {
             return this.consoleCommandFormat(message);
         },
         alert: (message: string): string => {
-            return `<pre style="color: var(--vscode-terminal-ansiBrightYellow);">${message}</pre>`;
+            return `<pre style="color: var(--vscode-terminal-ansiBrightYellow);">${ message }</pre>`;
         },
         warning: (message: string): string => {
-            return `<pre style="color: var(--vscode-terminal-ansiYellow);">${message}</pre>`;
+            return `<pre style="color: var(--vscode-terminal-ansiYellow);">${ message }</pre>`;
         },
         error: (message: string): string => {
-            return `<pre style="color: var(--vscode-terminal-ansiRed);">${message}</pre>`;
+            return `<pre style="color: var(--vscode-terminal-ansiRed);">${ message }</pre>`;
         },
         success: (message: string): string => {
-            return `<pre style="color: var(--vscode-terminal-ansiGreen);">${message}</pre>`;
+            return `<pre style="color: var(--vscode-terminal-ansiGreen);">${ message }</pre>`;
         },
         step: (message: string): string => {
-            return `<pre><span style="color: var(--vscode-terminal-ansiBlue);">${message.split(` `)[0]}</span> <span style="color: var(--vscode-terminal-ansiBrightBlue);">${message.split(` `).slice(1).join(` `)}</span></pre>`;
+            return `<pre><span style="color: var(--vscode-terminal-ansiBlue);">${ message.split(" ")[0] }</span> <span style="color: var(--vscode-terminal-ansiBrightBlue);">${ message.split(" ").slice(1).join(" ") }</span></pre>`;
         },
         color: (message: string, color: VSCodeTerminalColors): string => {
-            return `<pre style="color: var(--vscode-terminal-ansi${color});">${message}</pre>`;
+            return `<pre style="color: var(--vscode-terminal-ansi${ color });">${ message }</pre>`;
         },
     };
 
@@ -107,19 +107,19 @@ export class FFConsole {
      */
     private consoleCommandFormat = (message: string): string => {
 
-        const splitMessage = message.split(` `);
+        const splitMessage = message.split(" ");
 
-        const command = `<span style="color: var(--vscode-terminal-ansiGreen)">${splitMessage[0]}</span>`;
-        const mainArgument = splitMessage[1] !== undefined ? `<span style="color: var(--vscode-terminal-ansiYellow)">${splitMessage[1]}</span>` : ``;
+        const command = `<span style="color: var(--vscode-terminal-ansiGreen)">${ splitMessage[0] }</span>`;
+        const mainArgument = splitMessage[1] !== undefined ? `<span style="color: var(--vscode-terminal-ansiYellow)">${ splitMessage[1] }</span>` : "";
 
-        let formattedMessage = `${command} ${mainArgument} ${splitMessage.slice(2).join(` `)}`;
+        let formattedMessage = `${ command } ${ mainArgument } ${ splitMessage.slice(2).join(" ") }`;
 
         // Highlight parameters (es: --depth=0 => --depth and 0 are highlighted)
         formattedMessage = formattedMessage.replace(/(--[a-zA-Z0-9-]+)=([a-zA-Z0-9-]+)/g, (match, p1, p2) => {
-            return `<span style="color: var(--vscode-terminal-ansiYellow)">${p1}</span>=<span style="color: var(--vscode-terminal-ansiGreen)">${p2}</span>`;
+            return `<span style="color: var(--vscode-terminal-ansiYellow)">${ p1 }</span>=<span style="color: var(--vscode-terminal-ansiGreen)">${ p2 }</span>`;
         });
 
-        return `<pre>${formattedMessage}</pre>`;
+        return `<pre>${ formattedMessage }</pre>`;
     };
 
     /**
@@ -133,7 +133,7 @@ export class FFConsole {
             if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
                 return match;
             } else {
-                return `<a href="${match}" target="_blank">${match}</a>`;
+                return `<a href="${ match }" target="_blank">${ match }</a>`;
             }
         });
 
@@ -142,7 +142,7 @@ export class FFConsole {
             if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
                 return match;
             } else {
-                return ` <a href="file://${match.trim()}" onclick="openLocalLink('${match.trim()}')">${match.trim()}</a>`;
+                return ` <a href="file://${ match.trim() }" onclick="openLocalLink('${ match.trim() }')">${ match.trim() }</a>`;
             }
         });
 
@@ -153,11 +153,11 @@ export class FFConsole {
      * Clear the console.
      */
     public clear = () => {
-        this._log = ``;
+        this._log = "";
 
         // Post message for the console
         FFConsole.webviewRef?.postMessage({
-            command: `${this._categoryId}:${this._tabId}:log`,
+            command: `${ this._categoryId }:${ this._tabId }:log`,
             content: this._log
         });
     };
@@ -167,9 +167,9 @@ export class FFConsole {
      * @param message The message to log.
      * @param type The type of the message (plain, code, consoleCommand, alert, error, success, step...).
      */
-    public log = (message: string, type: string = `plain`, args?: any[]) => {
+    public log = (message: string, type: string = "plain", args?: any[]) => {
         if (!Object.keys(this._logTypes).includes(type)) {
-            type = `plain`;
+            type = "plain";
         }
 
         if (args !== undefined) {
@@ -180,7 +180,7 @@ export class FFConsole {
         }
 
         FFConsole.webviewRef?.postMessage({
-            command: `${this._categoryId}:${this._tabId}:log`,
+            command: `${ this._categoryId }:${ this._tabId }:log`,
             content: this._log
         });
     };

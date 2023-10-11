@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { MainView } from './main/main.view';
-import { PanelView } from './panel/panel.view';
+import { MainView } from "./main/main.view";
+import { PanelView } from "./panel/panel.view";
 
 export class Views {
 

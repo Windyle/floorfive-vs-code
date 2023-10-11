@@ -1,8 +1,8 @@
-import { BaseModule } from '../../core/classes/base-module';
-import { Module } from '../../core/types/module';
-import { SimpleCommandCommand } from './commands/simple-command.command';
-import { WithConfirmCommand } from './commands/with-confirm.command';
-import { WithLoaderCommand } from './commands/with-loader.command';
+import { BaseModule } from "../../core/classes/base-module";
+import { Module } from "../../core/types/module";
+import { SimpleCommandCommand } from "./commands/simple-command.command";
+import { WithConfirmCommand } from "./commands/with-confirm.command";
+import { WithLoaderCommand } from "./commands/with-loader.command";
 
 /**
  * A sample module to use as a template for new modules.
@@ -10,7 +10,7 @@ import { WithLoaderCommand } from './commands/with-loader.command';
 export class SamplesModule extends BaseModule implements Module {
 
     constructor() {
-        super(`samples`, `Samples`, `book`);
+        super("samples", "Samples", "book");
 
         const simpleCommandCommand = new SimpleCommandCommand();
         const withLoaderCommand = new WithLoaderCommand();

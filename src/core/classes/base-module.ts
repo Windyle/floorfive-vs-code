@@ -86,7 +86,7 @@ export class BaseModule {
      */
     public getActionsHtml(): string {
         if (Object.keys(this.commands).length === 0 || Object.keys(this.commands).every((id: string) => !this.commands[id].show())) {
-            return ``;
+            return "";
         }
 
         // This code creates the HTML for the collapsible toolbar.
@@ -96,17 +96,17 @@ export class BaseModule {
 
         return `
 <div class="collapsible">
-    <icon name="${this._icon}"></icon>
-    <h1>${this.getLabel()}</h1>
+    <icon name="${ this._icon }"></icon>
+    <h1>${ this.getLabel() }</h1>
     <div class="chevron-arrow"></div>
 </div>
-<div class="btns-container" id="${this.getId()}-btns-container">
-    ${Object.keys(this.commands).map((id: string) => {
+<div class="btns-container" id="${ this.getId() }-btns-container">
+    ${ Object.keys(this.commands).map((id: string) => {
             const command = this.commands[id];
             if (command.show()) {
-                return `<button class="command-button icon-button" id="${this.getId()}-${command.getId()}" loader="${command.getWithLoader()}"><icon name="${command.getIcon()}"></icon> <label>${command.getLabel()}</label></button>`;
+                return `<button class="command-button icon-button" id="${ this.getId() }-${ command.getId() }" loader="${ command.getWithLoader() }"><icon name="${ command.getIcon() }"></icon> <label>${ command.getLabel() }</label></button>`;
             }
-        }).join(`\n`)
+        }).join("\n")
             }
 </div>
         `;

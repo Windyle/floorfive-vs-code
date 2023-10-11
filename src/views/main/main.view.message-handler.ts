@@ -1,5 +1,5 @@
-import * as vscode from 'vscode';
-import { Modules } from '../../modules/modules.index';
+import * as vscode from "vscode";
+import { Modules } from "../../modules/modules.index";
 
 /**
  * Handles messages received from the main view's webview.
@@ -16,7 +16,7 @@ export class MainViewMessageHandler {
                 const command = module.commands[commandId];
                 if (command.executing) {
                     webview.postMessage({
-                        command: '@is-executing:listener',
+                        command: "@is-executing:listener",
                         moduleId: module.getId(),
                         commandId: command.getId(),
                         icon: command.getIcon(),

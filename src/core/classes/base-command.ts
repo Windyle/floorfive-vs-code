@@ -53,6 +53,11 @@ export class BaseCommand {
     private _loaderItem: vscode.StatusBarItem | undefined;
 
     /**
+     * Indicates whether the command is a sub-command.
+     */
+    private _isSubCommand: boolean = false;
+
+    /**
      * Creates a new BaseCommand instance.
      * @param module The module name of the command.
      * @param id The unique identifier of the command.
@@ -60,31 +65,19 @@ export class BaseCommand {
      * @param label The label or name of the command.
      * @param withLoader Indicates whether the command should display a loader.
      */
-    constructor(module: string, id: string, icon: string, label: string, withLoader: boolean, loaderLabel?: string) {
-        this._module = module;
-        this._id = id;
-        this._icon = icon;
-        this._label = label;
-        this._withLoader = withLoader;
-        this._loaderLabel = loaderLabel || `Executing ${label}...`;
+    constructor(config: CommandConfig) {
+        this._module = config.module;
+        this._id = config.id;
+        this._icon = config.icon;
+        this._label = config.label;
+        this._withLoader = config.withLoader || false;
+        this._loaderLabel = config.loaderLabel || `Executing ${ config.label }...`;
+        this._isSubCommand = config.subCommand || false;
 
-        this.console = ConsoleInstantiator.instantiate(module, id);
+        this.console = ConsoleInstantiator.instantiate(config.module, config.id);
     }
 
     // Getters
-
-    /**
-     * Get the configuration of the command.
-     * @returns The command configuration.
-     */
-    public getConfig(): CommandConfig {
-        return {
-            id: this._id,
-            icon: this._icon,
-            label: this._label,
-            withLoader: this._withLoader,
-        };
-    }
 
     /**
      * Get the module name of the command.
@@ -165,8 +158,8 @@ export class BaseCommand {
         this._loaderItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, -99999);
 
         // Set the text and tooltip for the status bar item
-        this._loaderItem.text = `$(sync~spin) ${this.getLoaderLabel()}`;
-        this._loaderItem.tooltip = `Executing ${this.getLabel()}`;
+        this._loaderItem.text = `$(sync~spin) ${ this.getLoaderLabel() }`;
+        this._loaderItem.tooltip = `Executing ${ this.getLabel() }`;
 
         // Show the status bar item
         this._loaderItem.show();
@@ -202,7 +195,7 @@ export class BaseCommand {
      */
     public openLogPanel(): void {
         Store.panelViewWebview?.postMessage({
-            command: `set-active-panel:goto`,
+            command: "set-active-panel:goto",
             moduleId: this._module,
             commandId: this._id,
         });
@@ -214,20 +207,20 @@ export class BaseCommand {
      */
     public getScript(): string {
         return `
-// => ${this.getLabel()} Command
+// => ${ this.getLabel() } Command
 
-document.getElementById("${this._module}-${this._id}").addEventListener("click", function() {
+document.getElementById("${ this._module }-${ this._id }").addEventListener("click", function() {
 
-    ${this._withLoader ? `setExecuting(this, '${this._icon}', '${this._label}');` : ``}
+    ${ this._withLoader ? `setExecuting(this, '${ this._icon }', '${ this._label }');` : "" }
     
     const message = {
-        command: '${this._module}:${this._id}:execute'
+        command: '${ this._module }:${ this._id }:execute'
     };
 
     vscode.postMessage(message);
 });
 
-// => End - ${this.getLabel()} Command
+// => End - ${ this.getLabel() } Command
         `;
     }
 
@@ -237,8 +230,8 @@ document.getElementById("${this._module}-${this._id}").addEventListener("click",
      */
     public getListenerScript(): string {
         return `
-case '${this._module}:${this._id}:listener':
-    ${this._withLoader ? `stopExecutingById("${this._module}-${this._id}", '${this._icon}', '${this._label}');` : ``}
+case '${ this._module }:${ this._id }:listener':
+    ${ this._withLoader ? `stopExecutingById("${ this._module }-${ this._id }", '${ this._icon }', '${ this._label }');` : "" }
     break;
         `;
     }
@@ -249,9 +242,9 @@ case '${this._module}:${this._id}:listener':
      */
     public getLogScript(): string {
         return `
-// ==> ${this.getLabel()} Command Log
-case '${this._module}:${this._id}:log':
-    if (activePanel === '${this._module}:${this._id}') {
+// ==> ${ this.getLabel() } Command Log
+case '${ this._module }:${ this._id }:log':
+    if (activePanel === '${ this._module }:${ this._id }') {
         setActivePanelContent(message.content);
     }
 break;

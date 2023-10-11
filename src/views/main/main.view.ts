@@ -1,12 +1,12 @@
-import * as vscode from 'vscode';
-import { Modules } from '../../modules/modules.index';
-import { IconsService } from '../../services/icons.service';
-import { ANIMATIONS_CSS } from '../_animations';
-import { CSS } from './main.view.css';
-import { HTML } from './main.view.html';
-import { MainViewScript } from './main.view.script';
-import { Store } from '../../store';
-import { MainViewMessageHandler } from './main.view.message-handler';
+import * as vscode from "vscode";
+import { Modules } from "../../modules/modules.index";
+import { IconsService } from "../../services/icons.service";
+import { ANIMATIONS_CSS } from "../_animations";
+import { CSS } from "./main.view.css";
+import { HTML } from "./main.view.html";
+import { MainViewScript } from "./main.view.script";
+import { Store } from "../../store";
+import { MainViewMessageHandler } from "./main.view.message-handler";
 
 /**
  * Represents the MainView class responsible for managing the webview.
@@ -15,7 +15,7 @@ export class MainView {
     /**
      * The view type used for registration.
      */
-    private static readonly viewType = 'floorfive-vs-code.webview';
+    private static readonly viewType = "floorfive-vs-code.webview";
 
     /**
      * Activates the MainView.
@@ -44,7 +44,7 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     /**
      * The icons script.
      */
-    private iconsScript: string = '';
+    private iconsScript: string = "";
 
     /**
      * Creates a new instance of MainViewProvider.
@@ -75,7 +75,7 @@ class MainViewProvider implements vscode.WebviewViewProvider {
 
             webviewView.webview.options = {
                 enableScripts: true,
-                localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'assets')]
+                localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, "assets")]
             };
 
             // Handle messages from the webview
@@ -119,7 +119,7 @@ class MainViewProvider implements vscode.WebviewViewProvider {
             modulesHtml.push(Modules.getModule(id).getActionsHtml());
         });
 
-        return modulesHtml.join('\n');
+        return modulesHtml.join("\n");
     }
 
     /**
@@ -130,15 +130,15 @@ class MainViewProvider implements vscode.WebviewViewProvider {
     private messageHandler(webview: vscode.Webview, message: any): void {
         try {
             if (message.command !== undefined && message.command !== null) {
-                if (message.command.endsWith(':execute')) {
-                    const [moduleId, commandId] = message.command.split(':');
+                if (message.command.endsWith(":execute")) {
+                    const [moduleId, commandId] = message.command.split(":");
                     Modules.getModule(moduleId).commands[commandId].execute();
                 } else {
                     switch (message.command) {
-                        case '@is-executing:check':
+                        case "@is-executing:check":
                             this.mainViewMessageHandler.isExecutingCheck(webview);
                             break;
-                        case '@modal-action':
+                        case "@modal-action":
                             this.mainViewMessageHandler.modalAction(message.moduleId, message.commandId, message.actionId);
                             break;
                     }

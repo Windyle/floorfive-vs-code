@@ -1,10 +1,10 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { BaseModule } from '../../core/classes/base-module';
-import { Module } from '../../core/types/module';
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { BaseModule } from "../../core/classes/base-module";
+import { Module } from "../../core/types/module";
 import { Store } from "../../store";
-import { Utilities } from '../../services/utilities.service';
-import { DynamicEchoCommand } from './commands/dynamic-echo.command';
+import { Utilities } from "../../services/utilities.service";
+import { DynamicEchoCommand } from "./commands/dynamic-echo.command";
 
 /**
  * A sample module that creates multiple instances of a command based on a configuration.
@@ -14,18 +14,18 @@ export class DynamicSamplesModule extends BaseModule implements Module {
      * Creates an instance of the Kbs6LibModule.
      */
     constructor() {
-        super(`dynamic-samples`, `Dynamic Samples`, `plane-departure`);
+        super("dynamic-samples", "Dynamic Samples", "plane-departure");
 
         const configurations = [
-            `red-monkey`,
-            `blue-horse`,
-            `green-dog`,
-            `yellow-cat`,
-            `purple-zebra`
+            "red-monkey",
+            "blue-horse",
+            "green-dog",
+            "yellow-cat",
+            "purple-zebra"
         ];
 
         configurations.forEach((configuration: string) => {
-            this.commands[configuration] = new DynamicEchoCommand(configuration, `Echo ${Utilities.capitalize(Utilities.snakeToCamel(configuration, true))}`);
+            this.commands[configuration] = new DynamicEchoCommand(configuration, `Echo ${ Utilities.capitalize(Utilities.snakeToCamel(configuration, true)) }`);
         });
     }
 

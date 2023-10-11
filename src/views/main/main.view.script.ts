@@ -15,9 +15,9 @@ export class MainViewScript {
                 if (command.show()) {
                     return command.getScript();
                 }
-            }).join(`\n`);
+            }).join("\n");
         }
-    }).join(`\n`);
+    }).join("\n");
 
     /**
      * Retrieve commands front end listeners scripts for each module.
@@ -29,9 +29,9 @@ export class MainViewScript {
                 if (command.show()) {
                     return command.getListenerScript();
                 }
-            }).join(`\n`);
+            }).join("\n");
         }
-    }).join(`\n`);
+    }).join("\n");
 
     /**
      * Listener for the core is-executing:listener command.
@@ -205,13 +205,13 @@ vscode.postMessage({
         return `
 const vscode = acquireVsCodeApi();
 
-${this.collapsible}
+${ this.collapsible }
 
-${this.setExecuting}
+${ this.setExecuting }
 
-${this.commandsScripts}
+${ this.commandsScripts }
 
-${this.modal}
+${ this.modal }
 
 // ==== MESSAGE HANDLER ====
 
@@ -220,9 +220,9 @@ window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
 
     switch (message.command) {
-        ${this.isExecutingListener}
-        ${this.modalListener}
-        ${this.commandsListenersScripts}
+        ${ this.isExecutingListener }
+        ${ this.modalListener }
+        ${ this.commandsListenersScripts }
     }
 });
             `;

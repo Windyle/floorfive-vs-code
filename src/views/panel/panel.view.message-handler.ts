@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import { Modules } from '../../modules/modules.index';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import { Modules } from "../../modules/modules.index";
 
 /**
  * Handles messages received from the panel view's webview.
@@ -19,7 +19,7 @@ export class PanelViewMessageHandler {
             const content: string = Modules.getModule(moduleId).commands[commandId].getLogContent();
 
             webview.postMessage({
-                command: `set-active-panel:response`,
+                command: "set-active-panel:response",
                 content: content
             });
         }
@@ -28,7 +28,7 @@ export class PanelViewMessageHandler {
             vscode.window.showErrorMessage(error.message);
         }
 
-        return `${moduleId}:${commandId}`;
+        return `${ moduleId }:${ commandId }`;
     }
 
     /**
@@ -37,20 +37,20 @@ export class PanelViewMessageHandler {
      * @param {string} activePanel - The active panel identifier.
      */
     public setActivePanelOnLoad(webview: vscode.Webview, activePanel: string): void {
-        if (activePanel.trim() !== `` && activePanel.includes(`:`)) {
+        if (activePanel.trim() !== "" && activePanel.includes(":")) {
             webview.postMessage({
-                command: `set-active-panel:goto`,
-                moduleId: activePanel.split(`:`)[0],
-                commandId: activePanel.split(`:`)[1]
+                command: "set-active-panel:goto",
+                moduleId: activePanel.split(":")[0],
+                commandId: activePanel.split(":")[1]
             });
 
             webview.postMessage({
-                command: `set-active-panel:response`,
-                content: Modules.getModule(activePanel.split(`:`)[0]).commands[activePanel.split(`:`)[1]].getLogContent(),
+                command: "set-active-panel:response",
+                content: Modules.getModule(activePanel.split(":")[0]).commands[activePanel.split(":")[1]].getLogContent(),
             });
         }
         else {
-            vscode.window.showErrorMessage(`Invalid active panel: ${activePanel}`);
+            vscode.window.showErrorMessage(`Invalid active panel: ${ activePanel }`);
         }
     }
 
@@ -75,9 +75,9 @@ export class PanelViewMessageHandler {
      */
     public openLocalLink(path: string): void {
         if (fs.lstatSync(path).isDirectory()) {
-            vscode.commands.executeCommand(`revealFileInOS`, vscode.Uri.file(path));
+            vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(path));
         } else {
-            vscode.commands.executeCommand(`vscode.open`, vscode.Uri.file(path));
+            vscode.commands.executeCommand("vscode.open", vscode.Uri.file(path));
         }
     }
 
@@ -86,7 +86,7 @@ export class PanelViewMessageHandler {
      */
     public updateOutputPanelThemeCurrent(): void {
         try {
-            Modules.getModule(`settings`).commands[`output-panel-theme`].updateOutputPanelWithCurrentTheme();
+            Modules.getModule("settings").commands["output-panel-theme"].updateOutputPanelWithCurrentTheme();
         }
         catch (err) {
             const error = err as Error;

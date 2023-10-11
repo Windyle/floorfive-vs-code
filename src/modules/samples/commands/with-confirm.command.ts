@@ -15,17 +15,17 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
     private interval: NodeJS.Timeout | undefined;
 
     constructor() {
-        super(
-            `samples`,
-            `with-confirm`,
-            `check-circle`,
-            `With Confirm`,
-            true
-        );
+        super({
+            module: "samples",
+            id: "with-confirm",
+            icon: "check-circle",
+            label: "With Confirm",
+            withLoader: true
+        });
 
         // It is possible to add a custom log type to the console for a command by extending its console instance
-        this.console.addLogType(`customLog`, (message: string): string => {
-            return `<pre style="color: var(--vscode-terminal-ansiBrightBlue);">${message}</pre>`;
+        this.console.addLogType("customLog", (message: string): string => {
+            return `<pre style="color: var(--vscode-terminal-ansiBrightBlue);">${ message }</pre>`;
         });
     }
 
@@ -35,14 +35,14 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
      */
     executeModalAction(actionId: string): void {
         Store.mainViewWebview?.postMessage({
-            command: `@dismiss-modal`
+            command: "@dismiss-modal"
         });
 
         switch (actionId) {
-            case `confirm`:
+            case "confirm":
                 this.executeProcess();
                 break;
-            case `cancel`:
+            case "cancel":
                 this.stopExecuting();
                 break;
         }
@@ -72,8 +72,8 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
     execute(): void {
         if (!this.isExecuting()) {
             Store.mainViewWebview?.postMessage({
-                command: `@show-modal`,
-                title: `Sample Confirm`,
+                command: "@show-modal",
+                title: "Sample Confirm",
                 content: `
                     Are you sure you want to run the command <b>With Confirm</b>?
                 `,
@@ -81,16 +81,16 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
                     {
                         module: this.getModule(),
                         command: this.getId(),
-                        id: `cancel`,
-                        label: `Cancel`,
-                        class: `secondary`
+                        id: "cancel",
+                        label: "Cancel",
+                        class: "secondary"
                     },
                     {
                         module: this.getModule(),
                         command: this.getId(),
-                        id: `confirm`,
-                        label: `Confirm`,
-                        class: `primary`
+                        id: "confirm",
+                        label: "Confirm",
+                        class: "primary"
                     }
                 ],
                 canDismiss: true
@@ -106,23 +106,23 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
         this.toggleExecuting();
         if (this.isExecuting()) {
             this.console.clear();
-            this.console.log(`Executing command: ${this.getId()}`);
+            this.console.log(`Executing command: ${ this.getId() }`);
 
             let counter = 0;
             this.interval = setInterval(() => {
                 // Log a message with a custom log type added to the console in the constructor
-                this.console.log(`echo '${counter}'`, `customLog`);
+                this.console.log(`echo '${ counter }'`, "customLog");
 
                 counter++;
 
                 if (counter > 10) {
-                    this.console.log(`Done!`, `success`);
+                    this.console.log("Done!", "success");
                     this.stopExecuting();
                 }
             }, 1000);
 
         } else {
-            this.console.log(`Process killed.`, `error`);
+            this.console.log("Process killed.", "error");
             this.stopExecuting();
         }
     }
@@ -135,7 +135,7 @@ export class WithConfirmCommand extends BaseCommand implements Command, WithModa
         this.setExecuting(false);
 
         Store.mainViewWebview!.postMessage({
-            command: `${this.getModule()}:${this.getId()}:listener`
+            command: `${ this.getModule() }:${ this.getId() }:listener`
         });
     }
 

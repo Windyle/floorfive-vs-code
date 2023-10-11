@@ -17,13 +17,13 @@ export class DynamicEchoCommand extends BaseCommand implements Command {
 
     constructor(id: string, label: string) {
         // Call the parent constructor to initialize the command
-        super(
-            "dynamic-samples",
-            `${id}`,
-            "plane",
-            label,
-            true
-        );
+        super({
+            module: "dynamic-samples",
+            id: `${ id }`,
+            icon: "plane",
+            label: label,
+            withLoader: true
+        });
     }
 
     /**
@@ -51,18 +51,18 @@ export class DynamicEchoCommand extends BaseCommand implements Command {
         if (this.isExecuting()) {
 
             this.console.clear();
-            this.console.log(`Starting process...`, `color`, [VSCodeTerminalColors.brightMagenta]);
+            this.console.log("Starting process...", "color", [VSCodeTerminalColors.brightMagenta]);
 
-            this.console.log(`Writing echo in 3 seconds...`, `color`, [VSCodeTerminalColors.brightBlue]);
+            this.console.log("Writing echo in 3 seconds...", "color", [VSCodeTerminalColors.brightBlue]);
 
             this.timeout = setTimeout(() => {
-                this.console.log(`echo ${this.getId()}`, `color`, [VSCodeTerminalColors.brightBlue]);
+                this.console.log(`echo ${ this.getId() }`, "color", [VSCodeTerminalColors.brightBlue]);
 
                 this.stopExecuting();
             }, 3000);
         }
         else {
-            this.console.log(`Process killed.`, `error`);
+            this.console.log("Process killed.", "error");
 
             this.stopExecuting();
         }
@@ -76,7 +76,7 @@ export class DynamicEchoCommand extends BaseCommand implements Command {
         this.setExecuting(false);
 
         Store.mainViewWebview!.postMessage({
-            command: `${this.getModule()}:${this.getId()}:listener`
+            command: `${ this.getModule() }:${ this.getId() }:listener`
         });
     }
 

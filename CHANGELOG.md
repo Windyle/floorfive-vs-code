@@ -4,6 +4,10 @@ All notable changes to the "floorfive-vs-code" extension will be documented in t
 
 ## [Unreleased]
 
+### Changed
+
+- Command initialization with object
+
 ### Added
 
 - Status bar loaders automatically synced with the execution of commands.

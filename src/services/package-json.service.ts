@@ -1,5 +1,5 @@
 import { Store } from "../store";
-import * as fs from 'node:fs';
+import * as fs from "node:fs";
 
 /**
  * Quick access to the package.json file of the workspace.
@@ -13,7 +13,7 @@ export class PackageJson {
      * @returns {boolean} True if the workspace is a node project, false otherwise.
      */
     public static isNodeProject = (): boolean => {
-        return fs.existsSync(`${Store.rootPath}/package.json`);
+        return fs.existsSync(`${ Store.rootPath }/package.json`);
     };
 
     /**
@@ -23,7 +23,7 @@ export class PackageJson {
     public static getPackageJson = (): object | undefined => {
         try {
             if (PackageJson.packageJson === undefined) {
-                PackageJson.packageJson = JSON.parse(fs.readFileSync(`${Store.rootPath}/package.json`, `utf-8`));
+                PackageJson.packageJson = JSON.parse(fs.readFileSync(`${ Store.rootPath }/package.json`, "utf-8"));
             }
 
             return PackageJson.packageJson;
@@ -38,6 +38,6 @@ export class PackageJson {
      */
     public static getDependencies = (): object | undefined => {
         const packageJson = PackageJson.getPackageJson();
-        return packageJson ? packageJson[`dependencies` as keyof typeof packageJson] : undefined;
+        return packageJson ? packageJson["dependencies" as keyof typeof packageJson] : undefined;
     };
 }

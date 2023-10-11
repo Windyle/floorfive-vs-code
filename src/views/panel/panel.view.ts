@@ -1,21 +1,21 @@
-import * as vscode from 'vscode';
-import * as fs from 'node:fs';
-import { FFConsole } from '../../services/console.service';
-import { IconsService } from '../../services/icons.service';
-import { ANIMATIONS_CSS } from '../_animations';
-import { CSS } from './panel.view.css';
-import { HTML } from './panel.view.html';
-import { Modules } from '../../modules/modules.index';
-import { PanelViewScript } from './panel.view.script';
-import { Store } from '../../store';
-import { PanelViewMessageHandler } from './panel.view.message-handler';
+import * as vscode from "vscode";
+import * as fs from "node:fs";
+import { FFConsole } from "../../services/console.service";
+import { IconsService } from "../../services/icons.service";
+import { ANIMATIONS_CSS } from "../_animations";
+import { CSS } from "./panel.view.css";
+import { HTML } from "./panel.view.html";
+import { Modules } from "../../modules/modules.index";
+import { PanelViewScript } from "./panel.view.script";
+import { Store } from "../../store";
+import { PanelViewMessageHandler } from "./panel.view.message-handler";
 
 /**
  * Represents the panel view for the extension.
  */
 export class PanelView {
 
-    private static readonly viewType = `floorfive-vs-code-panel.webview`;
+    private static readonly viewType = "floorfive-vs-code-panel.webview";
 
     /**
      * Activates the panel view.
@@ -33,8 +33,8 @@ export class PanelView {
 class PanelViewProvider implements vscode.WebviewViewProvider {
 
     private extensionUri: vscode.Uri;
-    private iconsScript: string = ``;
-    private activePanel: string = ``;
+    private iconsScript: string = "";
+    private activePanel: string = "";
 
     /**
      * Creates an instance of PanelViewProvider.
@@ -50,7 +50,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
         // Get initial active panel
         const initialCommand = Modules.getModulesArray().filter((module: any) => module.showInPanel())[0].getCommandsArray().filter((command: any) => command.showInPanel())[0];
-        this.activePanel = `${initialCommand.getModule()}:${initialCommand.getId()}`;
+        this.activePanel = `${ initialCommand.getModule() }:${ initialCommand.getId() }`;
     }
 
     /**
@@ -73,7 +73,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
 
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, `assets`)]
+            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, "assets")]
         };
 
         // Handle messages from the webview
@@ -92,7 +92,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      * @returns {string} The HTML content with replaced variables.
      */
     private replaceTemplateVariables(html: string): string {
-        const outputPanelThemeConfiguration = vscode.workspace.getConfiguration().get(`floorfive-vs-code.output-panel-theme`) as string ?? `github-dark`;
+        const outputPanelThemeConfiguration = vscode.workspace.getConfiguration().get("floorfive-vs-code.output-panel-theme") as string ?? "github-dark";
 
         return html
             .replace(/(?<!')\{\{outputPanelTheme\}\}(?!')/g, outputPanelThemeConfiguration)
@@ -111,9 +111,9 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         return Object.keys(Modules.getModules()).map((id: any) => {
             const module = Modules.getModule(id);
             if (module.showInPanel()) {
-                return `<button class="category-button" id="${module.getId()}">${module.getLabel()}</button>`;
+                return `<button class="category-button" id="${ module.getId() }">${ module.getLabel() }</button>`;
             }
-        }).join(`\n`);
+        }).join("\n");
     };
 
     /**
@@ -123,31 +123,31 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
      */
     private messageHandler(webview: vscode.Webview, message: any) {
         switch (message.command) {
-            case `set-active-panel`:
+            case "set-active-panel":
                 this.activePanel = this.messageHandlerService.setActivePanel(webview, message.moduleId, message.commandId);
                 break;
 
-            case `set-active-panel:onload`:
+            case "set-active-panel:onload":
                 this.messageHandlerService.setActivePanelOnLoad(webview, this.activePanel);
                 break;
 
-            case `clear-log`:
+            case "clear-log":
                 this.messageHandlerService.clearLog(message.moduleId, message.commandId);
                 break;
 
-            case `open-local-link`:
+            case "open-local-link":
                 this.messageHandlerService.openLocalLink(message.path);
                 break;
 
-            case `update-output-panel-theme:current`:
+            case "update-output-panel-theme:current":
                 this.messageHandlerService.updateOutputPanelThemeCurrent();
                 break;
 
-            case `show-info`:
+            case "show-info":
                 this.messageHandlerService.showInfo(message.content);
                 break;
 
-            case `show-error`:
+            case "show-error":
                 this.messageHandlerService.showError(message.content);
                 break;
         }

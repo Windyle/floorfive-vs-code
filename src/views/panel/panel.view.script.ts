@@ -32,7 +32,7 @@ categoriesBtns.forEach(btn => {
     private tabs: string = `
 // ==== TABS ====
 
-var tabsList = ${JSON.stringify(
+var tabsList = ${ JSON.stringify(
         Modules.getModulesArray().reduce((acc: any, module: any) => {
             if (module.show()) {
                 acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
@@ -47,7 +47,7 @@ var tabsList = ${JSON.stringify(
             }
             return acc;
         }, {})
-    )};
+    ) };
 
 var tabs;
 
@@ -237,15 +237,15 @@ window.addEventListener('message', event => {
         case 'update-output-panel-theme':
             setOutputPanelTheme(message.theme);
             break;
-        ${Modules.getModulesArray().map((module: any) => {
+        ${ Modules.getModulesArray().map((module: any) => {
         if (module.show()) {
             return module.getCommandsArray().map((command: any) => {
                 if (command.show()) {
                     return command.getLogScript();
                 }
-            }).join(`\n`);
+            }).join("\n");
         }
-    }).join(`\n`)
+    }).join("\n")
         }
     }
 });
@@ -259,23 +259,23 @@ window.addEventListener('message', event => {
 var vscode = acquireVsCodeApi();
 var activePanel = '';
 
-${this.categories}
+${ this.categories }
 
-${this.tabs}
+${ this.tabs }
 
-${this.sidebarCollapse}
+${ this.sidebarCollapse }
 
-${this.clearConsole}
+${ this.clearConsole }
 
-${this.setActivePanel}
+${ this.setActivePanel }
 
-${this.goToActivePanel}
+${ this.goToActivePanel }
 
-${this.openLocalLink}
+${ this.openLocalLink }
 
-${this.copyConsole}
+${ this.copyConsole }
 
-${this.messageHandler}
+${ this.messageHandler }
 `;
     };
 }
