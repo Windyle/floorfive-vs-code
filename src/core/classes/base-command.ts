@@ -135,6 +135,14 @@ export class BaseCommand {
         return this._executing;
     }
 
+    /**
+     * Returns whether the command is a sub-command.
+     * @returns True if the command is a sub-command; otherwise, false. 
+     */
+    public isSubCommand(): boolean {
+        return this._isSubCommand;
+    }
+
     // Methods
 
     /**

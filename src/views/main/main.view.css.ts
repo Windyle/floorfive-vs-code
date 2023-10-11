@@ -107,45 +107,6 @@ label {
     user-select: none;
 }
 
-@media screen and (min-width: 420px) {
-    .btns-container {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .btns-container h2,
-    button.btn-span-2 {
-        grid-column: 1 / span 2;
-    }
-}
-
-@media screen and (min-width: 620px) {
-    .btns-container {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .btns-container h2 {
-        grid-column: 1 / span 3;
-    }
-
-    .command-button.btn-span-2 {
-        grid-column: 1 / span 1;
-    }
-}
-
-@media screen and (min-width: 950px) {
-    .btns-container {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-
-    .btns-container h2 {
-        grid-column: 1 / span 4;
-    }
-
-    .command-button.btn-span-2 {
-        grid-column: 1 / span 1;
-    }
-}
-
 /* Command Button Styles */
 
 .command-button {
@@ -156,6 +117,13 @@ label {
     height: 30px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.command-button.sub {
+    width: 85%;
+    margin-right: 0;
+    margin-left: auto;
+    filter: saturate(0.5);
 }
 
 .command-button:has(svg.flip) {

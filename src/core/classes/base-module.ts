@@ -104,7 +104,7 @@ export class BaseModule {
     ${ Object.keys(this.commands).map((id: string) => {
             const command = this.commands[id];
             if (command.show()) {
-                return `<button class="command-button icon-button" id="${ this.getId() }-${ command.getId() }" loader="${ command.getWithLoader() }"><icon name="${ command.getIcon() }"></icon> <label>${ command.getLabel() }</label></button>`;
+                return `<button class="command-button ${ command.isSubCommand() ? "sub" : "" } icon-button" id="${ this.getId() }-${ command.getId() }" loader="${ command.getWithLoader() }"><icon name="${ command.getIcon() }"></icon> <label>${ command.getLabel() }</label></button>`;
             }
         }).join("\n")
             }
