@@ -4,50 +4,57 @@ import { Modules } from "../../modules/modules.index";
  * Represents the main script part for the panel view webview.
  */
 export class MainViewScript {
+  /**
+   * Retrieve commands front end execution scripts for each module.
+   */
+  private commandsScripts: string = Modules.getModulesArray()
+    .map((module: any) => {
+      if (module.show()) {
+        return Object.keys(module.commands)
+          .map((commandId: string) => {
+            const command = module.commands[commandId];
+            if (command.show()) {
+              return command.getScript();
+            }
+          })
+          .join("\n");
+      }
+    })
+    .join("\n");
 
-    /**
-     * Retrieve commands front end execution scripts for each module.
-     */
-    private commandsScripts: string = Modules.getModulesArray().map((module: any) => {
-        if (module.show()) {
-            return Object.keys(module.commands).map((commandId: string) => {
-                const command = module.commands[commandId];
-                if (command.show()) {
-                    return command.getScript();
-                }
-            }).join("\n");
-        }
-    }).join("\n");
+  /**
+   * Retrieve commands front end listeners scripts for each module.
+   */
+  private commandsListenersScripts: string = Modules.getModulesArray()
+    .map((module: any) => {
+      if (module.show()) {
+        return Object.keys(module.commands)
+          .map((commandId: string) => {
+            const command = module.commands[commandId];
+            if (command.show()) {
+              return command.getListenerScript();
+            }
+          })
+          .join("\n");
+      }
+    })
+    .join("\n");
 
-    /**
-     * Retrieve commands front end listeners scripts for each module.
-     */
-    private commandsListenersScripts: string = Modules.getModulesArray().map((module: any) => {
-        if (module.show()) {
-            return Object.keys(module.commands).map((commandId: string) => {
-                const command = module.commands[commandId];
-                if (command.show()) {
-                    return command.getListenerScript();
-                }
-            }).join("\n");
-        }
-    }).join("\n");
-
-    /**
-     * Listener for the core is-executing:listener command.
-     */
-    private isExecutingListener: string = `
+  /**
+   * Listener for the core is-executing:listener command.
+   */
+  private isExecutingListener: string = `
 case '@is-executing:listener':
     var element = document.getElementById(message.moduleId + '-' + message.commandId);
     setExecuting(element, message.icon, message.label);
     break;
         `;
 
-    /**
-     * Modal management script.
-     * Show, dismiss and execute modal actions.
-     */
-    private modal: string = `
+  /**
+   * Modal management script.
+   * Show, dismiss and execute modal actions.
+   */
+  private modal: string = `
 // ==== MODAL ====
 
 var canDismissModal = true;
@@ -57,6 +64,12 @@ var modalOverlay = document.getElementById("modal-overlay");
 var modalTitle = document.getElementById("modal-title");
 var modalDescription = document.getElementById("modal-description");
 var modalActions = document.getElementById("modal-actions");
+
+modalOverlay.addEventListener("click", function() {
+    if(canDismissModal) {
+        dismissModal();
+    }
+});
 
 function showModal(title, content, actions, canDismiss = true) {
 
@@ -83,19 +96,6 @@ function showModal(title, content, actions, canDismiss = true) {
         });
     });
 
-    modalOverlay.removeEventListener("click", function() {});    
-    modalOverlay.addEventListener("click", function() {
-        if(canDismissModal) {
-            var refAction = actions[0];
-            vscode.postMessage({
-                command:'@modal-action',
-                moduleId: refAction.module,
-                commandId: refAction.command,
-                actionId: 'cancel'
-            });
-        }
-    });
-
     modalOverlay.classList.add("show");
     modal.classList.add("show");
 }
@@ -106,10 +106,10 @@ function dismissModal() {
 }
         `;
 
-    /**
-     * Listener for the core @show-modal and @dismiss-modal commands, used for interacting with the modal from outside the webview.
-     */
-    private modalListener: string = `
+  /**
+   * Listener for the core @show-modal and @dismiss-modal commands, used for interacting with the modal from outside the webview.
+   */
+  private modalListener: string = `
 case '@show-modal':
     showModal(message.title, message.content, message.actions, message.canDismiss);
     break;
@@ -118,11 +118,11 @@ case '@dismiss-modal':
     break;
         `;
 
-    /**
-     * Modules collapsible sections management script.
-     * Used for collapsing and expanding the sections to show or hide the commands.
-     */
-    private collapsible: string = `
+  /**
+   * Modules collapsible sections management script.
+   * Used for collapsing and expanding the sections to show or hide the commands.
+   */
+  private collapsible: string = `
 // ==== COLLAPSIBLE ====
 
 var coll = document.getElementsByClassName("collapsible");
@@ -152,10 +152,10 @@ for (i = 0; i < coll.length; i++) {
 }
         `;
 
-    /**
-     * Manage execution state of commands that can have a loading state.
-     */
-    private setExecuting: string = `
+  /**
+   * Manage execution state of commands that can have a loading state.
+   */
+  private setExecuting: string = `
 // ==== SET EXECUTING ====
 
 function setExecuting(element, icon, label) {
@@ -196,13 +196,31 @@ vscode.postMessage({
 });
         `;
 
-    /**
-     * Generate the script for the main view webview.
-     * @returns {string} The script.
-     */
-    public getScript = (): string => {
+  private updateCommandStyleListener: string = `
+case '@update-command-style':
+    var element = document.getElementById(message.moduleId + '-' + message.commandId);
 
-        return `
+    for (var customizationKey of Object.keys(message.customizations)) {
+      if(customizationKey === 'icon') {
+        var icon = message.customizations.icon;
+        var iconTag = element.querySelector('icon');
+        iconTag.setAttribute('name', icon);
+        iconTag.innerHTML = icons[icon];
+      }
+      else {
+        element.style[customizationKey] = message.customizations[customizationKey];
+      }
+    }
+
+    break;
+        `;
+
+  /**
+   * Generate the script for the main view webview.
+   * @returns {string} The script.
+   */
+  public getScript = (): string => {
+    return `
 const vscode = acquireVsCodeApi();
 
 ${ this.collapsible }
@@ -222,9 +240,10 @@ window.addEventListener('message', event => {
     switch (message.command) {
         ${ this.isExecutingListener }
         ${ this.modalListener }
+        ${ this.updateCommandStyleListener }
         ${ this.commandsListenersScripts }
     }
 });
             `;
-    };
+  };
 }

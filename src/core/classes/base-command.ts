@@ -113,6 +113,14 @@ export class BaseCommand {
     }
 
     /**
+     * Set the icon associated with the command at runtime.
+     * @param icon The icon.
+     */
+    public setIcon(icon: string): void {
+        this._icon = icon;
+    }
+
+    /**
      * Get the label or name of the command.
      * @returns The label.
      */
