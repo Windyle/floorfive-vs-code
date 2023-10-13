@@ -16,7 +16,15 @@ export class GithubCommand extends BaseCommand implements Command {
             module: "samples",
             id: "github-command",
             icon: "github",
-            label: "Github"
+            label: "Github",
+            customize: {
+                // If only one set of customizations is provided, it will be used for both light and dark themes.
+                dark: {
+                    textColor: "#FFFFFF",
+                    backgroundColor: "#0d1117",
+                    borderColor: "#21262d"
+                }
+            }
         });
     }
 

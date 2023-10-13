@@ -6,4 +6,14 @@ export interface CommandConfig {
     withLoader?: boolean;
     loaderLabel?: string;
     subCommand?: boolean;
+    customize?: {
+        light?: CommandButtonCustomizations; 
+        dark?: CommandButtonCustomizations;
+    }
+}
+
+export interface CommandButtonCustomizations {
+    textColor?: string;
+    backgroundColor?: string;
+    borderColor?: string;
 }

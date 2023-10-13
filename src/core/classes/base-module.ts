@@ -104,7 +104,30 @@ export class BaseModule {
     ${ Object.keys(this.commands).map((id: string) => {
             const command = this.commands[id];
             if (command.show()) {
-                return `<button class="command-button ${ command.isSubCommand() ? "sub" : "" } icon-button" id="${ this.getId() }-${ command.getId() }" loader="${ command.getWithLoader() }"><icon name="${ command.getIcon() }"></icon> <label>${ command.getLabel() }</label></button>`;
+
+                // Apply customizations to the button's style.
+
+                let customStyle = "";
+                for(const key of Object.keys(command.getCustomizations())) {
+                    switch(key) {
+                        case "textColor":
+                            customStyle += `color: ${ command.getCustomizations()[key] };`;
+                            break;
+                        case "backgroundColor":
+                            customStyle += `background-color: ${ command.getCustomizations()[key] };`;
+                            break;
+                        case "borderColor":
+                            customStyle += `border: 1px solid ${ command.getCustomizations()[key] };`;
+                            break;
+                    }
+                }
+
+                if ( customStyle !== "" ) {
+                    customStyle = `style="${ customStyle }"`;
+                }
+
+                // Return the button's HTML.
+                return `<button class="command-button ${ command.isSubCommand() ? "sub" : "" } icon-button" ${ customStyle } id="${ this.getId() }-${ command.getId() }" loader="${ command.getWithLoader() }"><icon name="${ command.getIcon() }"></icon> <label>${ command.getLabel() }</label></button>`;
             }
         }).join("\n")
             }

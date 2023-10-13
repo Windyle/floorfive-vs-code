@@ -1,6 +1,6 @@
 import { ConsoleInstantiator, FFConsole } from "../../services/console.service";
 import { Store } from "../../store";
-import { CommandConfig } from "../types/command-config";
+import { CommandButtonCustomizations, CommandConfig } from "../types/command-config";
 import * as vscode from "vscode";
 
 /**
@@ -58,6 +58,14 @@ export class BaseCommand {
     private _isSubCommand: boolean = false;
 
     /**
+     * Customizations for the button's style.
+     */
+    private _customizations: {
+        light?: CommandButtonCustomizations;
+        dark?: CommandButtonCustomizations;
+    } = {};
+
+    /**
      * Creates a new BaseCommand instance.
      * @param module The module name of the command.
      * @param id The unique identifier of the command.
@@ -73,6 +81,7 @@ export class BaseCommand {
         this._withLoader = config.withLoader || false;
         this._loaderLabel = config.loaderLabel || `Executing ${ config.label }...`;
         this._isSubCommand = config.subCommand || false;
+        this._customizations = config.customize || {};
 
         this.console = ConsoleInstantiator.instantiate(config.module, config.id);
     }
@@ -125,6 +134,30 @@ export class BaseCommand {
      */
     public getWithLoader(): boolean {
         return this._withLoader;
+    }
+
+    /**
+     * Get the customizations for the button's style.
+     * @returns The customizations.
+     */
+    public getCustomizations(): CommandButtonCustomizations {
+
+        // Check if one of the customizations is set, if both are set return the one for the current theme, otherwise return the one that is set
+        if (this._customizations.light && this._customizations.dark) {
+            // Check if the current theme is dark or light
+            const isDark = vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Dark;
+
+            // Return the customizations for the current theme
+            return (isDark ? this._customizations.dark : this._customizations.light) || {};
+        }
+        else if (this._customizations.light) {
+            return this._customizations.light;
+        }
+        else if (this._customizations.dark) {
+            return this._customizations.dark;
+        }
+
+        return {};
     }
 
     /**
