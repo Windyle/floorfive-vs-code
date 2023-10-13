@@ -2,6 +2,7 @@ import { BaseModule } from "../../core/classes/base-module";
 import { Module } from "../../core/types/module";
 import { GithubCommand } from "./commands/github.command";
 import { SimpleCommandCommand } from "./commands/simple-command.command";
+import { SubCommandCommand } from "./commands/sub-command.command";
 import { WithConfirmCommand } from "./commands/with-confirm.command";
 import { WithLoaderCommand } from "./commands/with-loader.command";
 
@@ -14,12 +15,14 @@ export class SamplesModule extends BaseModule implements Module {
         super("samples", "Samples", "book");
 
         const simpleCommandCommand = new SimpleCommandCommand();
+        const subCommandCommand = new SubCommandCommand();
         const withLoaderCommand = new WithLoaderCommand();
         const withConfirmCommand = new WithConfirmCommand();
         const githubCommand = new GithubCommand();
 
         // Add command instances to the commands object
         this.commands[simpleCommandCommand.getId()] = simpleCommandCommand;
+        this.commands[subCommandCommand.getId()] = subCommandCommand;
         this.commands[withLoaderCommand.getId()] = withLoaderCommand;
         this.commands[withConfirmCommand.getId()] = withConfirmCommand;
         this.commands[githubCommand.getId()] = githubCommand;
