@@ -11,6 +11,7 @@ export const ICONS = [
     "edit",
     "external-link",
     "eye",
+    "github",
     "hammer",
     "loader",
     "mountain",
