@@ -22,7 +22,28 @@ export class Utilities {
                     .replace("-", " ") }`;
             });
         }
-    };
+    }
+
+    /**
+     * Convert a string from camel case to snake case.
+     * @param str - The string to convert.
+     * @returns The converted string.
+     */
+    public static camelToSnake(str: string): string {
+        return str.replace(/[A-Z]/g, (letter) => `-${ letter.toLowerCase() }`);
+    }
+
+    /**
+     * Convert a string from camel case to a sentence with spaces.
+     * @param str - The string to convert.
+     * @param capitalize - Whether to capitalize the first letter of the sentence.
+     * @returns The converted string.
+     */
+    camelToSentence(str: string, capitalize: boolean = false): string {
+        let res = str.replace(/[A-Z]/g, (letter) => ` ${ letter.toLowerCase() }`);
+
+        return capitalize ? Utilities.capitalize(res) : res;
+    }
 
     /**
      * Capitalize a string (first letter).
