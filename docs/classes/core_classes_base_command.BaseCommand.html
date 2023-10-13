@@ -31,7 +31,7 @@
 <li><a href="modules_samples_commands_with_confirm_command.WithConfirmCommand.html" class="tsd-signature-type tsd-kind-class">WithConfirmCommand</a></li>
 <li><a href="modules_samples_commands_with_loader_command.WithLoaderCommand.html" class="tsd-signature-type tsd-kind-class">WithLoaderCommand</a></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L9">core/classes/base-command.ts:9</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L9">core/classes/base-command.ts:9</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -43,7 +43,8 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="core_classes_base_command.BaseCommand.html#_executing" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_executing</span></a>
+<div class="tsd-index-list"><a href="core_classes_base_command.BaseCommand.html#_customizations" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_customizations</span></a>
+<a href="core_classes_base_command.BaseCommand.html#_executing" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_executing</span></a>
 <a href="core_classes_base_command.BaseCommand.html#_icon" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_icon</span></a>
 <a href="core_classes_base_command.BaseCommand.html#_id" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_id</span></a>
 <a href="core_classes_base_command.BaseCommand.html#_isSubCommand" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_is<wbr/>Sub<wbr/>Command</span></a>
@@ -58,6 +59,7 @@
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="core_classes_base_command.BaseCommand.html#clearConsole" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>clear<wbr/>Console</span></a>
 <a href="core_classes_base_command.BaseCommand.html#createLoaderItem" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>create<wbr/>Loader<wbr/>Item</span></a>
+<a href="core_classes_base_command.BaseCommand.html#getCustomizations" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Customizations</span></a>
 <a href="core_classes_base_command.BaseCommand.html#getIcon" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Icon</span></a>
 <a href="core_classes_base_command.BaseCommand.html#getId" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Id</span></a>
 <a href="core_classes_base_command.BaseCommand.html#getLabel" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Label</span></a>
@@ -92,9 +94,24 @@
 <h4 class="tsd-returns-title">Returns <a href="core_classes_base_command.BaseCommand.html" class="tsd-signature-type tsd-kind-class">BaseCommand</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L68">core/classes/base-command.ts:68</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L76">core/classes/base-command.ts:76</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="_customizations" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_customizations</span><a href="#_customizations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">_customizations</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">dark</span><span class="tsd-signature-symbol">?: </span><a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">light</span><span class="tsd-signature-symbol">?: </span><a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol"> = {}</span></div>
+<div class="tsd-comment tsd-typography"><p>Customizations for the button&#39;s style.</p>
+</div>
+<div class="tsd-type-declaration">
+<h4>Type declaration</h4>
+<ul class="tsd-parameters">
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-property">dark</span><span class="tsd-signature-symbol">?: </span><a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a></h5></li>
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-property">light</span><span class="tsd-signature-symbol">?: </span><a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a></h5></li></ul></div>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L63">core/classes/base-command.ts:63</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_executing" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_executing</span><a href="#_executing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_executing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
@@ -102,7 +119,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L48">core/classes/base-command.ts:48</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L48">core/classes/base-command.ts:48</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_icon" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_icon</span><a href="#_icon" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_icon</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -110,7 +127,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L23">core/classes/base-command.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L23">core/classes/base-command.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_id" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_id</span><a href="#_id" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -118,7 +135,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L18">core/classes/base-command.ts:18</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L18">core/classes/base-command.ts:18</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_isSubCommand" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_is<wbr/>Sub<wbr/>Command</span><a href="#_isSubCommand" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_is<wbr/>Sub<wbr/>Command</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
@@ -126,7 +143,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L58">core/classes/base-command.ts:58</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L58">core/classes/base-command.ts:58</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_label" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_label</span><a href="#_label" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_label</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -134,7 +151,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L28">core/classes/base-command.ts:28</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L28">core/classes/base-command.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_loaderItem" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_loader<wbr/>Item</span><a href="#_loaderItem" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_loader<wbr/>Item</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">StatusBarItem</span></div>
@@ -142,7 +159,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L53">core/classes/base-command.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L53">core/classes/base-command.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_loaderLabel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_loader<wbr/>Label</span><a href="#_loaderLabel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_loader<wbr/>Label</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -150,7 +167,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L33">core/classes/base-command.ts:33</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L33">core/classes/base-command.ts:33</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_module" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_module</span><a href="#_module" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_module</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -158,7 +175,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L13">core/classes/base-command.ts:13</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L13">core/classes/base-command.ts:13</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_withLoader" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_with<wbr/>Loader</span><a href="#_withLoader" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_with<wbr/>Loader</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -166,7 +183,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L38">core/classes/base-command.ts:38</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L38">core/classes/base-command.ts:38</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="console" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>console</span><a href="#console" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">console</span><span class="tsd-signature-symbol">:</span> <a href="services_console_service.FFConsole.html" class="tsd-signature-type tsd-kind-class">FFConsole</a></div>
@@ -174,7 +191,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L43">core/classes/base-command.ts:43</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L43">core/classes/base-command.ts:43</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="clearConsole" class="tsd-anchor"></a>
@@ -187,7 +204,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L151">core/classes/base-command.ts:151</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L184">core/classes/base-command.ts:184</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="createLoaderItem" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>create<wbr/>Loader<wbr/>Item</span><a href="#createLoaderItem" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -195,7 +212,19 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L164">core/classes/base-command.ts:164</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L197">core/classes/base-command.ts:197</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="getCustomizations" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Customizations</span><a href="#getCustomizations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="getCustomizations.getCustomizations-1"><span class="tsd-kind-call-signature">get<wbr/>Customizations</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a><a href="#getCustomizations.getCustomizations-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get the customizations for the button&#39;s style.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/core_types_command_config.CommandButtonCustomizations.html" class="tsd-signature-type tsd-kind-interface">CommandButtonCustomizations</a></h4><p>The customizations.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L143">core/classes/base-command.ts:143</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getIcon" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Icon</span><a href="#getIcon" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -207,7 +236,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L102">core/classes/base-command.ts:102</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L111">core/classes/base-command.ts:111</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getId" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Id</span><a href="#getId" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -219,7 +248,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L94">core/classes/base-command.ts:94</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L103">core/classes/base-command.ts:103</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getLabel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Label</span><a href="#getLabel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -231,7 +260,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L110">core/classes/base-command.ts:110</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L119">core/classes/base-command.ts:119</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getListenerScript" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Listener<wbr/>Script</span><a href="#getListenerScript" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -243,7 +272,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L239">core/classes/base-command.ts:239</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L272">core/classes/base-command.ts:272</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getLoaderLabel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Loader<wbr/>Label</span><a href="#getLoaderLabel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -255,7 +284,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L118">core/classes/base-command.ts:118</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L127">core/classes/base-command.ts:127</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getLogContent" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Log<wbr/>Content</span><a href="#getLogContent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -267,7 +296,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L197">core/classes/base-command.ts:197</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L230">core/classes/base-command.ts:230</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getLogScript" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Log<wbr/>Script</span><a href="#getLogScript" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -279,7 +308,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L251">core/classes/base-command.ts:251</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L284">core/classes/base-command.ts:284</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getModule" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Module</span><a href="#getModule" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -291,7 +320,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L86">core/classes/base-command.ts:86</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L95">core/classes/base-command.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getScript" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Script</span><a href="#getScript" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -303,7 +332,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L216">core/classes/base-command.ts:216</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L249">core/classes/base-command.ts:249</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getWithLoader" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>With<wbr/>Loader</span><a href="#getWithLoader" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -315,7 +344,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L126">core/classes/base-command.ts:126</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L135">core/classes/base-command.ts:135</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="isExecuting" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Executing</span><a href="#isExecuting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -327,7 +356,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L134">core/classes/base-command.ts:134</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L167">core/classes/base-command.ts:167</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="isSubCommand" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Sub<wbr/>Command</span><a href="#isSubCommand" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -339,7 +368,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L142">core/classes/base-command.ts:142</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L175">core/classes/base-command.ts:175</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="manageLoaderState" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>manage<wbr/>Loader<wbr/>State</span><a href="#manageLoaderState" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -347,7 +376,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L155">core/classes/base-command.ts:155</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L188">core/classes/base-command.ts:188</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="openLogPanel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>open<wbr/>Log<wbr/>Panel</span><a href="#openLogPanel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -358,7 +387,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L204">core/classes/base-command.ts:204</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L237">core/classes/base-command.ts:237</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setExecuting" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Executing</span><a href="#setExecuting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -377,7 +406,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L188">core/classes/base-command.ts:188</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L221">core/classes/base-command.ts:221</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toggleExecuting" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>toggle<wbr/>Executing</span><a href="#toggleExecuting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -388,7 +417,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/stefanodenti/floorfive-vs-code/blob/9a19f54/src/core/classes/base-command.ts#L179">core/classes/base-command.ts:179</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/Windyle/floorfive-vs-code/blob/778d3b4/src/core/classes/base-command.ts#L212">core/classes/base-command.ts:212</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -409,6 +438,7 @@
 <div class="tsd-accordion-details">
 <ul>
 <li><a href="#constructor" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
+<li><a href="#_customizations" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_customizations</span></a></li>
 <li><a href="#_executing" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_executing</span></a></li>
 <li><a href="#_icon" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_icon</span></a></li>
 <li><a href="#_id" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_id</span></a></li>
@@ -421,6 +451,7 @@
 <li><a href="#console" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>console</span></a></li>
 <li><a href="#clearConsole" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>clear<wbr/>Console</span></a></li>
 <li><a href="#createLoaderItem" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>create<wbr/>Loader<wbr/>Item</span></a></li>
+<li><a href="#getCustomizations" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Customizations</span></a></li>
 <li><a href="#getIcon" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Icon</span></a></li>
 <li><a href="#getId" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Id</span></a></li>
 <li><a href="#getLabel" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Label</span></a></li>

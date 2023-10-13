@@ -1,10 +1,10 @@
 {
     "name": "FloorFive-VS-Code Documentation",
-    "out": "docs", // La cartella di destinazione della documentazione
-    "entryPoints": ["./src"], // I percorsi dei file sorgente da documentare
+    "out": "docs", // The destination folder for documentation
+    "entryPoints": ["./src"], // Paths of source files to be documented
     "entryPointStrategy": "expand",
-    "exclude": ["**/node_modules/**", "**/*.spec.ts"], // File o cartelle da escludere
+    "exclude": ["**/node_modules/**", "**/*.spec.ts"], // Files or folders to exclude
     "includes": "*",
-    "theme": "default", // Il tema della documentazione (puoi personalizzarlo)
-    "tsconfig": "tsconfig.json" // Il percorso del file tsconfig.json
-  }
+    "theme": "default", // Documentation theme (you can customize it)
+    "tsconfig": "tsconfig.json", // Path to the tsconfig.json file
+}
