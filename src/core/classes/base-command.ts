@@ -247,6 +247,15 @@ export class BaseCommand {
   }
 
   /**
+   * Start the executing state of the command.
+   */
+  public startExecuting(): void {
+    if (!this.isExecuting()) {
+      this.setExecuting(true);
+    }
+  }
+
+  /**
    * Stop the executing state of the command and send a message to the main view webview.
    */
   public stopExecuting(): void {
