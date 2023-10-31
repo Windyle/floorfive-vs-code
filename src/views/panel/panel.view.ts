@@ -54,7 +54,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
         .filter((module: any) => module.showInPanel())[0]
         .getCommandsArray()
         .filter((command: any) => command.showInPanel())[0];
-      this.activePanel = `${initialCommand.getModule()}:${initialCommand.getId()}`;
+      this.activePanel = `${ initialCommand.getModule() }:${ initialCommand.getId() }`;
     }
   }
 
@@ -109,8 +109,19 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
       .replace(/(?<!')\{\{css\}\}(?!')/g, CSS)
       .replace(/(?<!')\{\{animationsCss\}\}(?!')/g, ANIMATIONS_CSS)
       .replace(/(?<!')\{\{categoriesButtons\}\}(?!')/g, this.getCategoriesButtons())
+      .replace(/(?<!')\{\{appLogo\}\}(?!')/g, this.getLogo())
       .replace(/(?<!')\{\{js\}\}(?!')/g, this.panelViewScript.getScript())
       .replace(/(?<!')\{\{iconsVariables\}\}(?!')/g, this.iconsScript); // Must be last
+  }
+
+  /**
+   * Retrieves the logo for the view.
+   * @returns {string} The logo HTML.
+   */
+  private getLogo(): string {
+    const logoPath = vscode.Uri.joinPath(this.extensionUri, "assets", "logo", "FloorFive_AppLogo.png");
+    const logo = fs.readFileSync(logoPath.fsPath, "base64");
+    return `<img class="empty-log-app-logo" src="data:image/png;base64,${ logo }" alt="Logo" />`;
   }
 
   /**
@@ -122,7 +133,7 @@ class PanelViewProvider implements vscode.WebviewViewProvider {
       .map((id: any) => {
         const module = Modules.getModule(id);
         if (module.showInPanel()) {
-          return `<button class="category-button" id="${module.getId()}">${module.getLabel()}</button>`;
+          return `<button class="category-button" id="${ module.getId() }">${ module.getLabel() }</button>`;
         }
       })
       .join("\n");

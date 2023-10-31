@@ -4,6 +4,7 @@ export const HTML: string = `
 
 <head>
     <meta charset="UTF-8">
+    <title>KBS6 Dev</title>
 
     <!-- Custom CSS -->
     <style>
@@ -37,6 +38,9 @@ export const HTML: string = `
 
             <!-- Console Panel -->
             <div class="section" id="console-panel"></div>
+            
+            <!-- Empty Log - Show Logo Image -->
+            {{appLogo}}
         </main>
     </div>
 

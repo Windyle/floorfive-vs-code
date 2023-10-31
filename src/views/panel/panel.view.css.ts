@@ -94,6 +94,7 @@ html, body {
     grid-template-rows: 30px 1fr;
     height: 100%;
     overflow-y: auto;
+    background-color: var(--vscode-editor-background);
 }
 
 /* Header */
@@ -167,6 +168,24 @@ html, body {
     opacity: 0.3;
 }
 
+/* Logo image for empty log */
+.empty-log-app-logo {
+    width: 150px;
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.4;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Hide logo when not empty */
+#console-panel:not(:empty) ~.empty-log-app-logo {
+    display: none;
+}
+
 /* Console panel */
 #console-panel {
     max-width: calc(100vw - 250px);
@@ -178,6 +197,11 @@ html, body {
     flex-direction: column;
     background-color: var(--vscode-editor-background);
     color: var(--vscode-editor-foreground);
+}
+
+/* Hide console panel when empty */
+#console-panel:empty {
+  display: none;
 }
 
 /* Styling for console panel pre tags */
