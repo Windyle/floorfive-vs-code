@@ -24,7 +24,8 @@ export class WithLoaderCommand extends BaseCommand implements Command {
             icon: "loader",
             label: "With Loader",
             withLoader: true,
-            loaderLabel: "Executing command with loader..." // Optional loader label, if not provided, the command label will be used
+            loaderLabel: "Executing command with loader...", // Optional loader label, if not provided, the command label will be used
+            unstoppable: true, // Optional, if true, the command cannot be cancelled
         });
     }
 

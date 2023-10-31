@@ -158,36 +158,43 @@ for (i = 0; i < coll.length; i++) {
   private setExecuting: string = `
 // ==== SET EXECUTING ====
 
-function setExecuting(element, icon, label) {
+function setExecuting(element, icon, label, isUnstoppable, forceStop = false) {
     const iconTag = element.querySelector('icon');
     const iconName = iconTag.getAttribute('name');
     
     if(iconName === icon) {
 
         iconTag.setAttribute('name', 'square');
-        iconTag.innerHTML = icons['square'];
-        iconTag.querySelector('svg').classList.add('flip');
+        iconTag.innerHTML = icons[isUnstoppable ? 'loader' : 'square'];
+        iconTag.querySelector('svg').classList.add(isUnstoppable ? 'spin' : 'flip');
         element.querySelector('label').innerHTML = 'Stop ' + label;
+
+        return true;
     }
-    else {
+    else if(!isUnstoppable || forceStop) {
 
         iconTag.setAttribute('name', icon);
         iconTag.innerHTML = icons[icon];
-        iconTag.querySelector('svg').classList.remove('flip');
+        iconTag.querySelector('svg').classList.remove(isUnstoppable ? 'spin' : 'flip');
         element.querySelector('label').innerHTML = label;
 
         element.classList.add('disabled');
         setTimeout(() => {
             element.classList.remove('disabled');
         }, 2500);
+
+        return true;
+    }
+    else {
+        return false;
     }
 }
 
-function stopExecutingById(id, icon, label) {
+function stopExecutingById(id, icon, label, isUnstoppable) {
     var element = document.getElementById(id);
 
     if(element.querySelector('icon').getAttribute('name') === 'square') {
-        setExecuting(element, icon, label);
+        setExecuting(element, icon, label, isUnstoppable, forceStop = true);
     }
 }
 
@@ -223,13 +230,13 @@ case '@update-command-style':
     return `
 const vscode = acquireVsCodeApi();
 
-${ this.collapsible }
+${this.collapsible}
 
-${ this.setExecuting }
+${this.setExecuting}
 
-${ this.commandsScripts }
+${this.commandsScripts}
 
-${ this.modal }
+${this.modal}
 
 // ==== MESSAGE HANDLER ====
 
@@ -238,10 +245,10 @@ window.addEventListener('message', event => {
     const message = event.data; // The JSON data our extension sent
 
     switch (message.command) {
-        ${ this.isExecutingListener }
-        ${ this.modalListener }
-        ${ this.updateCommandStyleListener }
-        ${ this.commandsListenersScripts }
+        ${this.isExecutingListener}
+        ${this.modalListener}
+        ${this.updateCommandStyleListener}
+        ${this.commandsListenersScripts}
     }
 });
             `;

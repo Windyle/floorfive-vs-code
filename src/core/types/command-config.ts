@@ -6,6 +6,7 @@ export interface CommandConfig {
     withLoader?: boolean;
     loaderLabel?: string;
     subCommand?: boolean;
+    unstoppable?: boolean;
     customize?: {
         light?: CommandButtonCustomizations; 
         dark?: CommandButtonCustomizations;

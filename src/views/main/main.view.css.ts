@@ -131,6 +131,11 @@ label {
     filter: hue-rotate(60deg) brightness(1.22);
 }
 
+.command-button:has(svg.spin) {
+  background-color: var(--vscode-button-background) !important;
+  filter: hue-rotate(60deg) brightness(1.22);
+}
+
 .command-button:hover {
     opacity: 0.9;
 }
@@ -142,6 +147,7 @@ label {
 .command-button.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .command-button.icon-button {
