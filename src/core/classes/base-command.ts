@@ -259,13 +259,11 @@ export class BaseCommand {
    * Stop the executing state of the command and send a message to the main view webview.
    */
   public stopExecuting(): void {
-    if (this.isExecuting()) {
-      this.setExecuting(false);
+    this.setExecuting(false);
 
-      Store.mainViewWebview!.postMessage({
-        command: `${this.getModule()}:${this.getId()}:listener`,
-      });
-    }
+    Store.mainViewWebview!.postMessage({
+      command: `${this.getModule()}:${this.getId()}:listener`,
+    });
   }
 
   /**
