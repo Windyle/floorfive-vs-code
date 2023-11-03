@@ -42,8 +42,17 @@ export class PackageJson {
    * Gets the dependencies of the package.json file of the workspace.
    * @returns {object | undefined} The dependencies of the package.json file or undefined if the file does not exist.
    */
-  public static getDependencies = (): object | undefined => {
+  public static getDependencies = (): { [dependency: string]: string } | undefined => {
     const packageJson = PackageJson.getPackageJson();
     return packageJson ? packageJson["dependencies" as keyof typeof packageJson] : undefined;
+  };
+
+  /**
+   * Gets the devDependencies of the package.json file of the workspace.
+   * @returns {object | undefined} The devDependencies of the package.json file or undefined if the file does not exist.
+   */
+  public static getDevDependencies = (): { [dependency: string]: string } | undefined => {
+    const packageJson = PackageJson.getPackageJson();
+    return packageJson ? packageJson["devDependencies" as keyof typeof packageJson] : undefined;
   };
 }

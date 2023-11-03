@@ -18,6 +18,11 @@ export class BaseCommand {
   private _id: string;
 
   /**
+   * The unique identifier of the command in the panel.
+   */
+  private _panelId: string;
+
+  /**
    * The icon associated with the command.
    */
   private _icon: string;
@@ -26,6 +31,11 @@ export class BaseCommand {
    * The label or name of the command.
    */
   private _label: string;
+
+  /**
+   * The label to display in the panel tab bar.
+   */
+  private _panelLabel: string;
 
   /**
    * The label to display in the loader.
@@ -77,8 +87,10 @@ export class BaseCommand {
   constructor(config: CommandConfig) {
     this._module = config.module;
     this._id = config.id;
+    this._panelId = config.panelId || config.id;
     this._icon = config.icon;
     this._label = config.label;
+    this._panelLabel = config.panelLabel || config.label;
     this._withLoader = config.withLoader || false;
     this._loaderLabel = config.loaderLabel || `Executing ${config.label}...`;
     this._isSubCommand = config.subCommand || false;
@@ -107,6 +119,14 @@ export class BaseCommand {
   }
 
   /**
+   * Get the unique identifier of the command in the panel.
+   * @returns The unique identifier.
+   */
+  public getPanelId(): string {
+    return this._panelId;
+  }
+
+  /**
    * Get the icon associated with the command.
    * @returns The icon.
    */
@@ -128,6 +148,14 @@ export class BaseCommand {
    */
   public getLabel(): string {
     return this._label;
+  }
+
+  /**
+   * Get the label to display in the panel tab bar.
+   * @returns The label.
+   */
+  public getPanelLabel(): string {
+    return this._panelLabel;
   }
 
   /**

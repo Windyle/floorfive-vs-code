@@ -4,12 +4,11 @@ import { Modules } from "../../modules/modules.index";
  * Represents the main script part for the panel view webview.
  */
 export class PanelViewScript {
-
-    /**
-     * Categories buttons event listeners initialization for switching between categories.
-     * The categories are generated dynamically based on the modules.
-     */
-    private categories: string = `
+  /**
+   * Categories buttons event listeners initialization for switching between categories.
+   * The categories are generated dynamically based on the modules.
+   */
+  private categories: string = `
 // ==== CATEGORIES ====
 var categoriesBtns = document.querySelectorAll('#categories-bar button');
 
@@ -25,29 +24,29 @@ categoriesBtns.forEach(btn => {
 });
     `;
 
-    /**
-     * Tabs event listeners initialization for switching between tabs of a given category.
-     * The tabs are generated dynamically based on the commands of the modules.
-     */
-    private tabs: string = `
+  /**
+   * Tabs event listeners initialization for switching between tabs of a given category.
+   * The tabs are generated dynamically based on the commands of the modules.
+   */
+  private tabs: string = `
 // ==== TABS ====
 
-var tabsList = ${ JSON.stringify(
-        Modules.getModulesArray().reduce((acc: any, module: any) => {
-            if (module.showInPanel()) {
-                acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
-                    if (command.showInPanel()) {
-                        acc[command.getId()] = {
-                            id: command.getId(),
-                            label: command.getLabel()
-                        };
-                    }
-                    return acc;
-                }, {});
-            }
-            return acc;
-        }, {})
-    ) };
+var tabsList = ${JSON.stringify(
+    Modules.getModulesArray().reduce((acc: any, module: any) => {
+      if (module.showInPanel()) {
+        acc[module.getId()] = module.getCommandsArray().reduce((acc: any, command: any) => {
+          if (command.showInPanel()) {
+            acc[command.getPanelId()] = {
+              id: command.getPanelId(),
+              label: command.getPanelLabel(),
+            };
+          }
+          return acc;
+        }, {});
+      }
+      return acc;
+    }, {})
+  )};
 
 var tabs;
 
@@ -78,10 +77,10 @@ function setTabs(categoryId = '') {
 }
 `;
 
-    /**
-     * Sidebar collapse button event listener initialization for collapsing the sidebar containing the categories buttons.
-     */
-    private sidebarCollapse: string = `
+  /**
+   * Sidebar collapse button event listener initialization for collapsing the sidebar containing the categories buttons.
+   */
+  private sidebarCollapse: string = `
 // ==== SIDEBAR COLLAPSE ====
 
 var sidebarCollapseBtn = document.getElementById('sidebar-collapse');
@@ -94,10 +93,10 @@ sidebarCollapseBtn.addEventListener('click', function() {
 });
 `;
 
-    /**
-     * Clear console button event listener initialization for clearing the console panel manually.
-     */
-    private clearConsole: string = `
+  /**
+   * Clear console button event listener initialization for clearing the console panel manually.
+   */
+  private clearConsole: string = `
 // ==== CLEAR CONSOLE ====
 
 var clearConsoleBtn = document.getElementById('clear-console');
@@ -111,11 +110,11 @@ clearConsoleBtn.addEventListener('click', function() {
 });
 `;
 
-    /**
-     * Set active panel function for setting the active panel content and the active panel id.
-     * Also, it sends a first message on load to get the active panel id from the view.
-     */
-    private setActivePanel: string = `
+  /**
+   * Set active panel function for setting the active panel content and the active panel id.
+   * Also, it sends a first message on load to get the active panel id from the view.
+   */
+  private setActivePanel: string = `
 // ==== SET ACTIVE PANEL CONTENT ====
 
 function setActivePanel(categoryId, tabId) {
@@ -152,10 +151,10 @@ function getActivePanelFromView() {
 getActivePanelFromView();
 `;
 
-    /**
-     * Go to active panel function for switching between panels programmatically.
-     */
-    private goToActivePanel: string = `
+  /**
+   * Go to active panel function for switching between panels programmatically.
+   */
+  private goToActivePanel: string = `
 // ==== GO TO ACTIVE PANEL ====
 
 function goToActivePanel(moduleId, commandId) {
@@ -178,10 +177,10 @@ function goToActivePanel(moduleId, commandId) {
 }
         `;
 
-    /**
-     * Open local link function for sending a message to the extension to open a local link in the editor.
-     */
-    private openLocalLink: string = `
+  /**
+   * Open local link function for sending a message to the extension to open a local link in the editor.
+   */
+  private openLocalLink: string = `
 // ==== OPEN LOCAL LINK ====
 
 function openLocalLink(path) {
@@ -192,10 +191,10 @@ function openLocalLink(path) {
 }
         `;
 
-    /**
-     * Copy console button event listener initialization for copying the console panel content to the clipboard.
-     */
-    private copyConsole: string = `
+  /**
+   * Copy console button event listener initialization for copying the console panel content to the clipboard.
+   */
+  private copyConsole: string = `
 // ==== COPY CONSOLE ====
 
 document.getElementById('copy-console').addEventListener('click', () => {
@@ -217,10 +216,10 @@ document.getElementById('copy-console').addEventListener('click', () => {
 });
         `;
 
-    /**
-     * Message handler for handling messages from the extension to the view.
-     */
-    private messageHandler: string = `
+  /**
+   * Message handler for handling messages from the extension to the view.
+   */
+  private messageHandler: string = `
 // ==== MESSAGE HANDLER ====
 
 window.addEventListener('message', event => {
@@ -237,45 +236,49 @@ window.addEventListener('message', event => {
         case 'update-output-panel-theme':
             setOutputPanelTheme(message.theme);
             break;
-        ${ Modules.getModulesArray().map((module: any) => {
-        if (module.showInPanel()) {
-            return module.getCommandsArray().map((command: any) => {
-                if (command.showInPanel()) {
+        ${Modules.getModulesArray()
+          .map((module: any) => {
+            if (module.showInPanel()) {
+              return module
+                .getCommandsArray()
+                .map((command: any) => {
+                  if (command.showInPanel()) {
                     return command.getLogScript();
-                }
-            }).join("\n");
-        }
-    }).join("\n")
-        }
+                  }
+                })
+                .join("\n");
+            }
+          })
+          .join("\n")}
     }
 });
 `;
 
-    /**
-     * Get the script for the panel view.
-     */
-    public getScript = (): string => {
-        return `
+  /**
+   * Get the script for the panel view.
+   */
+  public getScript = (): string => {
+    return `
 var vscode = acquireVsCodeApi();
 var activePanel = '';
 
-${ this.categories }
+${this.categories}
 
-${ this.tabs }
+${this.tabs}
 
-${ this.sidebarCollapse }
+${this.sidebarCollapse}
 
-${ this.clearConsole }
+${this.clearConsole}
 
-${ this.setActivePanel }
+${this.setActivePanel}
 
-${ this.goToActivePanel }
+${this.goToActivePanel}
 
-${ this.openLocalLink }
+${this.openLocalLink}
 
-${ this.copyConsole }
+${this.copyConsole}
 
-${ this.messageHandler }
+${this.messageHandler}
 `;
-    };
+  };
 }

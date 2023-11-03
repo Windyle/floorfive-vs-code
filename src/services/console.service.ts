@@ -15,6 +15,10 @@ export class ConsoleInstantiator {
    * @returns {FFConsole} The new console instance.
    */
   public static instantiate = (moduleId: string, commandId: string): FFConsole => {
+    if (ConsoleInstantiator.instances.has(`${moduleId}:${commandId}`)) {
+      return ConsoleInstantiator.instances.get(`${moduleId}:${commandId}`)!;
+    }
+
     const instance = new FFConsole(moduleId, commandId);
     ConsoleInstantiator.instances.set(`${moduleId}:${commandId}`, instance);
 
@@ -150,7 +154,8 @@ export class FFConsole {
       if (/<a\s+(?:[^>]*?\s+)?href=("|')([^"']+)\1[^>]*>/.test(match)) {
         return match;
       } else {
-        return ` <a href="file://${match.trim()}" onclick="openLocalLink('${match.trim()}')">${match.trim()}</a>`;
+        const uri = match.trim().replace(/\\/g, "/");
+        return ` <a href="file://${uri}" onclick="openLocalLink('${uri}')">${uri}</a>`;
       }
     });
 
