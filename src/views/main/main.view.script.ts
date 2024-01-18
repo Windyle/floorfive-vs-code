@@ -167,7 +167,7 @@ function setExecuting(element, icon, label, isUnstoppable, forceStop = false) {
         iconTag.setAttribute('name', 'square');
         iconTag.innerHTML = icons[isUnstoppable ? 'loader' : 'square'];
         iconTag.querySelector('svg').classList.add(isUnstoppable ? 'spin' : 'flip');
-        element.querySelector('label').innerHTML = 'Stop ' + label;
+        element.querySelector('label').innerHTML = (isUnstoppable ? '' : 'Stop ') + label;
 
         return true;
     }
