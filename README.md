@@ -21,13 +21,13 @@ For usage instructions, check the [USAGE.md](USAGE.md) file.
 The main feature of this boilerplate is the ability to create commands that can be easily executed with a single click, without having to remember the command itself or its parameters. The commands can be grouped into categories, which are displayed in the extension's sidebar, and can be executed from there or from the command palette if configured to do so.
 
 <div style="text-align: center">
-<img src="https://lh3.googleusercontent.com/drive-viewer/AK7aPaAIMIS4qpB1opoQGgt9_J1NQiOubSk3heaVxnTk9wEr0s0GvrrVvho9j50PGNUF9wRZoQZNxTHhBT7W1Vm0niEl1ZCFog=s2560"/>
+<img src="https://i.ibb.co/vqppXKR/commands-example-screen.png"/>
 </div>
 
 It is also possible to instantiate commands dynamically if you need to create a single command class that needs to be executed with different parameters.
 
 <div style="text-align: center">
-<img src="https://lh3.googleusercontent.com/drive-viewer/AK7aPaC5DATzEpjgmNJfr8JgSIrD2q5UB_xOyX1JLHk1_W2jJ-FOQCoiMRzdEK3lw8i0nDO9WGmJUovXoNs6uG4gvptj47lE=s2560" />
+<img src="https://i.ibb.co/M9MBHqD/dynamic-commands-example-screen.png" />
 </div>
 
 ### Output panel
@@ -37,7 +37,7 @@ The extension also provides a custom output panel that can be used to display in
 The panel is fully customizable.
 
 <div style="text-align: center">
-<img src="https://lh3.googleusercontent.com/drive-viewer/AK7aPaCvTmW7Rk2CkrUCXgOrmfoZ7KUkpAc3_zhonYDJnr5mheX6T1MbU-Ey0_gNd4ISUtm4K_uOjPiEvKZovC7BmPbSqNRMHA=s1600" />
+<img src="https://i.ibb.co/NxZ9FrF/output-panel-example-screen.png" />
 </div>
 
 ### Icons
